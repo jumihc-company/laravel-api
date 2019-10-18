@@ -200,6 +200,8 @@ class MakeCommonModel extends Command
 
 namespace App\Common\Models;
 
+use Jmhc\Restful\Models\BaseModel;
+
 class %s extends BaseModel
 {}
 EOF;

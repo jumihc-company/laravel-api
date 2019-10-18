@@ -55,7 +55,7 @@ class ExceptionHandler extends Handler
         // 判断刷新的token是否存在
         if(! empty($request->refreshToken)) {
             // 单设备登录操作
-            $this->sdlHandler();
+            $this->sdlHandler($request);
             $headers[Env::get('jmhc.refresh_token_name', 'token')] = $request->refreshToken;
         }
 
@@ -121,7 +121,8 @@ class ExceptionHandler extends Handler
 
     /**
      * 单设备登录操作
+     * @param $request
      */
-    protected function sdlHandler()
+    protected function sdlHandler($request)
     {}
 }
