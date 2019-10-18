@@ -1,0 +1,43 @@
+{
+    "name": "jmhc/laravel-api",
+    "description": "Laravel restful api.",
+    "keywords": [
+        "restful",
+        "api",
+        "laravel"
+    ],
+    "homepage": "http://jumihc.com/",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "jumihc",
+            "email": "jumihuchuang@126.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Jmhc\\Restful\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "require": {
+        "php": "^7.2",
+        "ext-json": "*",
+        "ext-openssl": "*",
+        "laravel/framework": "^6.3",
+        "doctrine/dbal": "^2.9",
+        "guzzlehttp/guzzle": "^6.3",
+        "jenssegers/mongodb": "^3.6",
+        "vladimir-yuldashev/laravel-queue-rabbitmq": "^9.1"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Jmhc\\Restful\\Providers\\JmhcApiServiceProvider",
+                "Jmhc\\Restful\\Providers\\JmhcJobServiceProvider"
+            ]
+        }
+    }
+}
