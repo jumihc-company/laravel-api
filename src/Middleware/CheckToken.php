@@ -10,6 +10,7 @@ use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Jmhc\Restful\Contracts\User;
 use Jmhc\Restful\Models\UserModel;
 use Jmhc\Restful\ResultCode;
 use Jmhc\Restful\ResultException;
@@ -78,7 +79,7 @@ class CheckToken
         [$id, $time] = $parse;
 
         // 判断token是否有效
-        $info = UserModel::getInfoById($id);
+        $info = app()->get(User::class)->getInfoById($id);
         if (empty($info)) {
             static::error(ResultMsg::TOKEN_INVALID, ResultCode::TOKEN_INVALID);
         } elseif ($info->status != UserModel::YES) {

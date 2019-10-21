@@ -8,8 +8,9 @@ namespace Jmhc\Restful\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Jmhc\Restful\Contracts\Version;
 
-class VersionModel extends BaseModel
+class VersionModel extends BaseModel implements Version
 {
     protected function getIsForceAttribute($value)
     {

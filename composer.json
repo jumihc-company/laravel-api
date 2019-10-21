@@ -36,7 +36,9 @@
         "laravel": {
             "providers": [
                 "Jmhc\\Restful\\Providers\\JmhcApiServiceProvider",
-                "Jmhc\\Restful\\Providers\\JmhcJobServiceProvider"
+                "Jmhc\\Restful\\Providers\\JmhcJobServiceProvider",
+                "Jmhc\\Restful\\Providers\\JmhcContractServiceProvider",
+                "Jmhc\\Restful\\Providers\\JmhcRouteServiceProvider"
             ]
         }
     }

@@ -8,8 +8,9 @@ namespace Jmhc\Restful\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Jmhc\Restful\Contracts\User;
 
-class UserModel extends BaseModel
+class UserModel extends BaseModel implements User
 {
     /**
      * 通过id获取信息

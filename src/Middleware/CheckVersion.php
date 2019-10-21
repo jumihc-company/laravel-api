@@ -8,7 +8,7 @@ namespace Jmhc\Restful\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Jmhc\Restful\Models\VersionModel;
+use Jmhc\Restful\Contracts\Version;
 use Jmhc\Restful\ResultCode;
 use Jmhc\Restful\ResultMsg;
 use Jmhc\Restful\Traits\ResultThrow;
@@ -27,7 +27,7 @@ class CheckVersion
         );
 
         // 验证版本
-        $info = VersionModel::getLastInfo();
+        $info = app()->get(Version::class)->getLastInfo();
         if (! empty($info)) {
             if ($version < $info->code && $info->is_force) {
                 static::error(ResultMsg::OLD_VERSION, ResultCode::OLD_VERSION, [
