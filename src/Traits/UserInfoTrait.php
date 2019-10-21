@@ -7,7 +7,7 @@
 namespace Jmhc\Restful\Traits;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
+use Jmhc\Restful\Utils\Collection;
 
 trait UserInfoTrait
 {
