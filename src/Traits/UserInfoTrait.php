@@ -7,7 +7,6 @@
 namespace Jmhc\Restful\Traits;
 
 use Illuminate\Database\Eloquent\Model;
-use Jmhc\Restful\Utils\Collection;
 
 trait UserInfoTrait
 {
@@ -19,7 +18,7 @@ trait UserInfoTrait
 
     /**
      * 登录用户信息
-     * @var Collection|Model
+     * @var Model
      */
     protected $userInfo;
 
@@ -28,7 +27,7 @@ trait UserInfoTrait
      */
     protected function initialize()
     {
-        $this->userInfo = $this->request->userInfo ?? new Collection();
+        $this->userInfo = $this->request->userInfo;
         $this->userId = $this->userInfo->id ?? 0;
     }
 }
