@@ -29,11 +29,6 @@ trait RequestInfoTrait
     protected $params;
 
     /**
-     * @var array
-     */
-    protected $arrayParams;
-
-    /**
      * @var string
      */
     protected $ip;
@@ -51,7 +46,6 @@ trait RequestInfoTrait
         $this->app = app('app');
         $this->request = request();
         $this->params = new Collection($this->request->params);
-        $this->arrayParams = $this->params->toArray();
         $this->ip = $this->request->ip();
         $this->platform = $this->request->platform ?? PlatformInfo::OTHER;
     }
