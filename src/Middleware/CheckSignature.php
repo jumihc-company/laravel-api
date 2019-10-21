@@ -40,7 +40,7 @@ class CheckSignature
         $timeout = Env::get('jmhc.timestamp_timeout', 60);
         $timestamp = $request->originParams['timestamp'] ?? 0;
         $time = time();
-        if ($timestamp > $time || ($timestamp + $timeout) < $time) {
+        if ($timestamp > ($time + $timeout) || ($timestamp + $timeout) < $time) {
             static::error('请求已过期~');
         }
 
