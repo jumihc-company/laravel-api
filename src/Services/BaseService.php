@@ -32,4 +32,16 @@ class BaseService implements ConstAttribute
         $this->setRequestInfo();
         $this->initialize();
     }
+
+    /**
+     * 更新请求信息
+     * @return $this
+     */
+    public function updateRequestInfo()
+    {
+        // 设置请求信息
+        $this->setRequestInfo();
+
+        return $this;
+    }
 }
