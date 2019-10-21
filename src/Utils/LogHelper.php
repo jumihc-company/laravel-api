@@ -38,7 +38,7 @@ class LogHelper
      */
     public static function request(array $config = [])
     {
-        return Log::setConfig(array_map([
+        return Log::setConfig(array_merge([
             'path' => static::dir('request'),
         ], $config));
     }
@@ -50,7 +50,7 @@ class LogHelper
      */
     public static function queue(array $config = [])
     {
-        return Log::setConfig(array_map([
+        return Log::setConfig(array_merge([
             'path' => static::dir('queue'),
         ], $config));
     }
