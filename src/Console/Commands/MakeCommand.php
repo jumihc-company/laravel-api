@@ -115,7 +115,7 @@ abstract class MakeCommand extends Command
 
         return sprintf(
             $this->defaultDir,
-            $this->filterStr($dir),
+            '/' . ucfirst($this->filterStr($dir)),
             $this->argumentName . 's'
         );
     }
