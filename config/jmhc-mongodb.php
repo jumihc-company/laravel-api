@@ -8,12 +8,12 @@ use Jmhc\Restful\Utils\Env;
 
 return [
     'driver'   => 'mongodb',
-    'host'     => Env::get('jmhc.mongodb.host', 'mongo'),
-    'port'     => Env::get('jmhc.mongodb.port', 27017),
-    'database' => Env::get('jmhc.mongodb.database', 'mongo'),
-    'username' => Env::get('jmhc.mongodb.username', ''),
-    'password' => Env::get('jmhc.mongodb.password', ''),
+    'host'     => Env::get('mongodb.host', 'mongo'),
+    'port'     => Env::get('mongodb.port', 27017),
+    'database' => Env::get('mongodb.database', 'mongo'),
+    'username' => Env::get('mongodb.username', ''),
+    'password' => Env::get('mongodb.password', ''),
     'options'  => [
-        'database' => Env::get('jmhc.mongodb.auth_database', 'admin'),
+        'database' => Env::get('mongodb.auth_database', 'admin'),
     ]
 ];

@@ -20,9 +20,9 @@ abstract class BaseRabbitmq extends BaseJob
     public function __construct(array $msg)
     {
         // 链接名称
-        $this->connection = Env::get('jmhc.rabbitmq.connection', 'rabbitmq');
+        $this->connection = Env::get('rabbitmq.connection', 'rabbitmq');
         // 队列名称
-        $this->queue = Env::get('jmhc.rabbitmq.queue', 'default');
+        $this->queue = Env::get('rabbitmq.queue', 'default');
         // 消息
         $this->msg = new Collection($msg);
 

@@ -26,7 +26,7 @@ class BaseMongo extends Model implements ConstAttribute
         // 设置链接名称
         if (empty($this->connection)) {
             $this->setConnection(
-                Env::get('jmhc.mongodb.connection','mongodb')
+                Env::get('mongodb.connection','mongodb')
             );
         }
 

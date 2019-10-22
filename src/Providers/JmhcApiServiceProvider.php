@@ -87,16 +87,7 @@ class JmhcApiServiceProvider extends ServiceProvider
             jmhc_api_config_path('jmhc-mongodb.php'),
             sprintf(
                 'database.connections.%s',
-                Env::get('jmhc.mongodb.connection', 'mongodb')
-            )
-        );
-
-        // 合并rabbitmq配置
-        $this->mergeConfigFrom(
-            jmhc_api_config_path('jmhc-rabbitmq.php'),
-            sprintf(
-                'queue.connections.%s',
-                Env::get('jmhc.rabbitmq.connection', 'rabbitmq')
+                Env::get('mongodb.connection', 'mongodb')
             )
         );
     }

@@ -71,38 +71,36 @@ JMHC_SDL_TMP_EXPIRE=10
 
 ```apacheconfig
 # mongodb链接名称
-JMHC_MONGODB_CONNECTION=mongodb
+MONGODB_CONNECTION=mongodb
 # mongodb链接地址
-JMHC_MONGODB_HOST=mongo
+MONGODB_HOST=mongo
 # mongodb链接端口
-JMHC_MONGODB_PORT=27017
+MONGODB_PORT=27017
 # mongodb数据库名称
-JMHC_MONGODB_DATABASE=mongo
+MONGODB_DATABASE=mongo
 # mongodb用户名
-JMHC_MONGODB_USERNAME=
+MONGODB_USERNAME=
 # mongodb密码
-JMHC_MONGODB_PASSWORD=
+MONGODB_PASSWORD=
 # mongodb授权数据库名称
-JMHC_MONGODB_AUTH_DATABASE=admin
+MONGODB_AUTH_DATABASE=admin
 ```
 
 ```apacheconfig
 # rabbitmq链接名称
-JMHC_RABBITMQ_CONNECTION=rabbitmq
+RABBITMQ_CONNECTION=rabbitmq
 # rabbitmq工作方式
-JMHC_RABBITMQ_WORKER=default
+RABBITMQ_WORKER=default
 # rabbitmq链接地址
-JMHC_RABBITMQ_HOST=rabbitmq
+RABBITMQ_HOST=rabbitmq
 # rabbitmq链接端口
-JMHC_RABBITMQ_PORT=5672
+RABBITMQ_PORT=5672
 # rabbitmq登录用户
-JMHC_RABBITMQ_LOGIN=guest
+RABBITMQ_LOGIN=guest
 # rabbitmq登录密码
-JMHC_RABBITMQ_PASSWORD=guest
+RABBITMQ_PASSWORD=guest
 # rabbitmq队列
-JMHC_RABBITMQ_QUEUE=
+RABBITMQ_QUEUE=
 # rabbitmq交换机
-JMHC_RABBITMQ_EXCHANGE_NAME=
-# rabbitmq路由key
-JMHC_RABBITMQ_ROUTING_KEY=
+RABBITMQ_EXCHANGE_NAME=
 ```
