@@ -7,4 +7,7 @@
 namespace Jmhc\Restful\Contracts;
 
 interface User
-{}
+{
+    // 通过id获取信息
+    public static function getInfoById(int $id);
+}

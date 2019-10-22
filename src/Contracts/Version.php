@@ -7,4 +7,7 @@
 namespace Jmhc\Restful\Contracts;
 
 interface Version
-{}
+{
+    // 获取最新版本信息
+    public static function getLastInfo();
+}
