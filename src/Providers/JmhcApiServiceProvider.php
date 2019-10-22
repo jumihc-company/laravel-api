@@ -76,6 +76,12 @@ class JmhcApiServiceProvider extends ServiceProvider
      */
     protected function mergeConfig()
     {
+        // 合并cross配置
+        $this->mergeConfigFrom(
+            jmhc_api_config_path('jmhc-cross.php'),
+            'jmhc-cross'
+        );
+
         // 合并mongodb配置
         $this->mergeConfigFrom(
             jmhc_api_config_path('jmhc-mongodb.php'),
