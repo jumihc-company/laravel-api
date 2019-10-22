@@ -58,8 +58,6 @@ abstract class MakeCommand extends Command
 
     public function __construct()
     {
-        parent::__construct();
-
         $this->signature = sprintf(
             $this->signature,
             $this->command,
@@ -70,6 +68,8 @@ abstract class MakeCommand extends Command
             $this->signature,
             strtolower($this->argumentName)
         );
+
+        parent::__construct();
     }
 
     public function handle()
