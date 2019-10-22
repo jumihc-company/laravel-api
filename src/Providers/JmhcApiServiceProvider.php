@@ -102,17 +102,24 @@ class JmhcApiServiceProvider extends ServiceProvider
     {
         // 发布配置文件
         $this->publishes([
-            jmhc_api_config_path('jmhc-cross.php') => config_path('jmhc-cross.php')
-        ], 'config');
+            jmhc_api_config_path('jmhc-cross.php') => config_path('jmhc-cross.php'),
+        ], 'jmhc-api-config');
 
         // 发布迁移文件
         $this->publishes([
-            jmhc_api_database_path('migrations') => database_path('migrations')
-        ], 'migrations');
+            jmhc_api_database_path('migrations') => database_path('migrations'),
+        ], 'jmhc-api-migrations');
 
         // 发布资源文件
         $this->publishes([
-            jmhc_api_resource_path('lang') => resource_path('lang')
-        ], 'resources');
+            jmhc_api_resource_path('lang') => resource_path('lang'),
+        ], 'jmhc-api-resources');
+
+        // 发布所有文件
+        $this->publishes([
+            jmhc_api_config_path('jmhc-cross.php') => config_path('jmhc-cross.php'),
+            jmhc_api_database_path('migrations') => database_path('migrations'),
+            jmhc_api_resource_path('lang') => resource_path('lang'),
+        ], 'jmhc-api');
     }
 }
