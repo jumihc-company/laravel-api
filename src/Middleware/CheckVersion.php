@@ -26,6 +26,11 @@ class CheckVersion
             Env::get('jmhc.request.version_name', 'version')
         );
 
+        // 判断版本号是否存在
+        if (empty($version)) {
+            static::error('版本号不存在');
+        }
+
         // 验证版本
         $info = app()->get(Version::class)->getLastInfo();
         if (! empty($info)) {

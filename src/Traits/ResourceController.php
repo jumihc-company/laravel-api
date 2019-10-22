@@ -12,7 +12,7 @@ trait ResourceController
 
     public function index()
     {
-        $this->service->updateRequestInfo()->index();
+        $this->service->updateAttribute()->index();
     }
 
     public function show(string $id = '')
@@ -21,12 +21,12 @@ trait ResourceController
             $this->request->params['id'] = $id;
         }
 
-        $this->service->updateRequestInfo()->show();
+        $this->service->updateAttribute()->show();
     }
 
     public function store()
     {
-        $this->service->updateRequestInfo()->store();
+        $this->service->updateAttribute()->store();
     }
 
     public function update(string $id = '')
@@ -35,7 +35,7 @@ trait ResourceController
             $this->request->params['id'] = $id;
         }
 
-        $this->service->updateRequestInfo()->update();
+        $this->service->updateAttribute()->update();
     }
 
     public function destroy(string $id = '')
@@ -44,6 +44,6 @@ trait ResourceController
             $this->request->params['id'] = $id;
         }
 
-        $this->service->updateRequestInfo()->destroy();
+        $this->service->updateAttribute()->destroy();
     }
 }

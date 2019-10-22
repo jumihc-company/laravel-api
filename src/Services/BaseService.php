@@ -34,13 +34,14 @@ class BaseService implements ConstAttribute
     }
 
     /**
-     * 更新请求信息
+     * 更新属性
      * @return $this
      */
-    public function updateRequestInfo()
+    public function updateAttribute()
     {
         // 设置请求信息
         $this->setRequestInfo();
+        $this->initialize();
 
         return $this;
     }
