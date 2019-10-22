@@ -41,7 +41,6 @@ class BaseService implements ConstAttribute
     {
         // 设置请求信息
         $this->setRequestInfo();
-        $this->initialize();
 
         return $this;
     }
