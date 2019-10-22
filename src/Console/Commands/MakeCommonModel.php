@@ -9,7 +9,6 @@ namespace Jmhc\Restful\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Symfony\Component\Console\Input\InputOption;
 use Throwable;
 
 class MakeCommonModel extends Command
@@ -17,17 +16,33 @@ class MakeCommonModel extends Command
     /**
      * @var string
      */
-    protected $dir;
-
-    /**
-     * @var string
-     */
-    protected $name = 'jmhc-api:make-common-model';
+    protected $signature = 'jmhc-api:make-common-model
+    {--d|db= : The generated database name}
+    {--p|prefix= : Datatable prefixes, which are not prefixed when generating models}
+    {--t|table=* : Exclude table names}
+    {--dir=%s : File saving path, relative to app directory}
+    {--f|force : Whether to overwrite an existing file}
+    {--c|clear : Clear all model files}';
 
     /**
      * @var string
      */
     protected $description = 'Generate the common model files';
+
+    /**
+     * @var string
+     */
+    protected $defaultDir = 'Common/Models/';
+
+    /**
+     * @var string
+     */
+    protected $namespace;
+
+    /**
+     * @var string
+     */
+    protected $dir;
 
     /**
      * @var string
@@ -44,10 +59,12 @@ class MakeCommonModel extends Command
      */
     protected $force;
 
-    /**
-     * @var string
-     */
-    protected $author;
+    public function __construct()
+    {
+        $this->signature = sprintf($this->signature, $this->defaultDir);
+
+        parent::__construct();
+    }
 
     /**
      * 执行操作
@@ -55,8 +72,13 @@ class MakeCommonModel extends Command
      */
     public function handle()
     {
+        // 获取保存文件夹
+        $dir = $this->getSaveDir();
         // 保存文件夹
-        $this->dir = app_path('Common/Models/');
+        $this->dir = app_path($dir);
+        // 命名空间
+        $this->namespace = $this->getNamespace($dir);
+
         // 创建文件夹
         $this->createDir();
 
@@ -66,15 +88,11 @@ class MakeCommonModel extends Command
         $this->database = $this->option('db') ?? $db->getConfig('database');
         $this->prefix = $this->option('prefix') ?? $db->getConfig('prefix');
         $this->force = $this->option('force');
-        $this->author = $this->option('author') ?? 'YL';
 
         // 排除的表
-        $excludeTables = [];
-        if ($this->option('table')) {
-            $excludeTables = array_map(function ($v) {
-                return $this->prefix . $v;
-            }, explode(',', $this->option('table')));
-        }
+        $excludeTables = array_map(function ($v) {
+            return $this->prefix . $v;
+        }, $this->option('table'));
 
         try {
             // 获取所有表
@@ -101,6 +119,52 @@ class MakeCommonModel extends Command
         }
 
         return true;
+    }
+
+    /**
+     * 获取保存文件夹
+     * @return string
+     */
+    protected function getSaveDir()
+    {
+        $dir = $this->option('dir');
+        if (! $dir) {
+            return $this->defaultDir;
+        }
+
+        // 过滤路径
+        $dir = $this->filterDir($dir);
+
+        $res = '';
+        foreach ($dir as $v) {
+            $res .= ucfirst($v) . '/';
+        }
+        return $res;
+    }
+
+    /**
+     * 过滤路径
+     * @param string $dir
+     * @return array
+     */
+    protected function filterDir(string $dir)
+    {
+        return array_filter(
+            explode(
+                '/',
+                str_replace('\\', '', $dir)
+            )
+        );
+    }
+
+    /**
+     * 获取命名空间
+     * @param string $dir
+     * @return string
+     */
+    protected function getNamespace(string $dir)
+    {
+        return 'App\\' . str_replace('/', '\\', rtrim($dir, '/'));
     }
 
     /**
@@ -158,14 +222,14 @@ class MakeCommonModel extends Command
      */
     protected function buildModel(string $table)
     {
-        $name = $this->getModelName($this->prefix, $table);
+        $name = $this->getBuildName($this->prefix, $table);
         $filePath = $this->dir . $name . '.php';
 
         if (file_exists($filePath) && ! $this->force) {
             return false;
         }
 
-        $content = $this->getBuildContent($this->author, $name);
+        $content = $this->getBuildContent($name);
         file_put_contents($filePath, $content);
 
         $this->info($filePath . ' create Succeed!');
@@ -173,54 +237,32 @@ class MakeCommonModel extends Command
     }
 
     /**
-     * 获取模型名称
+     * 获取生成名称
      * @param string $prefix
      * @param string $table
      * @return string
      */
-    protected function getModelName(string $prefix, string $table)
+    protected function getBuildName(string $prefix, string $table)
     {
         return Str::studly(Str::singular(str_replace($prefix, '', $table))) . 'Model';
     }
 
     /**
      * 获取生成内容
-     * @param string $author
      * @param string $name
      * @return string
      */
-    protected function getBuildContent(string $author, string $name)
+    protected function getBuildContent(string $name)
     {
         $str = <<< EOF
 <?php
-/**
- * User: %s
- * Date: %s
- */
-
-namespace App\Common\Models;
+namespace %s;
 
 use Jmhc\Restful\Models\BaseModel;
 
 class %s extends BaseModel
 {}
 EOF;
-        return sprintf($str, $author, date('Y/m/d'), $name);
-    }
-
-    /**
-     * 重写参数
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return [
-            ['db', 'd', InputOption::VALUE_OPTIONAL, 'The generated database name'],
-            ['table', 't', InputOption::VALUE_OPTIONAL, 'Exclude table names, multiple use `,` separated'],
-            ['prefix', 'p', InputOption::VALUE_OPTIONAL, 'Datatable prefixes, which are not prefixed when generating models'],
-            ['force', 'f', InputOption::VALUE_NONE, 'Whether to overwrite an existing file'],
-            ['clear', 'c', InputOption::VALUE_NONE, 'Clear all model files'],
-            ['author', 'a', InputOption::VALUE_OPTIONAL, 'Author\'s name'],
-        ];
+        return sprintf($str, $this->namespace, $name);
     }
 }

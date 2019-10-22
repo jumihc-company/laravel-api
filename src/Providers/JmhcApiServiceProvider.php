@@ -8,6 +8,9 @@ namespace Jmhc\Restful\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Jmhc\Restful\Console\Commands\MakeCommonModel;
+use Jmhc\Restful\Console\Commands\MakeController;
+use Jmhc\Restful\Console\Commands\MakeModel;
+use Jmhc\Restful\Console\Commands\MakeService;
 use Jmhc\Restful\Middleware\AllowCrossDomain;
 use Jmhc\Restful\Middleware\CheckSdl;
 use Jmhc\Restful\Middleware\CheckSignature;
@@ -27,6 +30,9 @@ class JmhcApiServiceProvider extends ServiceProvider
      */
     protected $commands = [
         MakeCommonModel::class,
+        MakeController::class,
+        MakeService::class,
+        MakeModel::class,
     ];
 
     /**
