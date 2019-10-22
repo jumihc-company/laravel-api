@@ -29,7 +29,7 @@ class MakeService extends MakeCommand
 <?php
 namespace %s;
 
-use Jmhc\Restful\Controllers\BaseService;
+use Jmhc\Restful\Services\BaseService;
 
 class %s extends BaseService
 {}
