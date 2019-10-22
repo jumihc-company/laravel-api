@@ -8,6 +8,7 @@ namespace Jmhc\Restful\Handlers;
 
 use ErrorException;
 use Exception;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler;
 use Illuminate\Foundation\Http\Exceptions\MaintenanceModeException;
@@ -86,8 +87,8 @@ class ExceptionHandler extends Handler
                 Env::get('jmhc.db_exception_file_name', 'handle_db.exception'),
                 $e
             );
-        } elseif ($e instanceof ReflectionException || $e instanceof LogicException || $e instanceof RuntimeException) {
-            // 发生异常
+        } elseif ($e instanceof ReflectionException || $e instanceof LogicException || $e instanceof RuntimeException || $e instanceof BindingResolutionException) {
+            // 反射、逻辑、运行、绑定解析异常
             $this->code = ResultCode::SYS_EXCEPTION;
             $this->msg = ResultMsg::SYS_EXCEPTION;
             LogHelper::throwableSave(
