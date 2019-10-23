@@ -159,7 +159,7 @@ php artisan jmhc-api:make-model test -m index
 #### rabbitmq
 > 需要继承  `Jmhc\Restful\Jobs\BaseRabbitmq` 
 >
-> 详细配置查看：`vendor/vladimir-yuldashev/laravel-queue-rabbitmq/config/rabbitmq.php`
+> 详细配置查看：[rabbitmq.conf](https://github.com/vyuldashev/laravel-queue-rabbitmq/blob/master/config/rabbitmq.php)
 
 ### 异常处理
 
