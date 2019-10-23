@@ -182,9 +182,12 @@ class MakeCommonModel extends Command
      */
     protected function clearAll(array $tables)
     {
+        // 清除确认
+        $this->confirm('Confirm delete all models?', false);
+
         $files = glob($this->dir . '*.php');
         $tables = array_map(function ($v) {
-            return $this->getModelName($this->prefix, $v) . '.php';
+            return $this->getBuildName($this->prefix, $v) . '.php';
         }, $tables);
 
         foreach ($files as $file) {
