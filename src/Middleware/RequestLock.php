@@ -49,6 +49,6 @@ class RequestLock
      */
     protected function getLockKey(Request $request)
     {
-        return md5('lock' . $request->ip() . $request->path() . json_encode($request->params));
+        return 'lock' . md5($request->ip() . $request->path() . json_encode($request->params));
     }
 }
