@@ -24,9 +24,9 @@ class FileSize
     ];
 
     /**
-     * 获取尺寸
+     * 获取尺寸(字节)
      * @param $size
-     * @return float
+     * @return int
      */
     public static function get($size)
     {
@@ -51,6 +51,6 @@ class FileSize
             }
         }
 
-        return round($num * pow(1024, $pos));
+        return intval($num * pow(1024, $pos));
     }
 }

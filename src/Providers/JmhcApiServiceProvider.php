@@ -55,7 +55,7 @@ class JmhcApiServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        // 注册路由
+        // 注册路由中间件
         $this->registerRouteMiddleware();
 
         // 注册命令

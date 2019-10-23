@@ -14,26 +14,31 @@ use Jmhc\Restful\Utils\Collection;
 trait RequestInfoTrait
 {
     /**
+     * app实例
      * @var Application
      */
     protected $app;
 
     /**
+     * 请求实例
      * @var Request
      */
     protected $request;
 
     /**
+     * 请求参数
      * @var Collection
      */
     protected $params;
 
     /**
+     * 请求ip
      * @var string
      */
     protected $ip;
 
     /**
+     * 请求平台 PlatformInfo::other
      * @var string
      */
     protected $platform;
