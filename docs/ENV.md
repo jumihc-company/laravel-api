@@ -30,6 +30,15 @@ JMHC_REQUEST_KEY=
 ```
 
 ```apacheconfig
+# 请求锁定driver
+JMHC_REQUEST_LOCK_DRIVER=redis
+# 请求锁定时间（秒）
+JMHC_REQUEST_LOCK_SECONDS=5
+# 请求锁定提示
+JMHC_REQUEST_LOCK_TIPS=请求已被锁定，请稍后重试~
+```
+
+```apacheconfig
 # token加密方法
 JMHC_TOKEN_METHOD=AES256
 # token加密iv
@@ -37,9 +46,9 @@ JMHC_TOKEN_IV=
 # token加密key
 JMHC_TOKEN_KEY=
 # token截取位置
-JMHC_TOKEN_POS=
+JMHC_TOKEN_POS=5
 # token截取长度
-JMHC_TOKEN_LEN=
+JMHC_TOKEN_LEN=6
 # 允许刷新时间（秒） 3天
 JMHC_TOKEN_ALLOW_REFRESH_TIME=259200
 # 提示刷新时间（秒） 2天
@@ -100,7 +109,7 @@ RABBITMQ_LOGIN=guest
 # rabbitmq登录密码
 RABBITMQ_PASSWORD=guest
 # rabbitmq队列
-RABBITMQ_QUEUE=
+RABBITMQ_QUEUE=default
 # rabbitmq交换机
-RABBITMQ_EXCHANGE_NAME=
+RABBITMQ_EXCHANGE_NAME=null
 ```
