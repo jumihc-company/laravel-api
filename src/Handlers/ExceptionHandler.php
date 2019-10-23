@@ -8,6 +8,7 @@ namespace Jmhc\Restful\Handlers;
 
 use ErrorException;
 use Exception;
+use Illuminate\Contracts\Cache\Lock as LockContract;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler;
@@ -55,10 +56,14 @@ class ExceptionHandler extends Handler
 
         // 判断刷新的token是否存在
         if(! empty($request->refreshToken)) {
+            // 刷新token
+            $this->refreshToken($request, $request->refreshToken, $headers);
             // 单设备登录操作
-            $this->sdlHandler($request);
-            $headers[Env::get('jmhc.refresh_token_name', 'token')] = $request->refreshToken;
+            $this->sdlHandler($request, $request->refreshToken);
         }
+
+        // 解除请求锁定
+        $this->unRequestLocke($request);
 
         return response()->json($response, $this->httpCode, $headers, JSON_UNESCAPED_UNICODE);
     }
@@ -121,9 +126,32 @@ class ExceptionHandler extends Handler
     }
 
     /**
+     * 刷新token
+     * @param $request
+     * @param string $token
+     * @param array $headers
+     */
+    protected function refreshToken($request, string $token, array &$headers)
+    {
+        $headers[Env::get('jmhc.refresh_token_name', 'token')] = $token;
+    }
+
+    /**
      * 单设备登录操作
      * @param $request
+     * @param string $token
      */
-    protected function sdlHandler($request)
+    protected function sdlHandler($request, string $token)
     {}
+
+    /**
+     * 解除请求锁定
+     * @param $request
+     */
+    protected function unRequestLocke($request)
+    {
+        if ($request->requestLock instanceof LockContract) {
+            $request->requestLock->forceRelease();
+        }
+    }
 }

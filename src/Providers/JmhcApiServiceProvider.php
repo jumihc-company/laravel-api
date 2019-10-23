@@ -18,6 +18,7 @@ use Jmhc\Restful\Middleware\CheckToken;
 use Jmhc\Restful\Middleware\CheckVersion;
 use Jmhc\Restful\Middleware\ConvertEmptyStringsToNull;
 use Jmhc\Restful\Middleware\ParamsHandler;
+use Jmhc\Restful\Middleware\RequestLock;
 use Jmhc\Restful\Middleware\RequestLog;
 use Jmhc\Restful\Middleware\RequestPlatform;
 use Jmhc\Restful\Middleware\TrimStrings;
@@ -43,6 +44,7 @@ class JmhcApiServiceProvider extends ServiceProvider
         'jmhc.params.handler' => ParamsHandler::class,
         'jmhc.convert.empty.strings.to.null' => ConvertEmptyStringsToNull::class,
         'jmhc.trim.strings' => TrimStrings::class,
+        'jmhc.request.lock' => RequestLock::class,
         'jmhc.request.log' => RequestLog::class,
         'jmhc.request.platform' => RequestPlatform::class,
         'jmhc.check.version' => CheckVersion::class,
