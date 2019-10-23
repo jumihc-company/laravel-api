@@ -20,6 +20,7 @@ class ResultCode
     const TOKEN_INVALID           = 4003;
     const TOKEN_EXPIRE            = 4004;
     const PROHIBIT_LOGIN          = 4005;
+    const REQUEST_LOCKED          = 4006;
     const SYS_EXCEPTION           = 5000;
     const SYS_ERROR               = 5001;
     const OLD_VERSION             = 6000;

@@ -9,6 +9,7 @@ namespace Jmhc\Restful\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Jmhc\Restful\ResultCode;
 use Jmhc\Restful\ResultException;
 use Jmhc\Restful\Traits\ResultThrow;
 use Jmhc\Restful\Utils\Env;
@@ -35,7 +36,8 @@ class RequestLock
 
         if (! $request->requestLock->get()) {
             static::error(
-                Env::get('jmhc.request.lock.tips', '请求已被锁定，请稍后重试~')
+                Env::get('jmhc.request.lock.tips', '请求已被锁定，请稍后重试~'),
+                ResultCode::REQUEST_LOCKED
             );
         }
 

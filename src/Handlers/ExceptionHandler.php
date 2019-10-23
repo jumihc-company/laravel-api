@@ -150,7 +150,8 @@ class ExceptionHandler extends Handler
      */
     protected function unRequestLocke($request)
     {
-        if ($request->requestLock instanceof LockContract) {
+        if ($this->code != ResultCode::REQUEST_LOCKED &&
+            $request->requestLock instanceof LockContract) {
             $request->requestLock->forceRelease();
         }
     }
