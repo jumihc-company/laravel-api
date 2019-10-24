@@ -27,10 +27,10 @@
         "ext-json": "*",
         "ext-openssl": "*",
         "laravel/framework": "^5.0 || ^6.0",
-        "doctrine/dbal": "^2.9",
-        "guzzlehttp/guzzle": "^6.3",
-        "jenssegers/mongodb": "^3.6",
-        "vladimir-yuldashev/laravel-queue-rabbitmq": "^9.1"
+        "doctrine/dbal": "^2.0",
+        "guzzlehttp/guzzle": "^6.0",
+        "jenssegers/mongodb": "^3.0",
+        "vladimir-yuldashev/laravel-queue-rabbitmq": "^9.0"
     },
     "extra": {
         "laravel": {
