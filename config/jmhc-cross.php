@@ -4,6 +4,7 @@
  * Date: 2019/10/17
  */
 
+// 跨域配置
 return [
     'Access-Control-Allow-Credentials' => 'true',
     'Access-Control-Allow-Methods'     => 'GET, POST, PATCH, PUT, DELETE',
