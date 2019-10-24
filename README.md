@@ -2,7 +2,7 @@
 
 使用以下命令安装：
 ```
-composer require jmhc/laravel-api=dev-master
+composer require jmhc/laravel-api
 ```
 发布文件[可选]：
 ```php
@@ -29,9 +29,9 @@ php artisan vendor:publish --tag=jmhc-api-resources
 
 > 需继承 `Jmhc\Restful\Controllers\BaseController`
 
-- 可使用 `Jmhc\Restful\Traits\RequestInfoTrait` 参数
-- 可使用 `Jmhc\Restful\Traits\UserInfoTrait` 参数、方法
-- 可使用 `Jmhc\Restful\Traits\ResourceController` 方法
+- 可使用 `Jmhc\Restful\Traits\RequestInfoTrait` 里的参数
+- 可使用 `Jmhc\Restful\Traits\UserInfoTrait` 里的参数、方法
+- 可使用 `Jmhc\Restful\Traits\ResourceController` 里的方法
 
 ### 模型
 
@@ -39,27 +39,28 @@ php artisan vendor:publish --tag=jmhc-api-resources
 
 > 需继承 `Jmhc\Restful\Models\BaseModel`
 
-- 可使用 `Jmhc\Restful\Traits\ModelTrait` 方法
+- 可使用 `Jmhc\Restful\Traits\ModelTrait` 里的方法
 
 #### 中间表模型
 
 > 需继承 `Jmhc\Restful\Models\BasePivot`
 
-- 可使用 `Jmhc\Restful\Traits\ModelTrait` 方法
+- 可使用 `Jmhc\Restful\Traits\ModelTrait` 里的方法
 
 #### mongodb模型
 
 > 需继承 `Jmhc\Restful\Models\BaseMongo`
 
-- 可使用 `Jmhc\Restful\Traits\ModelTrait` 方法
+- 可使用 `Jmhc\Restful\Traits\ModelTrait` 里的方法
+- 配置参考：[jmhc-mongodb.php](config/jmhc-mongodb.php)
 
 ### 服务层(逻辑层)
 
 > 需继承 `Jmhc\Restful\Services\BaseService`
 
-- 可使用 `Jmhc\Restful\Traits\RequestInfoTrait` 参数
-- 可使用 `Jmhc\Restful\Traits\UserInfoTrait` 参数、方法
-- 可使用 `Jmhc\Restful\Traits\ResourceService` 方法
+- 可使用 `Jmhc\Restful\Traits\RequestInfoTrait` 里的参数
+- 可使用 `Jmhc\Restful\Traits\UserInfoTrait` 里的参数、方法
+- 可使用 `Jmhc\Restful\Traits\ResourceService` 里的方法
 
 ```php
 class TestController extends BaseController
@@ -204,7 +205,7 @@ php artisan jmhc-api:make-model test -m index
 
 > `Jmhc\Restful\Rules\Images`
 
-验证图片字段后缀地址为 `jpeg` , `jpg`, `png`, `bmp`, `gif`, `svg`, `webp`
+验证图片字段后缀地址为 `jpeg` , `jpg` , `png` , `bmp` , `gif` , `svg` , `webp`
 
 如：
 
@@ -227,8 +228,8 @@ php artisan jmhc-api:make-model test -m index
 #### Instance.php
 
 > `Jmhc\Restful\Traits\Instance`
-
-**单例类trait**
+>
+> 单例类 trait
 
 ```php
 // 无构造参数使用
@@ -243,8 +244,8 @@ T::getInstance([
 #### ModelTrait.php
 
 > `Jmhc\Restful\Traits\ModelTrait`
-
-**模型辅助trait**
+>
+> 模型辅助 trait
 
 使用类:
 - `Jmhc\Restful\Models\BaseModel`
@@ -253,15 +254,15 @@ T::getInstance([
 
 #### RedisHandler.php
 
-> Jmhc\Restful\Traits\RedisHandler`
-
-**redis辅助trait**
+> `Jmhc\Restful\Traits\RedisHandler`
+>
+> redis 辅助 trait
 
 #### RequestInfoTrait.php
 
-> Jmhc\Restful\Traits\RequestInfoTrait`
-
-**请求信息绑定**
+> `Jmhc\Restful\Traits\RequestInfoTrait`
+>
+> 请求信息绑定
 
 使用类:
 
@@ -271,14 +272,14 @@ T::getInstance([
 #### ResultThrow.php
 
 > `Jmhc\Restful\Traits\ResultThrow`
-
-**异常抛出辅助**
+>
+> 异常抛出辅助
 
 #### UserInfoTrait.php
 
-> Jmhc\Restful\Traits\UserInfoTrait`
-
-**用户信息绑定**
+> `Jmhc\Restful\Traits\UserInfoTrait`
+>
+> 用户信息绑定
 
 使用类:
 
@@ -289,18 +290,18 @@ T::getInstance([
 
 #### Collection.php
 
-> Jmhc\Restful\Utils\Collection`
-
-**集合，基于 `Illuminate\Support\Collection`**
+> `Jmhc\Restful\Utils\Collection`
+>
+> 集合，基于 `Illuminate\Support\Collection`
 
 - 修改`__get` 魔术方法
 - 新增`__set` , `__isset` , `__unset` 魔术方法
 
 #### Env.php
 
-> Jmhc\Restful\Utils\Env`
-
-**获取环境变量**
+> `Jmhc\Restful\Utils\Env`
+>
+> 获取环境变量
 
 ```php
 // .env
@@ -325,9 +326,9 @@ Env::get('log.a')
 
 #### FileSize.php
 
-> Jmhc\Restful\Utils\FileSize`
-
-**转换文件尺寸**
+> `Jmhc\Restful\Utils\FileSize`
+>
+> 转换文件尺寸
 
 ```php
 // 返回 2097152 字节
@@ -339,17 +340,17 @@ FileSize::get('2g');
 
 #### Log.php
 
-> Jmhc\Restful\Utils\Log`
-
-**文件日志保存**
+> `Jmhc\Restful\Utils\Log`
+>
+> 文件日志保存
 
 - `debug` 日志受环境变量 `LOG_DEBUG` 控制
 
 #### RequestClient.php
 
-> Jmhc\Restful\Utils\RequestClient`
-
-**请求客户端，基于 `GuzzleHttp\Client`**
+> `Jmhc\Restful\Utils\RequestClient`
+>
+> 请求客户端，基于 `GuzzleHttp\Client`
 
 复写构造函数：
 
@@ -358,18 +359,18 @@ FileSize::get('2g');
 
 #### Sdl.php
 
-> Jmhc\Restful\Utils\Sdl`
-
-**单设备登录类**
+> `Jmhc\Restful\Utils\Sdl`
+>
+> 单设备登录类
 
 #### SmsCache.php
 
-> Jmhc\Restful\Utils\SmsCache`
-
-**发送短信缓存类**
+> `Jmhc\Restful\Utils\SmsCache`
+>
+> 发送短信缓存类
 
 #### Token.php
 
-> Jmhc\Restful\Utils\Token`
-
-**令牌相关类**
+> `Jmhc\Restful\Utils\Token`
+>
+> 令牌相关类
