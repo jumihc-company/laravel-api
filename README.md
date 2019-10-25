@@ -196,6 +196,8 @@ php artisan jmhc-api:make-model test -m index
 #### 路由服务提供者
 
 > `Jmhc\Restful\Providers\JmhcRouteServiceProvider`  
+>
+> 默认不启用
 
 - 注册 `base_path('routes')` 下面所有 php 文件到路由
 
