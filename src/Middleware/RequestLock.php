@@ -27,6 +27,11 @@ class RequestLock
      */
     public function handle(Request $request, Closure $next)
     {
+        // 跨域请求
+        if ($request->getMethod() === 'OPTIONS') {
+            return $next($request);
+        }
+
         $request->requestLock = Cache::store(
             Env::get('jmhc.request.lock.driver', 'redis')
         )->lock(
