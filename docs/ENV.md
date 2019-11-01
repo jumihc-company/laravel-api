@@ -67,8 +67,10 @@ JMHC_ERROR_FILE_NAME=handle.error
 ```apacheconfig
 # 请求token名称
 JMHC_REQUEST_TOKEN_NAME=token
-# 请求version名称
+# 请求版本名称
 JMHC_REQUEST_VERSION_NAME=version
+# 请求平台名称
+JMHC_REQUEST_PLATFORM_NAME=request-platform
 # 响应header刷新token名称
 JMHC_REFRESH_TOKEN_NAME=token
 ```

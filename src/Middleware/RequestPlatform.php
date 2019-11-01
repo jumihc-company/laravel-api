@@ -9,6 +9,7 @@ namespace Jmhc\Restful\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Jmhc\Restful\PlatformInfo;
+use Jmhc\Restful\Utils\Env;
 
 class RequestPlatform
 {
@@ -20,16 +21,19 @@ class RequestPlatform
      */
     public function handle(Request $request, Closure $next)
     {
-        // 请求 user_agent
-        $userAgent = $request->server('HTTP_USER_AGENT', '-');
+        // 请求平台
+        $requestPlatform = $this->getRequestPlatform(
+            $request,
+            Env::get('jmhc.request.platform_name', 'request-platform')
+        );
 
         // 所有 user_agent
-        $allUserAgent = PlatformInfo::getAllUserAgent();
+        $allPlatform = PlatformInfo::getAllPlatform();
 
         // 平台
         $platform = PlatformInfo::OTHER;
-        foreach ($allUserAgent as $k => $v) {
-            if (preg_match(sprintf('/(%s)/', $k), $userAgent)) {
+        foreach ($allPlatform as $k => $v) {
+            if (preg_match(sprintf('/(%s)/', $k), $requestPlatform)) {
                 $platform = $v;
                 break;
             }
@@ -39,5 +43,24 @@ class RequestPlatform
         $request->platform = $platform;
 
         return $next($request);
+    }
+
+    /**
+     * 获取请求平台
+     * @param Request $request
+     * @param string $name
+     * @return array|string|null
+     */
+    protected function getRequestPlatform(Request $request, string $name)
+    {
+        $platform = $request->header($name, '-');
+        if (empty($platform)) {
+            $platform = $request->input($name, '-');
+        }
+        if(empty($platform)) {
+            $platform = $request->server('HTTP_USER_AGENT', '-');
+        }
+
+        return $platform;
     }
 }

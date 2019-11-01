@@ -17,7 +17,7 @@ class PlatformInfo
     /**
      * @var array
      */
-    protected static $userAgent = [
+    protected static $platforms = [
         'JmhcAndroid' => self::ANDROID,
         'JmhcIos' => self::IOS,
         'JmhcWeiMp' => self::WEI_MP,
@@ -25,11 +25,11 @@ class PlatformInfo
     ];
 
     /**
-     * 获取所有user-agent
+     * 获取所有平台
      * @return array
      */
-    public static function getAllUserAgent()
+    public static function getAllPlatform()
     {
-        return static::$userAgent;
+        return static::$platforms;
     }
 }
