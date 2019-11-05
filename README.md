@@ -25,6 +25,29 @@ php artisan vendor:publish --tag=jmhc-api-resources
 > 
 > restful参考: [restful](docs/RESTFUL.md)
 
+### 快速使用
+
+#### 中间件
+- 必须注册全局中间件 `Jmhc\Restful\Middleware\ParamsHandler`
+- 可选中间件查看 [中间件列表](### 中间件)
+
+#### 异常处理
+
+- 修改 `App\Exceptions\Handler` 继承的方法为  `Jmhc\Restful\Handlers\ExceptionHandler`
+- 其他异常捕获调用父类 `response()`  方法并重写，参考 `Jmhc\Restful\Handlers\ExceptionHandler->response()`
+
+#### 控制器
+
+- 直接继承 `Jmhc\Restful\Controllers\BaseController`
+
+#### 模型
+
+- 可选继承 `Jmhc\Restful\Models\BaseModel` 、 `Jmhc\Restful\Models\BaseMongo` 、 `Jmhc\Restful\Models\BasePivot` 、 `Jmhc\Restful\Models\UserModel`  、`Jmhc\Restful\Models\VersionModel`
+
+#### 服务层(逻辑层)
+
+- 直接继承 `Jmhc\Restful\Services\BaseService`
+
 ### 控制器
 
 > 需继承 `Jmhc\Restful\Controllers\BaseController`
@@ -166,7 +189,7 @@ php artisan jmhc-api:make-model test -m index
 
 > `App\Exceptions\Handler` 继承 `Jmhc\Restful\Handlers\ExceptionHandler`
 >
-> 其他异常捕获重写 `response()`  方法，参考 `Jmhc\Restful\Handlers\ExceptionHandler->response()`
+> 其他异常捕获调用父类 `response()`  方法并重写，参考 `Jmhc\Restful\Handlers\ExceptionHandler->response()`
 
 ### 服务提供者
 
