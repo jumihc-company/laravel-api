@@ -1,5 +1,3 @@
-[TOC]
-
 ## 安装配置
 
 使用以下命令安装：
@@ -31,7 +29,7 @@ php artisan vendor:publish --tag=jmhc-api-resources
 
 #### 中间件
 - 必须注册全局中间件 `Jmhc\Restful\Middleware\ParamsHandler`
-- 可选中间件查看 [中间件列表](### 中间件)
+- 可选中间件查看中间件列表
 
 #### 异常处理
 
