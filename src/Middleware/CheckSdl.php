@@ -7,8 +7,10 @@
 namespace Jmhc\Restful\Middleware;
 
 use Closure;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request;
 use Jmhc\Restful\ResultCode;
+use Jmhc\Restful\ResultException;
 use Jmhc\Restful\ResultMsg;
 use Jmhc\Restful\Traits\ResultThrow;
 use Jmhc\Restful\Utils\Sdl;
@@ -18,6 +20,14 @@ class CheckSdl
 {
     use ResultThrow;
 
+    /**
+     * 单设备登录
+     * @param Request $request
+     * @param Closure $next
+     * @return mixed
+     * @throws BindingResolutionException
+     * @throws ResultException
+     */
     public function handle(Request $request, Closure $next)
     {
         $token = Token::get();

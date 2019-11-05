@@ -18,8 +18,7 @@ class TrimStrings extends TransformsRequest
     ];
 
     /**
-     * Transform the given value.
-     *
+     * trim请求参数
      * @param  string  $key
      * @param  mixed  $value
      * @return mixed

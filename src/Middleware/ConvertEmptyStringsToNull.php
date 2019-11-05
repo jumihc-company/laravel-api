@@ -9,8 +9,7 @@ namespace Jmhc\Restful\Middleware;
 class ConvertEmptyStringsToNull
 {
     /**
-     * Transform the given value.
-     *
+     * 转换空字符串为null
      * @param  string  $key
      * @param  mixed  $value
      * @return mixed

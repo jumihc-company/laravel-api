@@ -10,6 +10,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Jmhc\Restful\Contracts\Version;
 use Jmhc\Restful\ResultCode;
+use Jmhc\Restful\ResultException;
 use Jmhc\Restful\ResultMsg;
 use Jmhc\Restful\Traits\ResultThrow;
 use Jmhc\Restful\Utils\Env;
@@ -18,6 +19,13 @@ class CheckVersion
 {
     use ResultThrow;
 
+    /**
+     * 验证版本
+     * @param Request $request
+     * @param Closure $next
+     * @return mixed
+     * @throws ResultException
+     */
     public function handle(Request $request, Closure $next)
     {
         // 当前版本

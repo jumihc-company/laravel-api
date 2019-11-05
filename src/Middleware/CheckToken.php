@@ -25,6 +25,14 @@ class CheckToken
 {
     use ResultThrow;
 
+    /**
+     * 验证token
+     * @param Request $request
+     * @param Closure $next
+     * @param bool $force
+     * @return mixed
+     * @throws ResultException
+     */
     public function handle(Request $request, Closure $next, $force = true)
     {
         try {

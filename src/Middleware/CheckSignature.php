@@ -22,8 +22,7 @@ class CheckSignature
     use RedisHandler;
 
     /**
-     * Handle an incoming request.
-     *
+     * 验证签名
      * @param Request $request
      * @param Closure $next
      * @return mixed
