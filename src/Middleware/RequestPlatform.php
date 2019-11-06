@@ -53,12 +53,12 @@ class RequestPlatform
      */
     protected function getRequestPlatform(Request $request, string $name)
     {
-        $platform = $request->header($name, '-');
+        $platform = $request->header($name);
         if (empty($platform)) {
-            $platform = $request->input($name, '-');
+            $platform = $request->input($name);
         }
         if(empty($platform)) {
-            $platform = $request->server('HTTP_USER_AGENT', '-');
+            $platform = $request->server('HTTP_USER_AGENT');
         }
 
         return $platform;
