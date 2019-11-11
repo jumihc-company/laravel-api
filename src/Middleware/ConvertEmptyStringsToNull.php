@@ -6,7 +6,7 @@
 
 namespace Jmhc\Restful\Middleware;
 
-class ConvertEmptyStringsToNull
+class ConvertEmptyStringsToNull extends TransformsRequest
 {
     /**
      * 转换空字符串为null
