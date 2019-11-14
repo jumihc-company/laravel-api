@@ -1,53 +1,52 @@
 ## 目录
 
-- [安装配置](https://github.com/jumihc-compony/laravel-api#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE)
-- [使用说明](https://github.com/jumihc-compony/laravel-api#%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E)
-	- [快速使用](https://github.com/jumihc-compony/laravel-api#%E5%BF%AB%E9%80%9F%E4%BD%BF%E7%94%A8)
-		- [中间件](https://github.com/jumihc-compony/laravel-api#%E4%B8%AD%E9%97%B4%E4%BB%B6)
-		- [异常处理](https://github.com/jumihc-compony/laravel-api#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86)
-		- [控制器](https://github.com/jumihc-compony/laravel-api#%E6%8E%A7%E5%88%B6%E5%99%A8)
-		- [模型](https://github.com/jumihc-compony/laravel-api#%E6%A8%A1%E5%9E%8B)
-		- [服务层(逻辑层)](https://github.com/jumihc-compony/laravel-api#%E6%9C%8D%E5%8A%A1%E5%B1%82%E9%80%BB%E8%BE%91%E5%B1%82)
-	- [控制器](https://github.com/jumihc-compony/laravel-api#%E6%8E%A7%E5%88%B6%E5%99%A8-1)
-	- [模型](https://github.com/jumihc-compony/laravel-api#%E6%A8%A1%E5%9E%8B-1)
-	    - [普通模型](https://github.com/jumihc-compony/laravel-api#%E6%99%AE%E9%80%9A%E6%A8%A1%E5%9E%8B)
-	    - [中间表模型](https://github.com/jumihc-compony/laravel-api#%E4%B8%AD%E9%97%B4%E8%A1%A8%E6%A8%A1%E5%9E%8B)
-	    - [mongodb模型](https://github.com/jumihc-compony/laravel-api#mongodb%E6%A8%A1%E5%9E%8B)
-	- [服务层(逻辑层)](https://github.com/jumihc-compony/laravel-api#%E6%9C%8D%E5%8A%A1%E5%B1%82%E9%80%BB%E8%BE%91%E5%B1%82-1)
-	- [命令行](https://github.com/jumihc-compony/laravel-api#%E5%91%BD%E4%BB%A4%E8%A1%8C)
-	    - [创建公用模型文件](https://github.com/jumihc-compony/laravel-api#%E5%88%9B%E5%BB%BA%E5%85%AC%E7%94%A8%E6%A8%A1%E5%9E%8B%E6%96%87%E4%BB%B6)
-	    - [创建控制器](https://github.com/jumihc-compony/laravel-api#%E5%88%9B%E5%BB%BA%E6%8E%A7%E5%88%B6%E5%99%A8)
-	    - [创建服务层(逻辑层)](https://github.com/jumihc-compony/laravel-api#%E5%88%9B%E5%BB%BA%E6%9C%8D%E5%8A%A1%E5%B1%82%E9%80%BB%E8%BE%91%E5%B1%82)
-	    - [创建模型](https://github.com/jumihc-compony/laravel-api#%E5%88%9B%E5%BB%BA%E6%A8%A1%E5%9E%8B)
-	- [中间件](https://github.com/jumihc-compony/laravel-api#%E4%B8%AD%E9%97%B4%E4%BB%B6-1)
-	- [队列](https://github.com/jumihc-compony/laravel-api#%E9%98%9F%E5%88%97)
-	    - [rabbitmq](https://github.com/jumihc-compony/laravel-api#rabbitmq)
-	- [异常处理](https://github.com/jumihc-compony/laravel-api#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86-1)
-	- [服务提供者](https://github.com/jumihc-compony/laravel-api#%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85)
-	    - [API服务提供者](https://github.com/jumihc-compony/laravel-api#api%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85)
-	    - [队列任务服务提供者](https://github.com/jumihc-compony/laravel-api#%E9%98%9F%E5%88%97%E4%BB%BB%E5%8A%A1%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85)
-	    - [契约服务提供者](https://github.com/jumihc-compony/laravel-api#%E5%A5%91%E7%BA%A6%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85)
-	    - [路由服务提供者](https://github.com/jumihc-compony/laravel-api#%E8%B7%AF%E7%94%B1%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85)
-	- [验证规则](https://github.com/jumihc-compony/laravel-api#%E9%AA%8C%E8%AF%81%E8%A7%84%E5%88%99)
-	    - [Images](https://github.com/jumihc-compony/laravel-api#images)
-	- [模型作用域](https://github.com/jumihc-compony/laravel-api#%E6%A8%A1%E5%9E%8B%E4%BD%9C%E7%94%A8%E5%9F%9F)
-	    - [主键字段倒序](https://github.com/jumihc-compony/laravel-api#%E4%B8%BB%E9%94%AE%E5%AD%97%E6%AE%B5%E5%80%92%E5%BA%8F)
-	- [trait介绍](https://github.com/jumihc-compony/laravel-api#trait%E4%BB%8B%E7%BB%8D)
-	    - [Instance.php](https://github.com/jumihc-compony/laravel-api#instancephp)
-		- [ModelTrait.php](https://github.com/jumihc-compony/laravel-api#modeltraitphp)
-	    - [RedisHandler.php](https://github.com/jumihc-compony/laravel-api#redishandlerphp)
-		- [RequestInfoTrait.php](https://github.com/jumihc-compony/laravel-api#requestinfotraitphp)
-	    - [ResultThrow.php](https://github.com/jumihc-compony/laravel-api#resultthrowphp)
-		- [UserInfoTrait.php](https://github.com/jumihc-compony/laravel-api#userinfotraitphp)
-	- [工具类介绍](https://github.com/jumihc-compony/laravel-api#%E5%B7%A5%E5%85%B7%E7%B1%BB%E4%BB%8B%E7%BB%8D)
-	    - [Collection.php](https://github.com/jumihc-compony/laravel-api#collectionphp)
-	    - [Env.php](https://github.com/jumihc-compony/laravel-api#envphp)
-	    - [FileSize.php](https://github.com/jumihc-compony/laravel-api#filesizephp)
-	    - [Log.php](https://github.com/jumihc-compony/laravel-api#logphp)
-	    - [RequestClient.php](https://github.com/jumihc-compony/laravel-api#requestclientphp)
-	    - [Sdl.php](https://github.com/jumihc-compony/laravel-api#sdlphp)
-	    - [SmsCache.php](https://github.com/jumihc-compony/laravel-api#smscachephp)
-	    - [Token.php](https://github.com/jumihc-compony/laravel-api#tokenphp)
+- [安装配置](#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE)
+- [使用说明](#%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E)
+	- [快速使用](#%E5%BF%AB%E9%80%9F%E4%BD%BF%E7%94%A8)
+		- [中间件](#%E4%B8%AD%E9%97%B4%E4%BB%B6)
+		- [异常处理](#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86)
+		- [控制器](#%E6%8E%A7%E5%88%B6%E5%99%A8)
+		- [模型](#%E6%A8%A1%E5%9E%8B)
+		- [服务层(逻辑层)](#%E6%9C%8D%E5%8A%A1%E5%B1%82%E9%80%BB%E8%BE%91%E5%B1%82)
+	- [控制器](#%E6%8E%A7%E5%88%B6%E5%99%A8-1)
+	- [模型](#%E6%A8%A1%E5%9E%8B-1)
+	    - [普通模型](#%E6%99%AE%E9%80%9A%E6%A8%A1%E5%9E%8B)
+	    - [中间表模型](#%E4%B8%AD%E9%97%B4%E8%A1%A8%E6%A8%A1%E5%9E%8B)
+	    - [mongodb模型](#mongodb%E6%A8%A1%E5%9E%8B)
+	- [服务层(逻辑层)](#%E6%9C%8D%E5%8A%A1%E5%B1%82%E9%80%BB%E8%BE%91%E5%B1%82-1)
+	- [命令行](#%E5%91%BD%E4%BB%A4%E8%A1%8C)
+	    - [创建公用模型文件](#%E5%88%9B%E5%BB%BA%E5%85%AC%E7%94%A8%E6%A8%A1%E5%9E%8B%E6%96%87%E4%BB%B6)
+	    - [创建控制器](#%E5%88%9B%E5%BB%BA%E6%8E%A7%E5%88%B6%E5%99%A8)
+	    - [创建服务层(逻辑层)](#%E5%88%9B%E5%BB%BA%E6%9C%8D%E5%8A%A1%E5%B1%82%E9%80%BB%E8%BE%91%E5%B1%82)
+	    - [创建模型](#%E5%88%9B%E5%BB%BA%E6%A8%A1%E5%9E%8B)
+	- [中间件](#%E4%B8%AD%E9%97%B4%E4%BB%B6-1)
+	- [队列](#%E9%98%9F%E5%88%97)
+	    - [rabbitmq](#rabbitmq)
+	- [异常处理](#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86-1)
+	- [服务提供者](#%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85)
+	    - [API服务提供者](#api%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85)
+	    - [队列任务服务提供者](#%E9%98%9F%E5%88%97%E4%BB%BB%E5%8A%A1%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85)
+	    - [契约服务提供者](#%E5%A5%91%E7%BA%A6%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85)
+	    - [路由服务提供者](#%E8%B7%AF%E7%94%B1%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85)
+	- [验证规则](#%E9%AA%8C%E8%AF%81%E8%A7%84%E5%88%99)
+	    - [Images](#images)
+	- [模型作用域](#%E6%A8%A1%E5%9E%8B%E4%BD%9C%E7%94%A8%E5%9F%9F)
+	    - [主键字段倒序](#%E4%B8%BB%E9%94%AE%E5%AD%97%E6%AE%B5%E5%80%92%E5%BA%8F)
+	- [trait介绍](#trait%E4%BB%8B%E7%BB%8D)
+	    - [InstanceTrait.php](#instancetraitphp)
+		- [ModelTrait.php](#modeltraitphp)
+	    - [RedisHandlerTrait.php](#redishandlertraitphp)
+		- [RequestInfoTrait.php](#requestinfotraitphp)
+	    - [ResultThrowTrait.php](#resultthrowtraitphp)
+		- [UserInfoTrait.php](#userinfotraitphp)
+	- [工具类介绍](#%E5%B7%A5%E5%85%B7%E7%B1%BB%E4%BB%8B%E7%BB%8D)
+	    - [Collection.php](#collectionphp)
+	    - [FileSize.php](#filesizephp)
+	    - [Log.php](#logphp)
+	    - [RequestClient.php](#requestclientphp)
+	    - [Sdl.php](#sdlphp)
+	    - [SmsCache.php](#smscachephp)
+	    - [Token.php](#tokenphp)
 
 ## 安装配置
 
@@ -79,8 +78,8 @@ php artisan vendor:publish --tag=jmhc-api-resources
 ### 快速使用
 
 #### 中间件
-- 必须注册全局中间件 `Jmhc\Restful\Middleware\ParamsHandler`
-- 可选中间件查看[中间件列表](https://github.com/jumihc-compony/laravel-api#%E4%B8%AD%E9%97%B4%E4%BB%B6-1)
+- 必须注册全局中间件 `Jmhc\Restful\Middleware\ParamsHandlerMiddleware`
+- 可选中间件查看[中间件列表](#%E4%B8%AD%E9%97%B4%E4%BB%B6-1)
 
 #### 异常处理
 
@@ -216,17 +215,17 @@ php artisan jmhc-api:make-model test -m index
 
 |   中间件   |   别名   |   用法   |   需要实现的契约或继承模型   |
 | ---- | ---- | ---- | ---- |
-| `Jmhc\Restful\Middleware\AllowCrossDomain` | `jmhc.allow.cross` | 允许跨域 | --- |
-| `Jmhc\Restful\Middleware\ParamsHandler`  | `jmhc.params.handler` | **参数处理** | --- |
-| `Jmhc\Restful\Middleware\ConvertEmptyStringsToNull` | `jmhc.convert.empty.strings.to.null` | 转换空字符串为null | --- |
-| `Jmhc\Restful\Middleware\TrimStrings` | `jmhc.trim.strings` | 清除字符串空格 | --- |
-| `Jmhc\Restful\Middleware\RequestLock` | `jmhc.request.lock` | 请求锁定 | --- |
-| `Jmhc\Restful\Middleware\RequestLog` | `jmhc.request.log` | 记录请求日志(debug) | --- |
-| `Jmhc\Restful\Middleware\RequestPlatform` | `jmhc.request.platform` | 设置请求平台，参考`Jmhc\Restful\PlatformInfo` | --- |
-| `Jmhc\Restful\Middleware\CheckVersion` | `jmhc.check.version` | 检测应用版本 | `Jmhc\Restful\Contracts\Version`<br />`Jmhc\Restful\Models\VersionModel` |
-| `Jmhc\Restful\Middleware\CheckSignature` | `jmhc.check.signature` | 验证请求签名 | --- |
-| `Jmhc\Restful\Middleware\CheckToken` | `jmhc.check.token` | 检测token，设置用户数据 | `Jmhc\Restful\Contracts\User`<br />`Jmhc\Restful\Models\UserModel` |
-| `Jmhc\Restful\Middleware\CheckSdl` | `jmhc.check.sdl` | 单设备登录，需要复写 `Jmhc\Restful\Handlers\ExceptionHandler->sdlHandler()` | --- |
+| `Jmhc\Restful\Middleware\CorsMiddleware` | `jmhc.allow.cors` | 允许跨域 | --- |
+| `Jmhc\Restful\Middleware\ParamsHandlerMiddleware`  | `jmhc.params.handler` | **参数处理** | --- |
+| `Jmhc\Restful\Middleware\ConvertEmptyStringsToNullMiddleware` | `jmhc.convert.empty.strings.to.null` | 转换空字符串为null | --- |
+| `Jmhc\Restful\Middleware\TrimStringsMiddleware` | `jmhc.trim.strings` | 清除字符串空格 | --- |
+| `Jmhc\Restful\Middleware\RequestLockMiddleware` | `jmhc.request.lock` | 请求锁定 | --- |
+| `Jmhc\Restful\Middleware\RequestLogMiddleware` | `jmhc.request.log` | 记录请求日志(debug) | --- |
+| `Jmhc\Restful\Middleware\RequestPlatformMiddleware` | `jmhc.request.platform` | 设置请求平台，参考`Jmhc\Restful\PlatformInfo` | --- |
+| `Jmhc\Restful\Middleware\CheckVersionMiddleware` | `jmhc.check.version` | 检测应用版本 | `Jmhc\Restful\Contracts\VersionModelInterface`<br />`Jmhc\Restful\Models\VersionModel` |
+| `Jmhc\Restful\Middleware\CheckSignatureMiddleware` | `jmhc.check.signature` | 验证请求签名 | --- |
+| `Jmhc\Restful\Middleware\CheckTokenMiddleware` | `jmhc.check.token` | 检测token，设置用户数据 | `Jmhc\Restful\Contracts\UserModelInterface`<br />`Jmhc\Restful\Models\UserModel` |
+| `Jmhc\Restful\Middleware\CheckSdlMiddleware` | `jmhc.check.sdl` | 单设备登录，需要复写 `Jmhc\Restful\Handlers\ExceptionHandler->sdlHandler()` | --- |
 
 
 ### 队列
@@ -264,8 +263,8 @@ php artisan jmhc-api:make-model test -m index
 
 > `Jmhc\Restful\Providers\JmhcContractServiceProvider`  
 
-- 绑定契约 `Jmhc\Restful\Contracts\User` 实现
-- 绑定契约 `Jmhc\Restful\Contracts\Version` 实现
+- 绑定契约 `Jmhc\Restful\Contracts\UserModelInterface` 实现
+- 绑定契约 `Jmhc\Restful\Contracts\VersionModelInterface` 实现
 
 #### 路由服务提供者
 
@@ -279,7 +278,7 @@ php artisan jmhc-api:make-model test -m index
 
 #### Images
 
-> `Jmhc\Restful\Rules\Images`
+> `Jmhc\Restful\Rules\ImagesRule`
 
 验证图片字段后缀地址为 `jpeg` , `jpg` , `png` , `bmp` , `gif` , `svg` , `webp`
 
@@ -301,9 +300,9 @@ php artisan jmhc-api:make-model test -m index
 
 ### trait介绍
 
-#### Instance.php
+#### InstanceTrait.php
 
-> `Jmhc\Restful\Traits\Instance`
+> `Jmhc\Restful\Traits\InstanceTrait`
 >
 > 单例类 trait
 
@@ -328,11 +327,11 @@ T::getInstance([
 - `Jmhc\Restful\Models\BasePivot`
 - `Jmhc\Restful\Models\BaseMongo`
 
-#### RedisHandler.php
+#### RedisHandlerTrait.php
 
-> `Jmhc\Restful\Traits\RedisHandler`
+> `Jmhc\Restful\Traits\RedisHandlerTrait`
 >
-> redis 辅助 trait
+> redis 操作句柄 trait
 
 #### RequestInfoTrait.php
 
@@ -345,9 +344,9 @@ T::getInstance([
 - `Jmhc\Restful\Controllers\BaseController`
 - `Jmhc\Restful\Services\BaseService`
 
-#### ResultThrow.php
+#### ResultThrowTrait.php
 
-> `Jmhc\Restful\Traits\ResultThrow`
+> `Jmhc\Restful\Traits\ResultThrowTrait`
 >
 > 异常抛出辅助
 
@@ -372,33 +371,6 @@ T::getInstance([
 
 - 修改`__get` 魔术方法
 - 新增`__set` , `__isset` , `__unset` 魔术方法
-
-#### Env.php
-
-> `Jmhc\Restful\Utils\Env`
->
-> 获取环境变量
-
-```php
-// .env
-LOG_A=a
-LOG_B=a
-LOG_A_B=ab
-
-// 返回log开头环境变量数组
-Env::get('log')
-// 返回
-[
-	'a' => 'a',
-	'b' => 'b',
-	'a_b' => 'ab',
-]
-
-// 返回LOG_A环境变量
-Env::get('log.a')
-// 返回
-'a'
-```
 
 #### FileSize.php
 

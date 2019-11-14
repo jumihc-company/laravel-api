@@ -42,14 +42,14 @@
 
 ## 请求令牌
 
-传递请求 `token` 使用以下方式：
+传递请求令牌使用以下方式：
 
 ```php
 // header头: bearer token
-Authorization:Bearer 1234
+Authorization: Bearer 1234
 
 // header头
-token:1234
+Token: 1234
 
 // 请求参数
 ?token=1234
@@ -57,14 +57,39 @@ token:1234
 
 ## 请求版本
 
-传递请求 `version` 使用以下方式：
+传递请求版本使用以下方式：
 
 ```php
 // header头
-version:1234
+Version: 1234
 
 // 请求参数
 ?version=1234
+```
+
+## 请求平台
+
+> 平台关键字查看 [PlatformInfo.php](blob/master/src/PlatformInfo.php)
+
+传递请求平台使用以下方式：
+
+```php
+// header头
+User-Agent: JmhcAndroid/1.0
+// header头
+Request-Platform: JmhcAndroid/1.0
+
+// 请求参数
+?request-platform=JmhcAndroid%2F1.0
+```
+
+## 响应刷新后的令牌
+
+> 此时应该更新下本地储存的令牌
+
+```php
+// header头
+Refresh-Token: 1234
 ```
 
 ## 返回数据格式

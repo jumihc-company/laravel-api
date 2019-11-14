@@ -7,50 +7,53 @@
 namespace Jmhc\Restful\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Jmhc\Restful\Console\Commands\MakeCommonModel;
-use Jmhc\Restful\Console\Commands\MakeController;
-use Jmhc\Restful\Console\Commands\MakeModel;
-use Jmhc\Restful\Console\Commands\MakeService;
-use Jmhc\Restful\Middleware\AllowCrossDomain;
-use Jmhc\Restful\Middleware\CheckSdl;
-use Jmhc\Restful\Middleware\CheckSignature;
-use Jmhc\Restful\Middleware\CheckToken;
-use Jmhc\Restful\Middleware\CheckVersion;
-use Jmhc\Restful\Middleware\ConvertEmptyStringsToNull;
-use Jmhc\Restful\Middleware\ParamsHandler;
-use Jmhc\Restful\Middleware\RequestLock;
-use Jmhc\Restful\Middleware\RequestLog;
-use Jmhc\Restful\Middleware\RequestPlatform;
-use Jmhc\Restful\Middleware\TrimStrings;
-use Jmhc\Restful\Utils\Env;
+use Jmhc\Restful\Console\Commands\MakeCommonModelCommand;
+use Jmhc\Restful\Console\Commands\MakeControllerCommand;
+use Jmhc\Restful\Console\Commands\MakeModelCommand;
+use Jmhc\Restful\Console\Commands\MakeServiceCommand;
+use Jmhc\Restful\Middleware\CheckSdlMiddleware;
+use Jmhc\Restful\Middleware\CheckSignatureMiddleware;
+use Jmhc\Restful\Middleware\CheckTokenMiddleware;
+use Jmhc\Restful\Middleware\CheckVersionMiddleware;
+use Jmhc\Restful\Middleware\ConvertEmptyStringsToNullMiddleware;
+use Jmhc\Restful\Middleware\CorsMiddleware;
+use Jmhc\Restful\Middleware\ParamsHandlerMiddleware;
+use Jmhc\Restful\Middleware\RequestLockMiddleware;
+use Jmhc\Restful\Middleware\RequestLogMiddleware;
+use Jmhc\Restful\Middleware\RequestPlatformMiddleware;
+use Jmhc\Restful\Middleware\TrimStringsMiddleware;
 
+/**
+ * Api 服务提供者
+ * @package Jmhc\Restful\Providers
+ */
 class JmhcApiServiceProvider extends ServiceProvider
 {
     /**
      * @var array
      */
     protected $commands = [
-        MakeCommonModel::class,
-        MakeController::class,
-        MakeService::class,
-        MakeModel::class,
+        MakeCommonModelCommand::class,
+        MakeControllerCommand::class,
+        MakeServiceCommand::class,
+        MakeModelCommand::class,
     ];
 
     /**
      * @var array
      */
     protected $routeMiddleware = [
-        'jmhc.allow.cross' => AllowCrossDomain::class,
-        'jmhc.params.handler' => ParamsHandler::class,
-        'jmhc.convert.empty.strings.to.null' => ConvertEmptyStringsToNull::class,
-        'jmhc.trim.strings' => TrimStrings::class,
-        'jmhc.request.lock' => RequestLock::class,
-        'jmhc.request.log' => RequestLog::class,
-        'jmhc.request.platform' => RequestPlatform::class,
-        'jmhc.check.version' => CheckVersion::class,
-        'jmhc.check.signature' => CheckSignature::class,
-        'jmhc.check.token' => CheckToken::class,
-        'jmhc.check.sdl' => CheckSdl::class,
+        'jmhc.cors' => CorsMiddleware::class,
+        'jmhc.params.handler' => ParamsHandlerMiddleware::class,
+        'jmhc.convert.empty.strings.to.null' => ConvertEmptyStringsToNullMiddleware::class,
+        'jmhc.trim.strings' => TrimStringsMiddleware::class,
+        'jmhc.request.lock' => RequestLockMiddleware::class,
+        'jmhc.request.log' => RequestLogMiddleware::class,
+        'jmhc.request.platform' => RequestPlatformMiddleware::class,
+        'jmhc.check.version' => CheckVersionMiddleware::class,
+        'jmhc.check.signature' => CheckSignatureMiddleware::class,
+        'jmhc.check.token' => CheckTokenMiddleware::class,
+        'jmhc.check.sdl' => CheckSdlMiddleware::class,
     ];
 
     public function boot()
@@ -84,19 +87,16 @@ class JmhcApiServiceProvider extends ServiceProvider
      */
     protected function mergeConfig()
     {
-        // 合并cross配置
+        // 合并api配置
         $this->mergeConfigFrom(
-            jmhc_api_config_path('jmhc-cross.php'),
-            'jmhc-cross'
+            jmhc_api_config_path('jmhc-api.php'),
+            'jmhc-api'
         );
 
         // 合并mongodb配置
         $this->mergeConfigFrom(
             jmhc_api_config_path('jmhc-mongodb.php'),
-            sprintf(
-                'database.connections.%s',
-                Env::get('mongodb.connection', 'mongodb')
-            )
+            'database.connections.mongodb'
         );
     }
 
@@ -107,7 +107,7 @@ class JmhcApiServiceProvider extends ServiceProvider
     {
         // 发布配置文件
         $this->publishes([
-            jmhc_api_config_path('jmhc-cross.php') => config_path('jmhc-cross.php'),
+            jmhc_api_config_path('jmhc-api.php') => config_path('jmhc-api.php'),
         ], 'jmhc-api-config');
 
         // 发布迁移文件
@@ -122,7 +122,7 @@ class JmhcApiServiceProvider extends ServiceProvider
 
         // 发布所有文件
         $this->publishes([
-            jmhc_api_config_path('jmhc-cross.php') => config_path('jmhc-cross.php'),
+            jmhc_api_config_path('jmhc-api.php') => config_path('jmhc-api.php'),
             jmhc_api_database_path('migrations') => database_path('migrations'),
             jmhc_api_resource_path('lang') => resource_path('lang'),
         ], 'jmhc-api');

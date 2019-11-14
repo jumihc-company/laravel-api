@@ -6,6 +6,10 @@
 
 namespace Jmhc\Restful\Utils\Cipher;
 
+/**
+ * 运行加密
+ * @package Jmhc\Restful\Utils\Cipher
+ */
 class Runtime extends Base
 {
     /**

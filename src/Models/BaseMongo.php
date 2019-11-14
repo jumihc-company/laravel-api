@@ -7,11 +7,15 @@
 namespace Jmhc\Restful\Models;
 
 use Jenssegers\Mongodb\Eloquent\Model;
-use Jmhc\Restful\Contracts\ConstAttribute;
+use Jmhc\Restful\Contracts\ConstAttributeInterface;
 use Jmhc\Restful\Traits\ModelTrait;
-use Jmhc\Restful\Utils\Env;
 
-class BaseMongo extends Model implements ConstAttribute
+/**
+ * 基础 mongo 模型
+ * @method ModelTrait initialize()
+ * @package Jmhc\Restful\Models
+ */
+class BaseMongo extends Model implements ConstAttributeInterface
 {
     use ModelTrait;
 
@@ -25,9 +29,7 @@ class BaseMongo extends Model implements ConstAttribute
     {
         // 设置链接名称
         if (empty($this->connection)) {
-            $this->setConnection(
-                Env::get('mongodb.connection','mongodb')
-            );
+            $this->setConnection('mongodb');
         }
 
         // 设置表名称

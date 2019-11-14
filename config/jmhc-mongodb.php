@@ -4,16 +4,14 @@
  * Date: 2019/10/18
  */
 
-use Jmhc\Restful\Utils\Env;
-
 return [
     'driver'   => 'mongodb',
-    'host'     => Env::get('mongodb.host', 'mongo'),
-    'port'     => Env::get('mongodb.port', 27017),
-    'database' => Env::get('mongodb.database', 'mongo'),
-    'username' => Env::get('mongodb.username', ''),
-    'password' => Env::get('mongodb.password', ''),
+    'host'     => env('MONGODB_HOST', 'mongo'),
+    'port'     => env('MONGODB_PORT', 27017),
+    'database' => env('MONGODB_DATABASE', 'mongo'),
+    'username' => env('MONGODB_USERNAME', ''),
+    'password' => env('MONGODB_PASSWORD', ''),
     'options'  => [
-        'database' => Env::get('mongodb.auth_database', 'admin'),
+        'database' => env('MONGODB_AUTH_DATABASE', 'admin'),
     ]
 ];

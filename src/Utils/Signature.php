@@ -6,6 +6,10 @@
 
 namespace Jmhc\Restful\Utils;
 
+/**
+ * 签名
+ * @package Jmhc\Restful\Utils
+ */
 class Signature
 {
     /**

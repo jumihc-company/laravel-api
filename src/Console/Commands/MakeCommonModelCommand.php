@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Throwable;
 
-class MakeCommonModel extends Command
+class MakeCommonModelCommand extends Command
 {
     /**
      * @var string

@@ -9,6 +9,10 @@ namespace Jmhc\Restful\Providers;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Route;
 
+/**
+ * 路由服务提供者
+ * @package Jmhc\Restful\Providers
+ */
 class JmhcRouteServiceProvider extends RouteServiceProvider
 {
     public function map()

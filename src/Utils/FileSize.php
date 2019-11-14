@@ -8,6 +8,10 @@ namespace Jmhc\Restful\Utils;
 
 use InvalidArgumentException;
 
+/**
+ * 文件大小
+ * @package Jmhc\Restful\Utils
+ */
 class FileSize
 {
     const MATCH_NUM = 3;

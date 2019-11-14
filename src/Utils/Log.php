@@ -9,6 +9,10 @@ namespace Jmhc\Restful\Utils;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Jmhc\Restful\Utils\Log\FileHandler;
 
+/**
+ * 日志
+ * @package Jmhc\Restful\Utils
+ */
 class Log
 {
     /**

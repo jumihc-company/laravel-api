@@ -10,29 +10,24 @@ use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Jmhc\Restful\Contracts\User;
+use Jmhc\Restful\Contracts\UserModelInterface;
+use Jmhc\Restful\Exceptions\ResultException;
 use Jmhc\Restful\Models\UserModel;
 use Jmhc\Restful\ResultCode;
-use Jmhc\Restful\ResultException;
 use Jmhc\Restful\ResultMsg;
-use Jmhc\Restful\Traits\ResultThrow;
+use Jmhc\Restful\Traits\ResultThrowTrait;
 use Jmhc\Restful\Utils\Collection;
-use Jmhc\Restful\Utils\Env;
 use Jmhc\Restful\Utils\Helper;
 use Jmhc\Restful\Utils\Token;
 
-class CheckToken
+/**
+ * 检测令牌中间件
+ * @package Jmhc\Restful\Middleware
+ */
+class CheckTokenMiddleware
 {
-    use ResultThrow;
+    use ResultThrowTrait;
 
-    /**
-     * 验证token
-     * @param Request $request
-     * @param Closure $next
-     * @param bool $force
-     * @return mixed
-     * @throws ResultException
-     */
     public function handle(Request $request, Closure $next, $force = true)
     {
         try {
@@ -43,7 +38,7 @@ class CheckToken
                 // 用户信息
                 $request->userInfo = new Collection();
             } else {
-                static::error(
+                $this->error(
                     $e->getMessage(),
                     $e->getCode(),
                     $e->getData(),
@@ -64,13 +59,11 @@ class CheckToken
     protected function check(Request $request)
     {
         // token
-        $token = Token::get(
-            Env::get('jmhc.request.token_name', 'token')
-        );
+        $token = Token::get();
 
         // 判断token是否存在
         if (empty($token)) {
-            static::error(ResultMsg::TOKEN_NO_EXISTS, ResultCode::TOKEN_NO_EXISTS);
+            $this->error(ResultMsg::TOKEN_NO_EXISTS, ResultCode::TOKEN_NO_EXISTS);
         }
 
         // 解析token
@@ -80,22 +73,22 @@ class CheckToken
         $verify = Token::verify($parse);
         if ($verify !== true) {
             [$code, $msg] = $verify;
-            static::error($msg, $code);
+            $this->error($msg, $code);
         }
 
         // 解析[加密字符, 加密时间]
         [$id, $time] = $parse;
 
         // 判断token是否有效
-        $info = app()->get(User::class)->getInfoById($id);
+        $info = app()->get(UserModelInterface::class)->getInfoById($id);
         if (empty($info)) {
-            static::error(ResultMsg::TOKEN_INVALID, ResultCode::TOKEN_INVALID);
+            $this->error(ResultMsg::TOKEN_INVALID, ResultCode::TOKEN_INVALID);
         } elseif ($info->status != UserModel::YES) {
-            static::error(ResultMsg::PROHIBIT_LOGIN, ResultCode::PROHIBIT_LOGIN);
+            $this->error(ResultMsg::PROHIBIT_LOGIN, ResultCode::PROHIBIT_LOGIN);
         }
 
         // 判断是否刷新token
-        $noticeTime = Env::get('jmhc.token.notice_refresh_time', 0);
+        $noticeTime = config('jmhc-api.token.notice_refresh_time', 0);
         if ((time() - $time) >= $noticeTime) {
             // 设置刷新的token
             $request->refreshToken = Token::create($id);

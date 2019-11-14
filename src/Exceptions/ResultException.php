@@ -1,13 +1,17 @@
 <?php
 /**
  * User: YL
- * Date: 2019/10/16
+ * Date: 2019/11/14
  */
 
-namespace Jmhc\Restful;
+namespace Jmhc\Restful\Exceptions;
 
 use Exception;
 
+/**
+ * 请求结果异常
+ * @package Jmhc\Restful\Exceptions
+ */
 class ResultException extends Exception
 {
     protected $data;

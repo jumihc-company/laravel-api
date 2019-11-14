@@ -6,17 +6,17 @@
 
 namespace Jmhc\Restful\Console\Commands;
 
-class MakeController extends MakeCommand
+class MakeServiceCommand extends MakeCommand
 {
     /**
      * @var string
      */
-    protected $command = 'jmhc-api:make-controller';
+    protected $command = 'jmhc-api:make-service';
 
     /**
      * @var string
      */
-    protected $argumentName = 'Controller';
+    protected $argumentName = 'Service';
 
     /**
      * 获取生成内容
@@ -29,9 +29,9 @@ class MakeController extends MakeCommand
 <?php
 namespace %s;
 
-use Jmhc\Restful\Controllers\BaseController;
+use Jmhc\Restful\Services\BaseService;
 
-class %s extends BaseController
+class %s extends BaseService
 {}
 EOF;
         return sprintf($str, $this->namespace, $name);

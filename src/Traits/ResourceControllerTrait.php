@@ -6,7 +6,11 @@
 
 namespace Jmhc\Restful\Traits;
 
-trait ResourceController
+/**
+ * 资源控制器方法
+ * @package Jmhc\Restful\Traits
+ */
+trait ResourceControllerTrait
 {
     protected $service;
 

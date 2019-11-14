@@ -7,19 +7,15 @@
 namespace Jmhc\Restful\Middleware;
 
 use Closure;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request;
 use Jmhc\Restful\Utils\LogHelper;
 
-class RequestLog
+/**
+ * 请求日志中间件
+ * @package Jmhc\Restful\Middleware
+ */
+class RequestLogMiddleware
 {
-    /**
-     * 请求日志
-     * @param Request $request
-     * @param Closure $next
-     * @return mixed
-     * @throws BindingResolutionException
-     */
     public function handle(Request $request, Closure $next)
     {
         // 记录请求日志

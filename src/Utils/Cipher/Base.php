@@ -6,44 +6,48 @@
 
 namespace Jmhc\Restful\Utils\Cipher;
 
+use Jmhc\Restful\Traits\InstanceTrait;
+
+/**
+ * 加密基类
+ * @package Jmhc\Restful\Utils\Cipher
+ */
 abstract class Base
 {
-    protected static $instance;
+    use InstanceTrait;
 
-    // 传入配置
+    /**
+     * 配置信息
+     * @var array
+     */
     protected $config;
 
-    // 加密方法
+    /**
+     * 加密方法
+     * @var string
+     */
     protected $method;
-    // iv
+
+    /**
+     * 加密向量
+     * @var string
+     */
     protected $iv;
-    // 加密key
+
+    /**
+     * 加密key
+     * @var string
+     */
     protected $key;
 
     abstract public function encrypt(string $str);
 
     abstract public function decrypt(string $str);
 
-    private function __construct(array $config)
+    public function __construct(array $config)
     {
-        $this->config = $config;
-
         // 初始化
         $this->initialize();
-    }
-
-    /**
-     * getInstance
-     * @param array $config
-     * @return static
-     */
-    public static function getInstance(array $config)
-    {
-        if (is_null(static::$instance)) {
-            static::$instance = new static($config);
-        }
-
-        return static::$instance;
     }
 
     /**
@@ -51,8 +55,16 @@ abstract class Base
      */
     protected function initialize()
     {
-        $this->method = $this->config['method'];
-        $this->iv     = $this->config['iv'];
-        $this->key    = $this->config['key'];
+        // 场景
+        $scene = strtolower(class_basename(get_called_class()));
+        // 配置
+        $this->config = config(
+            sprintf('jmhc-api.%s', $scene),
+            []
+        );
+
+        $this->method = $this->config['method'] ?? '';
+        $this->iv     = $this->config['iv'] ?? '';
+        $this->key    = $this->config['key'] ?? '';
     }
 }

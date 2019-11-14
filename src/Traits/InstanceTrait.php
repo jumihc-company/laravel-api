@@ -9,7 +9,11 @@ namespace Jmhc\Restful\Traits;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Jmhc\Restful\Utils\Helper;
 
-trait Instance
+/**
+ * 单例类 trait
+ * @package Jmhc\Restful\Traits
+ */
+trait InstanceTrait
 {
     /**
      * getInstance

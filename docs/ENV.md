@@ -1,4 +1,13 @@
 ```apacheconfig
+# 反射、逻辑、运行异常文件名称
+JMHC_EXCEPTION_FILE_NAME=handle.exception
+# 数据库查询异常文件名称
+JMHC_DB_EXCEPTION_FILE_NAME=handle_db.exception
+# 错误文件名称
+JMHC_ERROR_FILE_NAME=handle.error
+```
+
+```apacheconfig
 # 是否允许保存debug日志
 JMHC_LOG_DEBUG=true
 # 日志保存路径
@@ -10,27 +19,44 @@ JMHC_LOG_MAX_FILES=0
 ```
 
 ```apacheconfig
+# 运行调试模式,true:不加密
+JMHC_RUNTIME_DEBUG=true
+# 运行加密方法
+JMHC_RUNTIME_METHOD=AES-128-CBC
+# 运行加密向量
+JMHC_RUNTIME_IV=
+# 运行加密秘钥
+JMHC_RUNTIME_KEY=
+```
+
+```apacheconfig
+# 令牌加密方法
+JMHC_TOKEN_METHOD=AES256
+# 令牌加密向量
+JMHC_TOKEN_IV=
+# 令牌加密秘钥
+JMHC_TOKEN_KEY=
+# 令牌填充位置
+JMHC_TOKEN_POS=5
+# 令牌填充长度
+JMHC_TOKEN_LEN=6
+# 令牌允许刷新时间（秒） 3天
+JMHC_TOKEN_ALLOW_REFRESH_TIME=259200
+# 令牌提示刷新时间（秒） 2天
+JMHC_TOKEN_NOTICE_REFRESH_TIME=172800
+```
+
+```apacheconfig
 # 是否检测签名
 JMHC_CHECK_SIGNATURE=false
 # 签名秘钥
 JMHC_SIGNATURE_KEY=
-# 时间戳过期时间（秒）
-JMHC_TIMESTAMP_TIMEOUT=60
+# 签名时间戳超时（秒）
+JMHC_SIGNATURE_TIMESTAMP_TIMEOUT=60
 ```
 
 ```apacheconfig
-# 请求调试模式,true:不加密
-JMHC_REQUEST_DEBUG=true
-# 请求加密方法
-JMHC_REQUEST_METHOD=AES-128-CBC
-# 请求加密iv
-JMHC_REQUEST_IV=
-# 请求加密key
-JMHC_REQUEST_KEY=
-```
-
-```apacheconfig
-# 请求锁定driver
+# 请求锁定驱动
 JMHC_REQUEST_LOCK_DRIVER=redis
 # 请求锁定时间（秒）
 JMHC_REQUEST_LOCK_SECONDS=5
@@ -39,50 +65,11 @@ JMHC_REQUEST_LOCK_TIPS=请求已被锁定，请稍后重试~
 ```
 
 ```apacheconfig
-# token加密方法
-JMHC_TOKEN_METHOD=AES256
-# token加密iv
-JMHC_TOKEN_IV=
-# token加密key
-JMHC_TOKEN_KEY=
-# token截取位置
-JMHC_TOKEN_POS=5
-# token截取长度
-JMHC_TOKEN_LEN=6
-# 允许刷新时间（秒） 3天
-JMHC_TOKEN_ALLOW_REFRESH_TIME=259200
-# 提示刷新时间（秒） 2天
-JMHC_TOKEN_NOTICE_REFRESH_TIME=172800
-```
-
-```apacheconfig
-# 反射、逻辑、运行异常文件名称
-JMHC_EXCEPTION_FILE_NAME=handle.exception
-# 数据库查询异常文件名称
-JMHC_DB_EXCEPTION_FILE_NAME=handle_db.exception
-# 错误文件名称
-JMHC_ERROR_FILE_NAME=handle.error
-```
-
-```apacheconfig
-# 请求token名称
-JMHC_REQUEST_TOKEN_NAME=token
-# 请求版本名称
-JMHC_REQUEST_VERSION_NAME=version
-# 请求平台名称
-JMHC_REQUEST_PLATFORM_NAME=request-platform
-# 响应header刷新token名称
-JMHC_REFRESH_TOKEN_NAME=token
-```
-
-```apacheconfig
 # 单设备登录临时缓存过期时间（秒）
 JMHC_SDL_TMP_EXPIRE=10
 ```
 
 ```apacheconfig
-# mongodb链接名称
-MONGODB_CONNECTION=mongodb
 # mongodb链接地址
 MONGODB_HOST=mongo
 # mongodb链接端口
@@ -98,8 +85,6 @@ MONGODB_AUTH_DATABASE=admin
 ```
 
 ```apacheconfig
-# rabbitmq链接名称
-RABBITMQ_CONNECTION=rabbitmq
 # rabbitmq工作方式
 RABBITMQ_WORKER=default
 # rabbitmq链接地址

@@ -7,18 +7,22 @@
 namespace Jmhc\Restful\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Jmhc\Restful\Contracts\User;
-use Jmhc\Restful\Contracts\Version;
+use Jmhc\Restful\Contracts\UserModelInterface;
+use Jmhc\Restful\Contracts\VersionModelInterface;
 use Jmhc\Restful\Models\UserModel;
 use Jmhc\Restful\Models\VersionModel;
 
+/**
+ * 契约服务提供者
+ * @package Jmhc\Restful\Providers
+ */
 class JmhcContractServiceProvider extends ServiceProvider
 {
     public function boot()
     {
         // 用户模型
-        app()->instance(User::class, new UserModel());
+        app()->instance(UserModelInterface::class, new UserModel());
         // 版本模型
-        app()->instance(Version::class, new VersionModel());
+        app()->instance(VersionModelInterface::class, new VersionModel());
     }
 }

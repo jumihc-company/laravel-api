@@ -8,6 +8,10 @@ namespace Jmhc\Restful\Utils;
 
 use Illuminate\Support\Arr;
 
+/**
+ * 辅助
+ * @package Jmhc\Restful\Utils
+ */
 class Helper
 {
     /**
@@ -96,10 +100,10 @@ class Helper
      */
     public static function getTestEnv(string $test, string $product, $default = null)
     {
-        $res = Env::get($test);
+        $res = env($test);
 
         if (! $res) {
-            $res = Env::get($product, $default);
+            $res = env($product, $default);
         }
 
         return $res;

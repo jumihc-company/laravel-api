@@ -6,9 +6,22 @@
 
 namespace Jmhc\Restful\Utils\Cipher;
 
+/**
+ * 令牌加密
+ * @package Jmhc\Restful\Utils\Cipher
+ */
 class Token extends Base
 {
+    /**
+     * 填充位置
+     * @var int
+     */
     protected $pos;
+
+    /**
+     * 填充长度
+     * @var int
+     */
     protected $len;
 
     /**

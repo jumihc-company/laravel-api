@@ -9,11 +9,15 @@ namespace Jmhc\Restful\Scopes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
-use Jmhc\Restful\Traits\Instance;
+use Jmhc\Restful\Traits\InstanceTrait;
 
+/**
+ * 主键倒序作用域
+ * @package Jmhc\Restful\Scopes
+ */
 class PrimaryKeyDescScope implements Scope
 {
-    use Instance;
+    use InstanceTrait;
 
     /**
      * Apply the scope to a given Eloquent query builder.

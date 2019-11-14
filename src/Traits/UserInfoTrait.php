@@ -9,6 +9,10 @@ namespace Jmhc\Restful\Traits;
 use Illuminate\Database\Eloquent\Model;
 use Jmhc\Restful\Utils\Collection;
 
+/**
+ * 用户信息
+ * @package Jmhc\Restful\Traits
+ */
 trait UserInfoTrait
 {
     /**

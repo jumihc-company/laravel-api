@@ -6,17 +6,17 @@
 
 namespace Jmhc\Restful\Console\Commands;
 
-class MakeModel extends MakeCommand
+class MakeControllerCommand extends MakeCommand
 {
     /**
      * @var string
      */
-    protected $command = 'jmhc-api:make-model';
+    protected $command = 'jmhc-api:make-controller';
 
     /**
      * @var string
      */
-    protected $argumentName = 'Model';
+    protected $argumentName = 'Controller';
 
     /**
      * 获取生成内容
@@ -29,7 +29,9 @@ class MakeModel extends MakeCommand
 <?php
 namespace %s;
 
-class %s
+use Jmhc\Restful\Controllers\BaseController;
+
+class %s extends BaseController
 {}
 EOF;
         return sprintf($str, $this->namespace, $name);

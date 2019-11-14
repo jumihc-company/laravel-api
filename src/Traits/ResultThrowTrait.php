@@ -6,11 +6,15 @@
 
 namespace Jmhc\Restful\Traits;
 
+use Jmhc\Restful\Exceptions\ResultException;
 use Jmhc\Restful\ResultCode;
-use Jmhc\Restful\ResultException;
 use Jmhc\Restful\ResultMsg;
 
-trait ResultThrow
+/**
+ * 抛出结果异常
+ * @package Jmhc\Restful\Traits
+ */
+trait ResultThrowTrait
 {
     /**
      * 抛出成功异常
@@ -19,9 +23,9 @@ trait ResultThrow
      * @param int $code
      * @throws ResultException
      */
-    protected static function success($data = null, string $msg = ResultMsg::SUCCESS, int $code = ResultCode::SUCCESS)
+    protected function success($data = null, string $msg = ResultMsg::SUCCESS, int $code = ResultCode::SUCCESS)
     {
-        static::abort($code, $msg, $data);
+        $this->abort($code, $msg, $data);
     }
 
     /**
@@ -32,9 +36,9 @@ trait ResultThrow
      * @param int $httpCode
      * @throws ResultException
      */
-    protected static function error(string $msg, int $code = ResultCode::ERROR, $data = null, int $httpCode = ResultCode::HTTP_ERROR_CODE)
+    protected function error(string $msg, int $code = ResultCode::ERROR, $data = null, int $httpCode = ResultCode::HTTP_ERROR_CODE)
     {
-        static::abort($code, $msg, $data, $httpCode);
+        $this->abort($code, $msg, $data, $httpCode);
     }
 
     /**
@@ -42,9 +46,9 @@ trait ResultThrow
      * @param string $msg
      * @throws ResultException
      */
-    protected static function noData(string $msg = ResultMsg::NO_DATA)
+    protected function noData(string $msg = ResultMsg::NO_DATA)
     {
-        static::abort(ResultCode::NO_DATA, $msg, null);
+        $this->abort(ResultCode::NO_DATA, $msg, null);
     }
 
     /**
@@ -55,7 +59,7 @@ trait ResultThrow
      * @param int $httpCode
      * @throws ResultException
      */
-    private static function abort(int $code, string $msg, $data, int $httpCode = ResultCode::HTTP_SUCCESS_CODE)
+    private function abort(int $code, string $msg, $data, int $httpCode = ResultCode::HTTP_SUCCESS_CODE)
     {
         throw new ResultException($code, $msg, $data, $httpCode);
     }

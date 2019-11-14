@@ -10,7 +10,11 @@ use Closure;
 use Illuminate\Http\Request;
 use Jmhc\Restful\Utils\Cipher;
 
-class ParamsHandler
+/**
+ * 请求参数处理中间件
+ * @package Jmhc\Restful\Middleware
+ */
+class ParamsHandlerMiddleware
 {
     /**
      * 过滤键
@@ -18,12 +22,6 @@ class ParamsHandler
      */
     protected $filter = ['sign', 'nonce', 'timestamp', 'file'];
 
-    /**
-     * 处理请求参数
-     * @param  Request  $request
-     * @param  Closure  $next
-     * @return mixed
-     */
     public function handle(Request $request, Closure $next)
     {
         // 是否直接存在json格式的params参数

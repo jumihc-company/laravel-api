@@ -10,21 +10,16 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Jmhc\Restful\ResultCode;
-use Jmhc\Restful\ResultException;
-use Jmhc\Restful\Traits\ResultThrow;
-use Jmhc\Restful\Utils\Env;
+use Jmhc\Restful\Traits\ResultThrowTrait;
 
-class RequestLock
+/**
+ * 请求锁定中间件
+ * @package Jmhc\Restful\Middleware
+ */
+class RequestLockMiddleware
 {
-    use ResultThrow;
+    use ResultThrowTrait;
 
-    /**
-     * 请求锁定
-     * @param Request $request
-     * @param Closure $next
-     * @return mixed
-     * @throws ResultException
-     */
     public function handle(Request $request, Closure $next)
     {
         // 跨域请求
@@ -33,15 +28,15 @@ class RequestLock
         }
 
         $request->requestLock = Cache::store(
-            Env::get('jmhc.request.lock.driver', 'redis')
+            config('jmhc-api.request_lock.driver', 'redis')
         )->lock(
             $this->getLockKey($request),
-            Env::get('jmhc.request.lock.seconds', 5)
+            config('jmhc-api.request_lock.seconds', 5)
         );
 
         if (! $request->requestLock->get()) {
-            static::error(
-                Env::get('jmhc.request.lock.tips', '请求已被锁定，请稍后重试~'),
+            $this->error(
+                config('jmhc-api.request_lock.tips', '请求已被锁定，请稍后重试~'),
                 ResultCode::REQUEST_LOCKED
             );
         }
@@ -56,6 +51,6 @@ class RequestLock
      */
     protected function getLockKey(Request $request)
     {
-        return 'lock' . md5($request->ip() . $request->path() . json_encode($request->params));
+        return 'lock-' . md5($request->ip() . $request->path() . json_encode($request->params));
     }
 }

@@ -6,7 +6,11 @@
 
 namespace Jmhc\Restful\Contracts;
 
-interface ConstAttribute
+/**
+ * 常用常量属性
+ * @package Jmhc\Restful\Contracts
+ */
+interface ConstAttributeInterface
 {
     const YES = 1;
     const NO = 0;

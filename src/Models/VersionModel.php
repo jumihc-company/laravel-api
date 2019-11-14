@@ -8,9 +8,13 @@ namespace Jmhc\Restful\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Jmhc\Restful\Contracts\Version;
+use Jmhc\Restful\Contracts\VersionModelInterface;
 
-class VersionModel extends BaseModel implements Version
+/**
+ * 版本模型
+ * @package Jmhc\Restful\Models
+ */
+class VersionModel extends BaseModel implements VersionModelInterface
 {
     protected function getIsForceAttribute($value)
     {
@@ -21,7 +25,7 @@ class VersionModel extends BaseModel implements Version
      * 获取最新版本信息
      * @return Builder|Model|object|null
      */
-    public static function getLastInfo()
+    public function getLastInfo()
     {
         return static::query()
             ->first();

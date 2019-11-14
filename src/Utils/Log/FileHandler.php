@@ -7,18 +7,21 @@
 namespace Jmhc\Restful\Utils\Log;
 
 use Illuminate\Support\Str;
-use Jmhc\Restful\Traits\Instance;
-use Jmhc\Restful\Utils\Env;
+use Jmhc\Restful\Traits\InstanceTrait;
 use Jmhc\Restful\Utils\FileSize;
 
+/**
+ * 文件日志处理器
+ * @package Jmhc\Restful\Utils\Log
+ */
 class FileHandler
 {
-    use Instance;
+    use InstanceTrait;
 
     /**
      * @var string
      */
-    protected $path = '/storage/logs/';
+    protected $path = 'storage/logs';
 
     /**
      * @var string
@@ -48,7 +51,7 @@ class FileHandler
     {
         // 设置配置值
         $this->setConfig(array_merge(
-            Env::get('jmhc.log', []),
+            config('jmhc-api.log', []),
             $config
         ));
 
@@ -63,7 +66,7 @@ class FileHandler
      */
     public function isDebug()
     {
-        return Env::get('jmhc.log.debug', true);
+        return config('jmhc-api.log.debug', true);
     }
 
     /**

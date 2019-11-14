@@ -7,9 +7,12 @@
 namespace Jmhc\Restful\Jobs;
 
 use Jmhc\Restful\Utils\Collection;
-use Jmhc\Restful\Utils\Env;
 use Jmhc\Restful\Utils\LogHelper;
 
+/**
+ * 基础 rabbitmq 任务
+ * @package Jmhc\Restful\Jobs
+ */
 abstract class BaseRabbitmq extends BaseJob
 {
     /**
@@ -20,9 +23,9 @@ abstract class BaseRabbitmq extends BaseJob
     public function __construct(array $msg)
     {
         // 链接名称
-        $this->connection = Env::get('rabbitmq.connection', 'rabbitmq');
+        $this->connection = 'rabbitmq';
         // 队列名称
-        $this->queue = Env::get('rabbitmq.queue', 'default');
+        $this->queue = config('rabbitmq.queue', 'default');
         // 消息
         $this->msg = new Collection($msg);
 

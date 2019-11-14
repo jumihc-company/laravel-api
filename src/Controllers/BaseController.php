@@ -8,15 +8,17 @@ namespace Jmhc\Restful\Controllers;
 
 use Illuminate\Routing\Controller;
 use Jmhc\Restful\Traits\RequestInfoTrait;
-use Jmhc\Restful\Traits\ResourceController;
+use Jmhc\Restful\Traits\ResourceControllerTrait;
 use Jmhc\Restful\Traits\UserInfoTrait;
 
 /**
+ * 基础控制器
  * @method UserInfoTrait initialize()
+ * @package Jmhc\Restful\Controllers
  */
 class BaseController extends Controller
 {
-    use ResourceController;
+    use ResourceControllerTrait;
     use RequestInfoTrait;
     use UserInfoTrait;
 

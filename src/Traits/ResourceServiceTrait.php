@@ -6,7 +6,11 @@
 
 namespace Jmhc\Restful\Traits;
 
-trait ResourceService
+/**
+ * 资源服务方法
+ * @package Jmhc\Restful\Traits
+ */
+trait ResourceServiceTrait
 {
     public function index()
     {}

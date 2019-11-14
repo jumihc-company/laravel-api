@@ -7,13 +7,15 @@
 namespace Jmhc\Restful\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
-use Jmhc\Restful\Contracts\ConstAttribute;
+use Jmhc\Restful\Contracts\ConstAttributeInterface;
 use Jmhc\Restful\Traits\ModelTrait;
 
 /**
+ * 基础中间模型
  * @method ModelTrait initialize()
+ * @package Jmhc\Restful\Models
  */
-class BasePivot extends Pivot implements ConstAttribute
+class BasePivot extends Pivot implements ConstAttributeInterface
 {
     use ModelTrait;
 

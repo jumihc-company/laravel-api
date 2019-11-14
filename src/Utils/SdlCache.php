@@ -7,13 +7,17 @@
 namespace Jmhc\Restful\Utils;
 
 use Illuminate\Redis\Connections\Connection;
-use Jmhc\Restful\Traits\Instance;
-use Jmhc\Restful\Traits\RedisHandler;
+use Jmhc\Restful\Traits\InstanceTrait;
+use Jmhc\Restful\Traits\RedisHandlerTrait;
 
-class Sdl
+/**
+ * 单设备缓存
+ * @package Jmhc\Restful\Utils
+ */
+class SdlCache
 {
-    use Instance;
-    use RedisHandler;
+    use InstanceTrait;
+    use RedisHandlerTrait;
 
     /**
      * @var Connection
@@ -25,7 +29,7 @@ class Sdl
 
     public function __construct()
     {
-        $this->handler = static::getPhpRedisHandler();
+        $this->handler = $this->getPhpRedisHandler();
     }
 
     /**
@@ -54,7 +58,7 @@ class Sdl
 
         // 旧token存在
         if (! empty($oldToken)) {
-            $this->handler->setex($this->getCacheTmpKey($id), Env::get('jmhc.sdl_tmp_expire', 10), $oldToken);
+            $this->handler->setex($this->getCacheTmpKey($id), config('jmhc-api.sdl_tmp_expire', 10), $oldToken);
         }
 
         return true;

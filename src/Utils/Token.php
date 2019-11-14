@@ -6,10 +6,15 @@
 
 namespace Jmhc\Restful\Utils;
 
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Jmhc\Restful\ResultCode;
 use Jmhc\Restful\ResultMsg;
 use Jmhc\Restful\Utils\Cipher\Token as TokenCipher;
 
+/**
+ * 令牌加密
+ * @package Jmhc\Restful\Utils
+ */
 class Token
 {
     /**
@@ -21,7 +26,7 @@ class Token
     {
         $token = request()->bearerToken();
         if (empty($token)) {
-            $token = request()->header($name, '');
+            $token = request()->header(ucwords($name, '-'), '');
         }
         if (empty($token)) {
             $token = request()->input($name, '');
@@ -34,11 +39,12 @@ class Token
      * 创建token
      * @param int $id
      * @return string
+     * @throws BindingResolutionException
      */
     public static function create(int $id)
     {
         $id .= ':' . time();
-        return TokenCipher::getInstance(Env::get('jmhc.token', []))
+        return TokenCipher::getInstance()
             ->encrypt($id);
     }
 
@@ -47,10 +53,11 @@ class Token
      * [加密数据, 加密时间]
      * @param string $token
      * @return array
+     * @throws BindingResolutionException
      */
     public static function parse(string $token)
     {
-        $str = TokenCipher::getInstance(Env::get('jmhc.token', []))
+        $str = TokenCipher::getInstance()
             ->decrypt($token);
         return explode(':', $str);
     }
@@ -68,7 +75,7 @@ class Token
         }
 
         // 验证token是否有效
-        $refreshTime = Env::get('jmhc.token.allow_refresh_time', 0);
+        $refreshTime = config('jmhc-api.token.allow_refresh_time', 0);
         if (($parse[1] + $refreshTime) < time()) {
             return [ResultCode::TOKEN_EXPIRE, ResultMsg::TOKEN_EXPIRE];
         }

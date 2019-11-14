@@ -9,7 +9,11 @@ namespace Jmhc\Restful\Middleware;
 use Illuminate\Foundation\Http\Middleware\TransformsRequest as BaseTransformsRequest;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
-class TransformsRequest extends BaseTransformsRequest
+/**
+ * 转换请求参数中间件
+ * @package Jmhc\Restful\Middleware
+ */
+class TransformsRequestMiddleware extends BaseTransformsRequest
 {
     protected function clean($request)
     {

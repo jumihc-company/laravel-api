@@ -6,19 +6,20 @@
 
 namespace Jmhc\Restful\Middleware;
 
-class TrimStrings extends TransformsRequest
+/**
+ * trim 请求参数中间件
+ * @package Jmhc\Restful\Middleware
+ */
+class TrimStringsMiddleware extends TransformsRequestMiddleware
 {
     /**
-     * The attributes that should not be trimmed.
-     *
+     * 不需要 trim 的字段
      * @var array
      */
-    protected $except = [
-        //
-    ];
+    protected $except = [];
 
     /**
-     * trim请求参数
+     * trim 请求参数
      * @param  string  $key
      * @param  mixed  $value
      * @return mixed

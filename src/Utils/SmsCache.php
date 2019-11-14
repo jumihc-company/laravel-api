@@ -7,13 +7,17 @@
 namespace Jmhc\Restful\Utils;
 
 use Illuminate\Contracts\Redis\Connection;
-use Jmhc\Restful\Traits\Instance;
-use Jmhc\Restful\Traits\RedisHandler;
+use Jmhc\Restful\Traits\InstanceTrait;
+use Jmhc\Restful\Traits\RedisHandlerTrait;
 
+/**
+ * 短信缓存
+ * @package Jmhc\Restful\Utils
+ */
 class SmsCache
 {
-    use Instance;
-    use RedisHandler;
+    use InstanceTrait;
+    use RedisHandlerTrait;
 
     /**
      * @var Connection
@@ -74,7 +78,7 @@ class SmsCache
             $this->validTime = $validTime;
         }
 
-        $this->handler = static::getPhpRedisHandler();
+        $this->handler = $this->getPhpRedisHandler();
     }
 
     /**

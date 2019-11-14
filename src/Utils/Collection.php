@@ -9,6 +9,10 @@ namespace Jmhc\Restful\Utils;
 use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Support\HigherOrderCollectionProxy;
 
+/**
+ * 集合
+ * @package Jmhc\Restful\Utils
+ */
 class Collection extends BaseCollection
 {
     public function __get($key)

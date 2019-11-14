@@ -9,25 +9,22 @@ namespace Jmhc\Restful\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Jmhc\Restful\PlatformInfo;
-use Jmhc\Restful\Utils\Env;
 
-class RequestPlatform
+/**
+ * 请求平台中间件
+ * @package Jmhc\Restful\Middleware
+ */
+class RequestPlatformMiddleware
 {
-    /**
-     * 请求平台
-     * @param Request $request
-     * @param Closure $next
-     * @return mixed
-     */
     public function handle(Request $request, Closure $next)
     {
         // 请求平台
         $requestPlatform = $this->getRequestPlatform(
             $request,
-            Env::get('jmhc.request.platform_name', 'request-platform')
+            'request-platform'
         );
 
-        // 所有 user_agent
+        // 所有平台信息
         $allPlatform = PlatformInfo::getAllPlatform();
 
         // 平台
@@ -53,7 +50,7 @@ class RequestPlatform
      */
     protected function getRequestPlatform(Request $request, string $name)
     {
-        $platform = $request->header($name);
+        $platform = $request->header(ucwords($name, '-'));
         if (empty($platform)) {
             $platform = $request->input($name);
         }

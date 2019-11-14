@@ -9,6 +9,10 @@ namespace Jmhc\Restful\Utils;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Throwable;
 
+/**
+ * 日志辅助
+ * @package Jmhc\Restful\Utils
+ */
 class LogHelper
 {
     /**

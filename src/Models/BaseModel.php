@@ -7,14 +7,16 @@
 namespace Jmhc\Restful\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Jmhc\Restful\Contracts\ConstAttribute;
+use Jmhc\Restful\Contracts\ConstAttributeInterface;
 use Jmhc\Restful\Scopes\PrimaryKeyDescScope;
 use Jmhc\Restful\Traits\ModelTrait;
 
 /**
+ * 基础模型
  * @method ModelTrait initialize()
+ * @package Jmhc\Restful\Models
  */
-class BaseModel extends Model implements ConstAttribute
+class BaseModel extends Model implements ConstAttributeInterface
 {
     use ModelTrait;
 

@@ -7,11 +7,15 @@
 namespace Jmhc\Restful\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
-use Jmhc\Restful\Traits\Instance;
+use Jmhc\Restful\Traits\InstanceTrait;
 
-class Images implements Rule
+/**
+ * 图片后缀验证规则
+ * @package Jmhc\Restful\Rules
+ */
+class ImagesRule implements Rule
 {
-    use Instance;
+    use InstanceTrait;
 
     protected $images = ['jpeg', 'jpg', 'png', 'bmp', 'gif', 'svg', 'webp'];
 

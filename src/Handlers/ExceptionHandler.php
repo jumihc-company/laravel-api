@@ -13,11 +13,10 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler;
 use Illuminate\Foundation\Http\Exceptions\MaintenanceModeException;
+use Jmhc\Restful\Exceptions\ResultException;
 use Jmhc\Restful\ResultCode;
-use Jmhc\Restful\ResultException;
 use Jmhc\Restful\ResultMsg;
 use Jmhc\Restful\Utils\Cipher;
-use Jmhc\Restful\Utils\Env;
 use Jmhc\Restful\Utils\LogHelper;
 use LogicException;
 use ReflectionException;
@@ -26,6 +25,10 @@ use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
+/**
+ * 异常处理
+ * @package Jmhc\Restful\Handlers
+ */
 class ExceptionHandler extends Handler
 {
     protected $code = ResultCode::ERROR;
@@ -89,7 +92,7 @@ class ExceptionHandler extends Handler
             $this->code = ResultCode::SYS_EXCEPTION;
             $this->msg = ResultMsg::SYS_EXCEPTION;
             LogHelper::throwableSave(
-                Env::get('jmhc.db_exception_file_name', 'handle_db.exception'),
+                config('jmhc-api.db_exception_file_name', 'handle_db.exception'),
                 $e
             );
         } elseif ($e instanceof ReflectionException || $e instanceof LogicException || $e instanceof RuntimeException || $e instanceof BindingResolutionException) {
@@ -97,7 +100,7 @@ class ExceptionHandler extends Handler
             $this->code = ResultCode::SYS_EXCEPTION;
             $this->msg = ResultMsg::SYS_EXCEPTION;
             LogHelper::throwableSave(
-                Env::get('jmhc.exception_file_name', 'handle.exception'),
+                config('jmhc-api.exception_file_name', 'handle.exception'),
                 $e
             );
         } elseif ($e instanceof FatalThrowableError || $e instanceof ErrorException) {
@@ -105,7 +108,7 @@ class ExceptionHandler extends Handler
             $this->code = ResultCode::SYS_ERROR;
             $this->msg = ResultMsg::SYS_ERROR;
             LogHelper::throwableSave(
-                Env::get('jmhc.error_file_name', 'handle.error'),
+                config('jmhc-api.error_file_name', 'handle.error'),
                 $e
             );
         }
@@ -133,7 +136,7 @@ class ExceptionHandler extends Handler
      */
     protected function refreshToken($request, string $token, array &$headers)
     {
-        $headers[Env::get('jmhc.refresh_token_name', 'token')] = $token;
+        $headers['Refresh-Token'] = $token;
     }
 
     /**

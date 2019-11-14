@@ -6,23 +6,25 @@
 
 namespace Jmhc\Restful\Services;
 
-use Jmhc\Restful\Contracts\ConstAttribute;
-use Jmhc\Restful\Traits\Instance;
-use Jmhc\Restful\Traits\RedisHandler;
+use Jmhc\Restful\Contracts\ConstAttributeInterface;
+use Jmhc\Restful\Traits\InstanceTrait;
+use Jmhc\Restful\Traits\RedisHandlerTrait;
 use Jmhc\Restful\Traits\RequestInfoTrait;
-use Jmhc\Restful\Traits\ResourceService;
-use Jmhc\Restful\Traits\ResultThrow;
+use Jmhc\Restful\Traits\ResourceServiceTrait;
+use Jmhc\Restful\Traits\ResultThrowTrait;
 use Jmhc\Restful\Traits\UserInfoTrait;
 
 /**
+ * 基础服务
  * @method UserInfoTrait initialize()
+ * @package Jmhc\Restful\Services
  */
-class BaseService implements ConstAttribute
+class BaseService implements ConstAttributeInterface
 {
-    use Instance;
-    use ResultThrow;
-    use RedisHandler;
-    use ResourceService;
+    use InstanceTrait;
+    use ResultThrowTrait;
+    use RedisHandlerTrait;
+    use ResourceServiceTrait;
     use RequestInfoTrait;
     use UserInfoTrait;
 

@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\ServiceProvider;
 use Jmhc\Restful\Utils\LogHelper;
 
+/**
+ * 任务服务提供者
+ * @package Jmhc\Restful\Providers
+ */
 class JmhcJobServiceProvider extends ServiceProvider
 {
     public function boot()

@@ -11,22 +11,26 @@ use Illuminate\Redis\RedisManager;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Redis;
 
-trait RedisHandler
+/**
+ * Redis 操作句柄 trait
+ * @package Jmhc\Restful\Traits
+ */
+trait RedisHandlerTrait
 {
     /**
-     * 获取redis操作句柄
+     * 获取 redis 操作句柄
      * @return Connection
      */
-    protected static function getRedisHandler()
+    protected function getRedisHandler()
     {
         return Redis::connection();
     }
 
     /**
-     * 获取无前缀redis操作句柄
+     * 获取无前缀 redis 操作句柄
      * @return Connection
      */
-    protected static function getNoPrefixRedisHandler()
+    protected function getNoPrefixRedisHandler()
     {
         $id = 'redis.no.prefix';
 
@@ -46,10 +50,10 @@ trait RedisHandler
     }
 
     /**
-     * 获取phpredis驱动的操作句柄
-     * @return Connection
+     * 获取 phpredis 驱动的操作句柄
+     * @return Connection|\Redis
      */
-    public static function getPhpRedisHandler()
+    public function getPhpRedisHandler()
     {
         $id = 'php.redis';
 
@@ -66,10 +70,10 @@ trait RedisHandler
     }
 
     /**
-     * 获取无前缀phpredis驱动的操作句柄
-     * @return Connection
+     * 获取无前缀 phpredis 驱动的操作句柄
+     * @return Connection|\Redis
      */
-    public static function getNoPrefixPhpRedisHandler()
+    public function getNoPrefixPhpRedisHandler()
     {
         $id = 'php.redis.no.prefix';
 

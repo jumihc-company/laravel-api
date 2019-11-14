@@ -7,11 +7,15 @@
 namespace Jmhc\Restful\Utils;
 
 use GuzzleHttp\Client;
-use Jmhc\Restful\Traits\Instance;
+use Jmhc\Restful\Traits\InstanceTrait;
 
+/**
+ * 请求客户端
+ * @package Jmhc\Restful\Utils
+ */
 class RequestClient extends Client
 {
-    use Instance;
+    use InstanceTrait;
 
     public function __construct(array $config = [])
     {

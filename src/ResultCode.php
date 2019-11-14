@@ -6,6 +6,10 @@
 
 namespace Jmhc\Restful;
 
+/**
+ * 请求结果状态码
+ * @package Jmhc\Restful
+ */
 class ResultCode
 {
     const HTTP_SUCCESS_CODE        = 200;

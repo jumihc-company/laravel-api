@@ -11,6 +11,10 @@ use Illuminate\Http\Request;
 use Jmhc\Restful\PlatformInfo;
 use Jmhc\Restful\Utils\Collection;
 
+/**
+ * 请求信息
+ * @package Jmhc\Restful\Traits
+ */
 trait RequestInfoTrait
 {
     /**

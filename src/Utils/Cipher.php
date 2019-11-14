@@ -6,9 +6,13 @@
 
 namespace Jmhc\Restful\Utils;
 
-use Illuminate\Http\Request;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Jmhc\Restful\Utils\Cipher\Runtime;
 
+/**
+ * 运行加、解密
+ * @package Jmhc\Restful\Utils
+ */
 class Cipher
 {
     /**
@@ -20,11 +24,12 @@ class Cipher
      * 请求
      * @param $params
      * @return string
+     * @throws BindingResolutionException
      */
     public static function request($params)
     {
         if (static::isExec()) {
-            return Runtime::getInstance(static::getConfig())
+            return Runtime::getInstance()
                 ->decrypt($params);
         }
 
@@ -35,11 +40,12 @@ class Cipher
      * 响应
      * @param array $data
      * @return array|string
+     * @throws BindingResolutionException
      */
     public static function response(array $data)
     {
         if (static::isExec()) {
-            return Runtime::getInstance(static::getConfig())
+            return Runtime::getInstance()
                 ->encrypt(json_encode($data));
         }
 
@@ -52,22 +58,9 @@ class Cipher
      */
     protected static function isExec()
     {
-        return ! Env::get(
-            'jmhc.request.debug',
+        return ! config(
+            'jmhc-api.runtime.debug',
             true
         );
-    }
-
-    /**
-     * 获取配置
-     * @return array
-     */
-    protected static function getConfig()
-    {
-        if (empty(static::$config)) {
-            static::$config = Env::get('jmhc.request', []);
-        }
-
-        return static::$config;
     }
 }

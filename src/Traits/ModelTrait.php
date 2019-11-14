@@ -11,6 +11,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Throwable;
 
+/**
+ * 模型辅助
+ * @package Jmhc\Restful\Traits
+ */
 trait ModelTrait
 {
     public function __construct(array $attributes = [])

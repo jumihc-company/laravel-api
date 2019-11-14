@@ -6,6 +6,10 @@
 
 namespace Jmhc\Restful;
 
+/**
+ * 请求结果消息
+ * @package Jmhc\Restful
+ */
 class ResultMsg
 {
     const SUCCESS                 = 'success';
