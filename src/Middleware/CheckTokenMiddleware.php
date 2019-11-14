@@ -7,6 +7,7 @@
 namespace Jmhc\Restful\Middleware;
 
 use Closure;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -55,6 +56,7 @@ class CheckTokenMiddleware
      * @param Request $request
      * @return Builder|Model|object|null
      * @throws ResultException
+     * @throws BindingResolutionException
      */
     protected function check(Request $request)
     {

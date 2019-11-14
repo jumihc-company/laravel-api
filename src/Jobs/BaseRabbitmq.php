@@ -16,6 +16,7 @@ use Jmhc\Restful\Utils\LogHelper;
 abstract class BaseRabbitmq extends BaseJob
 {
     /**
+     * 消息
      * @var Collection
      */
     protected $msg;

@@ -16,11 +16,6 @@ use Jmhc\Restful\Utils\Cipher\Runtime;
 class Cipher
 {
     /**
-     * @var array
-     */
-    protected static $config;
-
-    /**
      * 请求
      * @param $params
      * @return string

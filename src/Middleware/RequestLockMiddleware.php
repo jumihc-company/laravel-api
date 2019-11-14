@@ -27,6 +27,7 @@ class RequestLockMiddleware
             return $next($request);
         }
 
+        // 请求锁定对象实例
         $request->requestLock = Cache::store(
             config('jmhc-api.request_lock.driver', 'redis')
         )->lock(
