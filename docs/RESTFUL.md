@@ -69,7 +69,7 @@ Version: 1234
 
 ## 请求平台
 
-> 平台关键字查看 [PlatformInfo.php](blob/master/src/PlatformInfo.php)
+> 平台关键字查看 [PlatformInfo.php](https://github.com/jumihc-compony/laravel-api/blob/master/src/PlatformInfo.php)
 
 传递请求平台使用以下方式：
 
