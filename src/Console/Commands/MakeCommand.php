@@ -8,6 +8,7 @@ namespace Jmhc\Restful\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -126,8 +127,8 @@ abstract class MakeCommand extends Command
         $this->argumentName = $this->argument('name');
 
         // 命令选项
-        $this->optionDir = $this->option('dir');
-        $this->optionModule = $this->option('module');
+        $this->optionDir = $this->filterOptionDir($this->option('dir'));
+        $this->optionModule = ucfirst($this->option('module'));
         $this->optionForce = $this->option('force');
         $this->optionSuffix = $this->option('suffix');
     }
@@ -142,14 +143,34 @@ abstract class MakeCommand extends Command
         $dir = $this->defaultDir;
         if ($this->optionDir) {
             $dir = $this->getDirStr($this->filterDir($this->optionDir));
+            // 路径不存在实体后缀
+            if (! preg_match(sprintf('/[(%ss\/)(%s)]$/i', $this->entityName, $this->entityName), $dir)) {
+                $dir .= $this->entityName . 's/';
+            }
         }
 
         // 模块存在
         if ($this->optionModule) {
-            $dir .= $this->filterStr($this->optionModule);
+            $dir = preg_replace(
+                    sprintf('/%ss\/$/i', $this->entityName),
+                    '',
+                    $this->optionDir
+                ) . $this->filterStr($this->optionModule) . '/' . $this->entityName . 's/';
         }
 
-        return $dir . $this->entityName . 's';
+        return $dir;
+    }
+
+    /**
+     * 过滤选项路径
+     * @param string $dir
+     * @return string
+     */
+    protected function filterOptionDir(string $dir)
+    {
+        return implode('/', $this->filterDir(
+                ucfirst(trim($dir, '/')) . '/'
+            )) . '/';
     }
 
     /**
@@ -250,30 +271,53 @@ abstract class MakeCommand extends Command
         // 创建参数
         $arguments = [
             'name' => $name,
-            '--dir' => $this->optionDir,
             '--module' => $this->optionModule,
             '--force' => $this->optionForce,
             '--suffix' => $this->optionSuffix,
         ];
+        // 保存路径
+        $saveDir = $this->getSaveDir();
+        if ($this->optionModule) {
+            $saveDir = str_replace($this->optionModule . '/', '', $this->getSaveDir());
+        }
+        // 路径格式
+        $dirFormat = str_replace(
+            $this->entityName,
+            '%',
+            $saveDir
+        );
+
+        // 创建控制器存在存在
+        if ($this->hasOption('controller') && $this->option('controller')) {
+            $_dir = sprintf($dirFormat, 'Controllers');
+            $arguments['--dir'] = $_dir;
+            $this->call('jmhc-api:make-controller', $arguments);
+        }
 
         // 创建模型存在
-        if ($this->option('model')) {
+        if ($this->hasOption('model') && $this->option('model')) {
+            $_dir = sprintf($dirFormat, 'Models');
+            $arguments['--dir'] = $_dir;
             $this->call('jmhc-api:make-model', $arguments);
         }
 
         // 创建服务存在
-        if ($this->option('service')) {
+        if ($this->hasOption('service') && $this->option('service')) {
+            $_dir = sprintf($dirFormat, 'Services');
+            $arguments['--dir'] = $_dir;
             $this->call('jmhc-api:make-service', $arguments);
         }
 
         // 创建迁移存在
         if ($this->option('migration')) {
-            $this->call('make:migration', [
-                'name' => sprintf(
-                    'create_%_table',
-                    Str::plural(Str::snake($name))
-                )
-            ]);
+            try {
+                $this->call('make:migration', [
+                    'name' => sprintf(
+                        'create_%s_table',
+                        Str::plural(Str::snake($name))
+                    )
+                ]);
+            } catch (InvalidArgumentException $e) {}
         }
 
         // 创建填充存在
@@ -281,7 +325,7 @@ abstract class MakeCommand extends Command
             $this->call('make:seeder', [
                 'name' => sprintf(
                     '%sTableSeeder',
-                    Str::plural($name)
+                    Str::plural(ucfirst($name))
                 )
             ]);
         }
@@ -305,8 +349,8 @@ abstract class MakeCommand extends Command
     protected function getOptions()
     {
         return [
-            ['dir', null, InputOption::VALUE_OPTIONAL, 'File saving path, relative to app directory', $this->defaultDir],
-            ['module', 'm', InputOption::VALUE_OPTIONAL, 'Module name'],
+            ['dir', null, InputOption::VALUE_REQUIRED, 'File saving path, relative to app directory', $this->defaultDir . $this->entityName . 's/'],
+            ['module', 'm', InputOption::VALUE_REQUIRED, 'Module name'],
             ['force', 'f', InputOption::VALUE_NONE, 'Overwrite existing file'],
             ['suffix', 's', InputOption::VALUE_NONE, sprintf('Add the `%s` suffix', $this->entityName)],
             ['migration', null, InputOption::VALUE_NONE, 'Generate the migration file with the same name'],

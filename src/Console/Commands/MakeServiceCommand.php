@@ -14,7 +14,7 @@ class MakeServiceCommand extends MakeCommand
      * 命令名称
      * @var string
      */
-    protected $command = 'jmhc-api:make-service';
+    protected $name = 'jmhc-api:make-service';
 
     /**
      * 实体名称

@@ -114,7 +114,7 @@ class MakeCommonModelCommand extends Command
 
         // 排除的表
         $excludeTables = array_map(function ($v) {
-            return $this->optionPrefix . $v;
+            return $this->optionPrefix . str_replace($this->optionPrefix, '', $v);
         }, $this->optionTable);
 
         try {
@@ -320,8 +320,8 @@ EOF;
     protected function getOptions()
     {
         return [
-            ['db', 'd', InputOption::VALUE_REQUIRED, 'Model source database'],
-            ['prefix', 'p', InputOption::VALUE_REQUIRED, 'Data table prefix'],
+            ['db', 'd', InputOption::VALUE_REQUIRED, 'Model source database', app('db.connection')->getConfig('database')],
+            ['prefix', 'p', InputOption::VALUE_REQUIRED, 'Data table prefix', app('db.connection')->getConfig('prefix')],
             ['table', 't', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Exclude table names'],
             ['dir', null, InputOption::VALUE_REQUIRED, 'File saving path, relative to app directory', $this->defaultDir],
             ['force', 'f', InputOption::VALUE_NONE, 'Overwrite existing files'],
