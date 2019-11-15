@@ -6,17 +6,21 @@
 
 namespace Jmhc\Restful\Console\Commands;
 
+use Symfony\Component\Console\Input\InputOption;
+
 class MakeModelCommand extends MakeCommand
 {
     /**
+     * 命令名称
      * @var string
      */
-    protected $command = 'jmhc-api:make-model';
+    protected $name = 'jmhc-api:make-model';
 
     /**
+     * 实体名称
      * @var string
      */
-    protected $argumentName = 'Model';
+    protected $entityName = 'Model';
 
     /**
      * 获取生成内容
@@ -33,5 +37,19 @@ class %s
 {}
 EOF;
         return sprintf($str, $this->namespace, $name);
+    }
+
+    /**
+     * 获取选项
+     * @return array
+     */
+    protected function getOptions()
+    {
+        $options = parent::getOptions();
+
+        return array_merge($options, [
+            ['controller', null, InputOption::VALUE_NONE, 'Generate the controller file with the same name'],
+            ['service', null, InputOption::VALUE_NONE, 'Generate the service file with the same name'],
+        ]);
     }
 }
