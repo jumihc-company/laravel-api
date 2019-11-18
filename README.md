@@ -220,6 +220,20 @@ php artisan jmhc-api:make-model test -m index
 ...
 ```
 
+#### 通过文件创建所需文件
+
+> 此命令通过 `config('jmhc-build-file')` 获取需要创建的文件名称
+
+```php
+// 生成控制器、模型、服务、迁移、填充
+php artisan jmhc-api:make-with-file --controller --model --service --migration --seeder
+// 覆盖生成所有文件
+php artisan jmhc-api:make-with-file -f
+// 覆盖生成控制器
+php artisan jmhc-api:make-with-file -fc
+...
+```
+
 ### 中间件
 
 > 用法加粗为必须调用

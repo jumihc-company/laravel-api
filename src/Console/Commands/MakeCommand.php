@@ -268,7 +268,7 @@ abstract class MakeCommand extends Command
         // 名称
         $name = $this->filterArgumentName($this->argumentName);
 
-        // 创建参数
+        // 命令参数
         $arguments = [
             'name' => $name,
             '--module' => $this->optionModule,
@@ -287,28 +287,28 @@ abstract class MakeCommand extends Command
             $saveDir
         );
 
-        // 创建控制器存在存在
+        // 创建控制器
         if ($this->hasOption('controller') && $this->option('controller')) {
             $_dir = sprintf($dirFormat, 'Controllers');
             $arguments['--dir'] = $_dir;
             $this->call('jmhc-api:make-controller', $arguments);
         }
 
-        // 创建模型存在
+        // 创建模型
         if ($this->hasOption('model') && $this->option('model')) {
             $_dir = sprintf($dirFormat, 'Models');
             $arguments['--dir'] = $_dir;
             $this->call('jmhc-api:make-model', $arguments);
         }
 
-        // 创建服务存在
+        // 创建服务
         if ($this->hasOption('service') && $this->option('service')) {
             $_dir = sprintf($dirFormat, 'Services');
             $arguments['--dir'] = $_dir;
             $this->call('jmhc-api:make-service', $arguments);
         }
 
-        // 创建迁移存在
+        // 创建迁移
         if ($this->option('migration')) {
             try {
                 $this->call('make:migration', [
@@ -320,7 +320,7 @@ abstract class MakeCommand extends Command
             } catch (InvalidArgumentException $e) {}
         }
 
-        // 创建填充存在
+        // 创建填充
         if ($this->option('seeder')) {
             $this->call('make:seeder', [
                 'name' => sprintf(

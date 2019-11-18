@@ -11,6 +11,7 @@ use Jmhc\Restful\Console\Commands\MakeCommonModelCommand;
 use Jmhc\Restful\Console\Commands\MakeControllerCommand;
 use Jmhc\Restful\Console\Commands\MakeModelCommand;
 use Jmhc\Restful\Console\Commands\MakeServiceCommand;
+use Jmhc\Restful\Console\Commands\MakeWithFileCommand;
 use Jmhc\Restful\Middleware\CheckSdlMiddleware;
 use Jmhc\Restful\Middleware\CheckSignatureMiddleware;
 use Jmhc\Restful\Middleware\CheckTokenMiddleware;
@@ -37,6 +38,7 @@ class JmhcApiServiceProvider extends ServiceProvider
         MakeControllerCommand::class,
         MakeServiceCommand::class,
         MakeModelCommand::class,
+        MakeWithFileCommand::class,
     ];
 
     /**
@@ -87,13 +89,19 @@ class JmhcApiServiceProvider extends ServiceProvider
      */
     protected function mergeConfig()
     {
-        // 合并api配置
+        // 合并 api 配置
         $this->mergeConfigFrom(
             jmhc_api_config_path('jmhc-api.php'),
             'jmhc-api'
         );
 
-        // 合并mongodb配置
+        // 合并 build-file 配置
+        $this->mergeConfigFrom(
+            jmhc_api_config_path('jmhc-build-file.php'),
+            'jmhc-build-file'
+        );
+
+        // 合并 mongodb 配置
         $this->mergeConfigFrom(
             jmhc_api_config_path('jmhc-mongodb.php'),
             'database.connections.mongodb'
@@ -108,6 +116,7 @@ class JmhcApiServiceProvider extends ServiceProvider
         // 发布配置文件
         $this->publishes([
             jmhc_api_config_path('jmhc-api.php') => config_path('jmhc-api.php'),
+            jmhc_api_config_path('jmhc-build-file.php') => config_path('jmhc-build-file.php'),
         ], 'jmhc-api-config');
 
         // 发布迁移文件
@@ -123,6 +132,7 @@ class JmhcApiServiceProvider extends ServiceProvider
         // 发布所有文件
         $this->publishes([
             jmhc_api_config_path('jmhc-api.php') => config_path('jmhc-api.php'),
+            jmhc_api_config_path('jmhc-build-file.php') => config_path('jmhc-build-file.php'),
             jmhc_api_database_path('migrations') => database_path('migrations'),
             jmhc_api_resource_path('lang') => resource_path('lang'),
         ], 'jmhc-api');
