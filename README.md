@@ -19,6 +19,8 @@
 	    - [创建控制器](#%E5%88%9B%E5%BB%BA%E6%8E%A7%E5%88%B6%E5%99%A8)
 	    - [创建服务层(逻辑层)](#%E5%88%9B%E5%BB%BA%E6%9C%8D%E5%8A%A1%E5%B1%82%E9%80%BB%E8%BE%91%E5%B1%82)
 	    - [创建模型](#%E5%88%9B%E5%BB%BA%E6%A8%A1%E5%9E%8B)
+	    - [通过文件创建所需文件](#%E9%80%9A%E8%BF%87%E6%96%87%E4%BB%B6%E5%88%9B%E5%BB%BA%E6%89%80%E9%9C%80%E6%96%87%E4%BB%B6)
+	    - [生成工厂文件](%23%E7%94%9F%E6%88%90%E5%B7%A5%E5%8E%82%E6%96%87%E4%BB%B6)
 	- [中间件](#%E4%B8%AD%E9%97%B4%E4%BB%B6-1)
 	- [队列](#%E9%98%9F%E5%88%97)
 	    - [rabbitmq](#rabbitmq)
@@ -230,7 +232,18 @@ php artisan jmhc-api:make-with-file --controller --model --service --migration -
 // 覆盖生成所有文件
 php artisan jmhc-api:make-with-file -f
 // 覆盖生成控制器
-php artisan jmhc-api:make-with-file -fc
+php artisan jmhc-api:make-with-file --force-controller
+...
+```
+
+#### 生成工厂文件
+
+```php
+// 通过指定目录创建factory,位于 app/Http/Common/Factorys/Service
+php artisan jmhc-api:make-factory service --dir Http/Services --dir Http/Index/Services
+
+// 通过指定目录创建factory,并增加后缀、保存至其他路径,位于 app/Http/Commons/Factorys/ServiceFactory
+php artisan jmhc-api:make-factory service --dir Http/Services --save-dir Commons/Factorys -s
 ...
 ```
 

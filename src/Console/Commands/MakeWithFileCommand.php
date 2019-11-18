@@ -147,24 +147,26 @@ class MakeWithFileCommand extends Command
             'name' => $name,
             '--module' => $this->optionModule,
             '--suffix' => $this->optionSuffix,
-            '--dir' => $this->optionDir,
         ];
 
         // 创建控制器
         if ($this->optionController) {
-            $arguments['force'] = $this->isForceController;
+            $arguments['--force'] = $this->isForceController;
+            $arguments['--dir'] = $this->optionDir . 'Controllers/';
             $this->call('jmhc-api:make-controller', $arguments);
         }
 
         // 创建模型
         if ($this->optionModel) {
-            $arguments['force'] = $this->isForceModel;
+            $arguments['--force'] = $this->isForceModel;
+            $arguments['--dir'] = $this->optionDir . 'Models/';
             $this->call('jmhc-api:make-model', $arguments);
         }
 
         // 创建服务
         if ($this->optionService) {
-            $arguments['force'] = $this->isForceService;
+            $arguments['--force'] = $this->isForceService;
+            $arguments['--dir'] = $this->optionDir . 'Services/';
             $this->call('jmhc-api:make-service', $arguments);
         }
 
@@ -192,12 +194,39 @@ class MakeWithFileCommand extends Command
     }
 
     /**
+     * 过滤选项路径
+     * @param string $dir
+     * @return string
+     */
+    protected function filterOptionDir(string $dir)
+    {
+        return implode('/', $this->filterDir(
+                ucfirst(trim($dir, '/')) . '/'
+            )) . '/';
+    }
+
+    /**
+     * 过滤路径
+     * @param string $dir
+     * @return array
+     */
+    protected function filterDir(string $dir)
+    {
+        return array_filter(
+            explode(
+                '/',
+                str_replace('\\', '', $dir)
+            )
+        );
+    }
+
+    /**
      * 设置参数、选项
      */
     protected function setArgumentOption()
     {
-        $this->optionDir = $this->option('dir');
-        $this->optionModule = $this->option('module');
+        $this->optionDir = $this->filterOptionDir($this->option('dir'));
+        $this->optionModule = $this->option('module') ?? '';
         $this->optionSuffix = $this->option('suffix');
         $this->optionController = $this->option('controller');
         $this->isForceController = $this->option('force') || $this->option('force-controller');
@@ -219,9 +248,9 @@ class MakeWithFileCommand extends Command
             ['dir', null, InputOption::VALUE_REQUIRED, 'File saving path, relative to app directory', $this->defaultDir],
             ['module', 'm', InputOption::VALUE_REQUIRED, 'Module name'],
             ['force', 'f', InputOption::VALUE_NONE, 'Overwrite existing file'],
-            ['force-controller', 'fc', InputOption::VALUE_NONE, 'Overwrite existing controller file'],
-            ['force-service', 'fs', InputOption::VALUE_NONE, 'Overwrite existing service file'],
-            ['force-model', 'fm', InputOption::VALUE_NONE, 'Overwrite existing model file'],
+            ['force-controller', null, InputOption::VALUE_NONE, 'Overwrite existing controller file'],
+            ['force-service', null, InputOption::VALUE_NONE, 'Overwrite existing service file'],
+            ['force-model', null, InputOption::VALUE_NONE, 'Overwrite existing model file'],
             ['suffix', 's', InputOption::VALUE_NONE, sprintf('Add suffix')],
             ['controller', null, InputOption::VALUE_NONE, 'Generate the controller file with the same name'],
             ['service', null, InputOption::VALUE_NONE, 'Generate the service file with the same name'],
