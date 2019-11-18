@@ -77,9 +77,14 @@ php artisan vendor:publish --tag=jmhc-api-resources
 
 ### 快速使用
 
+1. [安装](#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE)
+2. [发布配置[可选]](#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE)
+3. [注册中间件](#%E4%B8%AD%E9%97%B4%E4%BB%B6)
+4. [继承异常处理程序](#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86)
+
 #### 中间件
 - 必须注册全局中间件 `Jmhc\Restful\Middleware\ParamsHandlerMiddleware`
-- 可选中间件查看[中间件列表](#%E4%B8%AD%E9%97%B4%E4%BB%B6-1)
+- 可选中间件查看 [中间件列表](#%E4%B8%AD%E9%97%B4%E4%BB%B6-1)
 
 #### 异常处理
 
@@ -180,9 +185,11 @@ php artisan jmhc-api:make-common-model -c
 > 创建的控制器默认继承基础控制器 BaseController
 
 ```php
-// 创建 Test 控制器位于 app/Http/Controllers/TestController.php
+// 创建 Test 控制器位于 app/Http/Controllers/Test.php
 php artisan jmhc-api:make-controller test
-// 创建 Test 控制器位于 app/Http/Index/Controllers/TestController.php
+// 创建 Test 控制器并添加后缀，位于 app/Http/Controllers/TestController.php
+php artisan jmhc-api:make-controller test -s
+// 创建 Test 控制器位于 app/Http/Index/Controllers/Test.php
 php artisan jmhc-api:make-controller test -m index
 ...
 ```
@@ -192,9 +199,11 @@ php artisan jmhc-api:make-controller test -m index
 > 创建的服务默认继承基础服务 BaseService
 
 ```php
-// 创建 Test 服务位于 app/Http/Services/TestService.php
+// 创建 Test 服务位于 app/Http/Services/Test.php
 php artisan jmhc-api:make-service test
-// 创建 Test 服务位于 app/Http/Index/Services/TestService.php
+// 创建 Test 服务并添加后缀，位于 app/Http/Services/TestService.php
+php artisan jmhc-api:make-service test -s
+// 创建 Test 服务位于 app/Http/Index/Services/Test.php
 php artisan jmhc-api:make-service test -m index
 ...
 ```
@@ -202,9 +211,11 @@ php artisan jmhc-api:make-service test -m index
 #### 创建模型
 
 ```php
-// 创建 Test 模型位于 app/Http/Models/TestModel.php
+// 创建 Test 模型位于 app/Http/Models/Test.php
 php artisan jmhc-api:make-model test
-// 创建 Test 模型位于 app/Http/Index/Models/TestModel.php
+// 创建 Test 服务并添加后缀，位于 app/Http/Models/TestModel.php
+php artisan jmhc-api:make-model test -s
+// 创建 Test 模型位于 app/Http/Index/Models/Test.php
 php artisan jmhc-api:make-model test -m index
 ...
 ```
