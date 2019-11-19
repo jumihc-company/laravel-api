@@ -8,6 +8,10 @@ namespace Jmhc\Restful\Console\Commands;
 
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * 生成服务
+ * @package Jmhc\Restful\Console\Commands
+ */
 class MakeServiceCommand extends MakeCommand
 {
     /**

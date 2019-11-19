@@ -9,6 +9,7 @@ namespace Jmhc\Restful\Providers;
 use Illuminate\Support\ServiceProvider;
 use Jmhc\Restful\Console\Commands\MakeCommonModelCommand;
 use Jmhc\Restful\Console\Commands\MakeControllerCommand;
+use Jmhc\Restful\Console\Commands\MakeFactoryCommand;
 use Jmhc\Restful\Console\Commands\MakeModelCommand;
 use Jmhc\Restful\Console\Commands\MakeServiceCommand;
 use Jmhc\Restful\Console\Commands\MakeWithFileCommand;
@@ -39,6 +40,7 @@ class JmhcApiServiceProvider extends ServiceProvider
         MakeServiceCommand::class,
         MakeModelCommand::class,
         MakeWithFileCommand::class,
+        MakeFactoryCommand::class,
     ];
 
     /**

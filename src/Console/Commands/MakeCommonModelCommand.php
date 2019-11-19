@@ -6,13 +6,16 @@
 
 namespace Jmhc\Restful\Console\Commands;
 
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 use Throwable;
 
-class MakeCommonModelCommand extends Command
+/**
+ * 生成公用模型
+ * @package Jmhc\Restful\Console\Commands
+ */
+class MakeCommonModelCommand extends AbstractMakeCommand
 {
     /**
      * 命令名称
@@ -31,18 +34,6 @@ class MakeCommonModelCommand extends Command
      * @var string
      */
     protected $defaultDir = 'Common/Models/';
-
-    /**
-     * 命名空间
-     * @var string
-     */
-    protected $namespace;
-
-    /**
-     * 文件保存路径
-     * @var string
-     */
-    protected $dir;
 
     /**
      * 参数 db
@@ -87,36 +78,10 @@ class MakeCommonModelCommand extends Command
     protected $optionSuffix;
 
     /**
-     * 执行操作
-     * @return bool
+     * 主要操作
      */
-    public function handle()
+    protected function mainHandle()
     {
-        // 设置参数、选项
-        $this->setArgumentOption();
-
-        // 获取保存文件夹
-        $dir = $this->getSaveDir();
-        // 保存文件夹
-        $this->dir = app_path($dir);
-        // 命名空间
-        $this->namespace = $this->getNamespace($dir);
-
-        // 创建文件夹
-        $this->createDir();
-
-        // 数据库链接实例
-        $db = app('db.connection');
-
-        // 设置默认值
-        $this->optionDb = $this->optionDb ?? $db->getConfig('database');
-        $this->optionPrefix = $this->optionPrefix ?? $db->getConfig('prefix');
-
-        // 排除的表
-        $excludeTables = array_map(function ($v) {
-            return $this->optionPrefix . str_replace($this->optionPrefix, '', $v);
-        }, $this->optionTable);
-
         try {
             // 获取所有表
             $tables = $this->getTables($this->optionDb);
@@ -124,39 +89,21 @@ class MakeCommonModelCommand extends Command
             // 清除所有
             if ($this->optionClear) {
                 $this->clearAll($tables);
-                $this->info('Clear Succeed!');
                 return true;
             }
 
             // 生成模型
             foreach ($tables as $table) {
-                if (in_array($table, $excludeTables)) {
+                if (in_array($table, $this->optionTable)) {
                     continue;
                 }
                 $this->buildModel($table);
             }
-
-            $this->info('Generate Succeed!');
         } catch (Throwable $e) {
             $this->error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
 
         return true;
-    }
-
-    /**
-     * 设置参数、选项
-     */
-    protected function setArgumentOption()
-    {
-        // 命令选项
-        $this->optionDb = $this->option('db');
-        $this->optionPrefix = $this->option('prefix');
-        $this->optionTable = $this->option('table');
-        $this->optionDir = $this->option('dir');
-        $this->optionForce = $this->option('force');
-        $this->optionClear = $this->option('clear');
-        $this->optionSuffix = $this->option('suffix');
     }
 
     /**
@@ -169,55 +116,7 @@ class MakeCommonModelCommand extends Command
             return $this->defaultDir;
         }
 
-        return $this->getDirStr($this->filterDir($this->optionDir));
-    }
-
-    /**
-     * 过滤路径
-     * @param string $dir
-     * @return array
-     */
-    protected function filterDir(string $dir)
-    {
-        return array_filter(
-            explode(
-                '/',
-                str_replace('\\', '', $dir)
-            )
-        );
-    }
-
-    /**
-     * 获取路径字符串
-     * @param array $dir
-     * @return string
-     */
-    protected function getDirStr(array $dir)
-    {
-        $res = '';
-        foreach ($dir as $v) {
-            $res .= ucfirst($v) . '/';
-        }
-        return $res;
-    }
-
-    /**
-     * 获取命名空间
-     * @param string $dir
-     * @return string
-     */
-    protected function getNamespace(string $dir)
-    {
-        return 'App\\' . str_replace('/', '\\', rtrim($dir, '/'));
-    }
-
-    /**
-     * 创建文件夹
-     * @return bool
-     */
-    protected function createDir()
-    {
-        return ! is_dir($this->dir) && mkdir($this->dir, 0755, true);
+        return $this->filterOptionDir($this->optionDir);
     }
 
     /**
@@ -311,6 +210,26 @@ class %s extends BaseModel
 {}
 EOF;
         return sprintf($str, $this->namespace, $name);
+    }
+
+    /**
+     * 设置参数、选项
+     */
+    protected function setArgumentOption()
+    {
+        // 数据库链接实例
+        $db = app('db.connection');
+
+        // 命令选项
+        $this->optionDb = $this->option('db') ?? $db->getConfig('database');
+        $this->optionPrefix = $this->option('prefix') ?? $db->getConfig('prefix');
+        $this->optionTable = array_map(function ($v) {
+            return $this->optionPrefix . str_replace($this->optionPrefix, '', $v);
+        }, $this->option('table'));;
+        $this->optionDir = $this->option('dir');
+        $this->optionForce = $this->option('force');
+        $this->optionClear = $this->option('clear');
+        $this->optionSuffix = $this->option('suffix');
     }
 
     /**

@@ -9,10 +9,17 @@ namespace Jmhc\Restful\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use Jmhc\Restful\Console\Commands\Traits\MakeTrait;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * 通过关联文件生成
+ * @package Jmhc\Restful\Console\Commands
+ */
 class MakeWithFileCommand extends Command
 {
+    use MakeTrait;
+
     /**
      * 命令名称
      * @var string
@@ -107,7 +114,8 @@ class MakeWithFileCommand extends Command
 
         // 数据表不存在
         if (empty($tables)) {
-            $this->info('Generate Succeed!');
+            // 运行完成
+            $this->runComplete();
         }
 
         // 过滤名称
@@ -118,7 +126,8 @@ class MakeWithFileCommand extends Command
             $this->buildFile($table);
         }
 
-        $this->info('Generate Succeed!');
+        // 运行完成
+        $this->runComplete();
     }
 
     /**
@@ -171,7 +180,7 @@ class MakeWithFileCommand extends Command
         }
 
         // 创建迁移
-        if ($this->option('migration')) {
+        if ($this->optionMigration) {
             try {
                 $this->call('make:migration', [
                     'name' => sprintf(
@@ -183,7 +192,7 @@ class MakeWithFileCommand extends Command
         }
 
         // 创建填充
-        if ($this->option('seeder')) {
+        if ($this->optionSeeder) {
             $this->call('make:seeder', [
                 'name' => sprintf(
                     '%sTableSeeder',
@@ -191,33 +200,6 @@ class MakeWithFileCommand extends Command
                 )
             ]);
         }
-    }
-
-    /**
-     * 过滤选项路径
-     * @param string $dir
-     * @return string
-     */
-    protected function filterOptionDir(string $dir)
-    {
-        return implode('/', $this->filterDir(
-                ucfirst(trim($dir, '/')) . '/'
-            )) . '/';
-    }
-
-    /**
-     * 过滤路径
-     * @param string $dir
-     * @return array
-     */
-    protected function filterDir(string $dir)
-    {
-        return array_filter(
-            explode(
-                '/',
-                str_replace('\\', '', $dir)
-            )
-        );
     }
 
     /**

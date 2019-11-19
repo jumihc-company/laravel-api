@@ -8,6 +8,10 @@ namespace Jmhc\Restful\Console\Commands;
 
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * 生成模型
+ * @package Jmhc\Restful\Console\Commands
+ */
 class MakeModelCommand extends MakeCommand
 {
     /**

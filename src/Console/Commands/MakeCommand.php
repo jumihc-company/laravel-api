@@ -6,13 +6,12 @@
 
 namespace Jmhc\Restful\Console\Commands;
 
-use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-abstract class MakeCommand extends Command
+abstract class MakeCommand extends AbstractMakeCommand
 {
     /**
      * 命令描述
@@ -31,18 +30,6 @@ abstract class MakeCommand extends Command
      * @var string
      */
     protected $defaultDir = 'Http/';
-
-    /**
-     * 命名空间
-     * @var string
-     */
-    protected $namespace;
-
-    /**
-     * 文件保存路径
-     * @var string
-     */
-    protected $dir;
 
     /**
      * 参数 name
@@ -86,22 +73,12 @@ abstract class MakeCommand extends Command
         parent::__construct();
     }
 
-    public function handle()
+    /**
+     * 主要操作
+     */
+    protected function mainHandle()
     {
-        // 设置参数、选项
-        $this->setArgumentOption();
-
-        // 获取保存文件夹
-        $dir = $this->getSaveDir();
-        // 保存文件夹
-        $this->dir = app_path($dir);
-        // 命名空间
-        $this->namespace = $this->getNamespace($dir);
-
-        // 创建文件夹
-        $this->createDir();
-
-        // 构建名称
+        // 生成名称
         $name = $this->getBuildName($this->argumentName);
 
         // 保存文件
@@ -114,23 +91,6 @@ abstract class MakeCommand extends Command
 
         // 执行额外命令
         $this->extraCommands();
-
-        $this->info('Generate Succeed!');
-    }
-
-    /**
-     * 设置参数、选项
-     */
-    protected function setArgumentOption()
-    {
-        // 命令参数
-        $this->argumentName = $this->argument('name');
-
-        // 命令选项
-        $this->optionDir = $this->filterOptionDir($this->option('dir'));
-        $this->optionModule = ucfirst($this->option('module'));
-        $this->optionForce = $this->option('force');
-        $this->optionSuffix = $this->option('suffix');
     }
 
     /**
@@ -142,7 +102,7 @@ abstract class MakeCommand extends Command
         // 路径
         $dir = $this->defaultDir;
         if ($this->optionDir) {
-            $dir = $this->getDirStr($this->filterDir($this->optionDir));
+            $dir = $this->filterOptionDir($this->optionDir);
             // 路径不存在实体后缀
             if (! preg_match(sprintf('/[(%ss\/)(%s)]$/i', $this->entityName, $this->entityName), $dir)) {
                 $dir .= $this->entityName . 's/';
@@ -162,66 +122,6 @@ abstract class MakeCommand extends Command
     }
 
     /**
-     * 过滤选项路径
-     * @param string $dir
-     * @return string
-     */
-    protected function filterOptionDir(string $dir)
-    {
-        return implode('/', $this->filterDir(
-                ucfirst(trim($dir, '/')) . '/'
-            )) . '/';
-    }
-
-    /**
-     * 过滤路径
-     * @param string $dir
-     * @return array
-     */
-    protected function filterDir(string $dir)
-    {
-        return array_filter(
-            explode(
-                '/',
-                str_replace('\\', '', $dir)
-            )
-        );
-    }
-
-    /**
-     * 获取路径字符串
-     * @param array $dir
-     * @return string
-     */
-    protected function getDirStr(array $dir)
-    {
-        $res = '';
-        foreach ($dir as $v) {
-            $res .= ucfirst($v) . '/';
-        }
-        return $res;
-    }
-
-    /**
-     * 创建文件夹
-     * @return bool
-     */
-    protected function createDir()
-    {
-        return ! is_dir($this->dir) && mkdir($this->dir, 0755, true);
-    }
-
-    /**
-     * 获取命名空间
-     * @param string $dir
-     * @return string
-     */
-    protected function getNamespace(string $dir)
-    {
-        return 'App\\' . str_replace('/', '\\', rtrim($dir, '/'));
-    }
-
-    /**
      * 获取生成名称
      * @param string $name
      * @return string
@@ -237,36 +137,12 @@ abstract class MakeCommand extends Command
     }
 
     /**
-     * 过滤字符串
-     * @param string $str
-     * @return string
-     */
-    protected function filterStr(string $str)
-    {
-        return str_replace(['/', '\\'], '', $str);
-    }
-
-    /**
-     * 过滤参数名称
-     * @param string $name
-     * @return string
-     */
-    protected function filterArgumentName(string $name)
-    {
-        return Str::singular(preg_replace(
-            sprintf('/%s$/i', $this->entityName),
-            '',
-            $this->filterStr($name)
-        ));
-    }
-
-    /**
      * 执行额外命令
      */
     protected function extraCommands()
     {
         // 名称
-        $name = $this->filterArgumentName($this->argumentName);
+        $name = $this->filterArgumentName($this->argumentName, $this->entityName);
 
         // 命令参数
         $arguments = [
@@ -332,13 +208,28 @@ abstract class MakeCommand extends Command
     }
 
     /**
+     * 设置参数、选项
+     */
+    protected function setArgumentOption()
+    {
+        // 命令参数
+        $this->argumentName = $this->argument('name');
+
+        // 命令选项
+        $this->optionDir = $this->filterOptionDir($this->option('dir'));
+        $this->optionModule = ucfirst($this->option('module'));
+        $this->optionForce = $this->option('force');
+        $this->optionSuffix = $this->option('suffix');
+    }
+
+    /**
      * 获取参数
      * @return array
      */
     protected function getArguments()
     {
         return [
-            ['name', InputArgument::REQUIRED, $this->name . ' name'],
+            ['name', InputArgument::REQUIRED, $this->entityName . ' name'],
         ];
     }
 

@@ -239,11 +239,11 @@ php artisan jmhc-api:make-with-file --force-controller
 #### 生成工厂文件
 
 ```php
-// 通过指定目录创建factory,位于 app/Http/Common/Factorys/Service
-php artisan jmhc-api:make-factory service --dir Http/Services --dir Http/Index/Services
+// 通过指定目录创建factory,位于 app/Http/Common/Factory/Service.php
+php artisan jmhc-api:make-factory service --scan-dir Http/Services --scan-dir Http/Index/Services
 
-// 通过指定目录创建factory,并增加后缀、保存至其他路径,位于 app/Http/Commons/Factorys/ServiceFactory
-php artisan jmhc-api:make-factory service --dir Http/Services --save-dir Commons/Factorys -s
+// 通过指定目录创建factory,并增加后缀、保存至其他路径,位于 app/Http/Commons/Factory/ServiceFactory.php
+php artisan jmhc-api:make-factory service --scan-dir Http/Services --dir Commons/Factory -s
 ...
 ```
 
