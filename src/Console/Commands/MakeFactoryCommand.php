@@ -149,7 +149,7 @@ use Jmhc\Restful\Factory\BaseFactory;
 class %s extends BaseFactory
 {}
 EOF;
-        return sprintf($str, $this->namespace, PHP_EOL . $annotation, $name);
+        return sprintf($str, $this->namespace, $annotation, $name);
     }
 
     /**
@@ -168,7 +168,7 @@ EOF;
             $str .= PHP_EOL . sprintf(' * @method static %s %s(bool $refresh = false, array $params = [])', $scan['namespace'], $scan['method']);
         }
 
-        return $str . PHP_EOL . ' * @package ' . $this->namespace . PHP_EOL . ' */';
+        return PHP_EOL . $str . PHP_EOL . ' * @package ' . $this->namespace . PHP_EOL . ' */';
     }
 
     /**
