@@ -6,6 +6,7 @@
 
 namespace Jmhc\Restful\Utils;
 
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 
 /**
@@ -89,6 +90,24 @@ class Helper
     public static function array2key(array $arr, string $flag = '')
     {
         return md5(json_encode(Arr::sortRecursive($arr)) . $flag);
+    }
+
+    /**
+     * 单例辅助
+     * @param string $class
+     * @param bool $refresh
+     * @param array $params
+     * @return mixed
+     * @throws BindingResolutionException
+     */
+    public static function instance(string $class, bool $refresh = false, array $params = [])
+    {
+        $id = static::array2key($params, $class);
+        if (! app()->has($id) || $refresh) {
+            app()->instance($id, app()->make($class, $params));
+        }
+
+        return app()->get($id);
     }
 
     /**

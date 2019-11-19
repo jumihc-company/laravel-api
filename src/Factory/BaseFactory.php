@@ -6,7 +6,6 @@
 
 namespace Jmhc\Restful\Factory;
 
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Jmhc\Restful\Utils\Helper;
 use ReflectionClass;
 use ReflectionException;
@@ -21,19 +20,19 @@ class BaseFactory
      * 文档注释
      * @var string
      */
-    private static $docComment;
+    protected static $docComment;
 
     /**
      * 元数据
      * @var array
      */
-    private static $metadata;
+    protected static $metadata;
 
     /**
      * 方法关键字
      * @var string
      */
-    private static $methodKeyword = ' * @method static ';
+    protected static $methodKeyword = ' * @method static ';
 
     public static function __callStatic($name, $arguments)
     {
@@ -44,25 +43,7 @@ class BaseFactory
         }
 
         // 返回实例对象
-        return static::getInstance($class, ! empty($arguments[0]), $arguments[1] ?? []);
-    }
-
-    /**
-     * 获取实例对象
-     * @param string $class
-     * @param bool $refresh
-     * @param array $params
-     * @return mixed
-     * @throws BindingResolutionException
-     */
-    protected static function getInstance(string $class, bool $refresh = false, array $params = [])
-    {
-        $id = Helper::array2key($params, $class);
-        if (! app()->has($id) || $refresh) {
-            app()->instance($id, app()->make(get_called_class(), $params));
-        }
-
-        return app()->get($id);
+        return Helper::instance($class, ! empty($arguments[0]), $arguments[1] ?? []);
     }
 
     /**
@@ -83,7 +64,6 @@ class BaseFactory
      */
     private static function getDocComment()
     {
-
         if (is_null(static::$docComment)) {
             static::$docComment = (new ReflectionClass(new static()))->getDocComment();
         }

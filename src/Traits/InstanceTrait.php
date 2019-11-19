@@ -23,11 +23,6 @@ trait InstanceTrait
      */
     public static function getInstance(array $params = [])
     {
-        $id = Helper::array2key($params, get_called_class());
-        if (! app()->has($id)) {
-            app()->instance($id, app()->make(get_called_class(), $params));
-        }
-
-        return app()->get($id);
+        return Helper::instance(get_called_class(), false, $params);
     }
 }
