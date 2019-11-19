@@ -44,7 +44,7 @@ abstract class Base
 
     abstract public function decrypt(string $str);
 
-    public function __construct(array $config)
+    public function __construct()
     {
         // 初始化
         $this->initialize();
