@@ -26,7 +26,7 @@ class MakeFactoryCommand extends AbstractMakeCommand
      * 命令描述
      * @var string
      */
-    protected $description = 'Generate the common model files';
+    protected $description = 'Generate the factory file';
 
     /**
      * 默认保存路径
