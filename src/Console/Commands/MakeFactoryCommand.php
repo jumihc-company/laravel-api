@@ -95,10 +95,14 @@ class MakeFactoryCommand extends AbstractMakeCommand
                     continue;
                 }
 
-                $_class = basename($file);
+                $_class = rtrim(basename($file), '\.php');
                 $_file = str_replace([$appPath, sprintf('/%s.php', $_class)], '', $file);
                 $scans[] = [
-                    'namespace' => $this->getNamespace($_file),
+                    'namespace' => sprintf(
+                        '\\App%s\\%s',
+                        str_replace('/', '\\', $_file),
+                        $_class
+                    ),
                     'method' => lcfirst($_class),
                 ];
             }
@@ -106,7 +110,9 @@ class MakeFactoryCommand extends AbstractMakeCommand
 
         // 生成文件
         $annotation = $this->getAnnotation($scans);
-        $this->getBuildContent($name, $annotation);
+        $content = $this->getBuildContent($name, $annotation);
+        file_put_contents($filePath, $content);
+        $this->info($filePath . ' create Succeed!');
 
         return true;
     }
