@@ -15,12 +15,18 @@ use Illuminate\Http\Request;
  */
 class CorsMiddleware
 {
+    /**
+     * 跨域响应状态码
+     * @var int
+     */
+    protected $statusCode = 204;
+
     public function handle(Request $request, Closure $next)
     {
         $headers = config('jmhc-api.cors', []);
 
         if ($request->getMethod() === 'OPTIONS') {
-            return response('', 204, $headers);
+            return response('', $this->statusCode, $headers);
         }
 
         return $next($request)->withHeaders($headers);
