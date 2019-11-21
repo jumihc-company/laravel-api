@@ -17,12 +17,6 @@ use ReflectionException;
 class BaseFactory
 {
     /**
-     * 当前调用类
-     * @var string
-     */
-    protected static $class;
-
-    /**
      * 文档注释
      * @var array
      */
@@ -42,9 +36,6 @@ class BaseFactory
 
     public static function __callStatic($name, $arguments)
     {
-        // 当前调用类
-        static::$class = get_called_class();
-
         // 解析class
         $class = static::parse($name);
         if (empty($class)) {
@@ -73,11 +64,11 @@ class BaseFactory
      */
     private static function getDocComment()
     {
-        if (! isset(static::$docComment[static::$class])) {
-            static::$docComment[static::$class] = (new ReflectionClass(new static()))->getDocComment();
+        if (! isset(static::$docComment[static::class])) {
+            static::$docComment[static::class] = (new ReflectionClass(new static()))->getDocComment();
         }
 
-        return static::$docComment[static::$class];
+        return static::$docComment[static::class];
     }
 
     /**
@@ -87,11 +78,11 @@ class BaseFactory
      */
     private static function getMetadata(string $docComment)
     {
-        if (! isset(static::$metadata[static::$class])) {
-            static::$metadata[static::$class] = static::createMetadata($docComment);
+        if (! isset(static::$metadata[static::class])) {
+            static::$metadata[static::class] = static::createMetadata($docComment);
         }
 
-        return static::$metadata[static::$class];
+        return static::$metadata[static::class];
     }
 
     /**
