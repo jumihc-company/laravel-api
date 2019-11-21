@@ -6,6 +6,7 @@
 
 namespace Jmhc\Restful\Handlers;
 
+use Error;
 use ErrorException;
 use Exception;
 use Illuminate\Contracts\Cache\Lock as LockContract;
@@ -21,7 +22,6 @@ use Jmhc\Restful\Utils\LogHelper;
 use LogicException;
 use ReflectionException;
 use RuntimeException;
-use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
@@ -103,7 +103,7 @@ class ExceptionHandler extends Handler
                 config('jmhc-api.exception_file_name', 'handle.exception'),
                 $e
             );
-        } elseif ($e instanceof FatalThrowableError || $e instanceof ErrorException) {
+        } elseif ($e instanceof Error || $e instanceof ErrorException) {
             // 发生错误
             $this->code = ResultCode::SYS_ERROR;
             $this->msg = ResultMsg::SYS_ERROR;
