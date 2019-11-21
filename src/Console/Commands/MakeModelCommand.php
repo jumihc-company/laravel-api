@@ -37,7 +37,9 @@ class MakeModelCommand extends MakeCommand
 <?php
 namespace %s;
 
-class %s
+use Jmhc\Restful\Models\BaseModel;
+
+class %s extends BaseModel
 {}
 EOF;
         return sprintf($str, $this->namespace, $name);
