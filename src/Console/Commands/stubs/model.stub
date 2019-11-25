@@ -18,5 +18,10 @@ class %CLASS% extends BaseModel
     /**
      * @var array
      */
+    protected $dates = %DATES%;
+
+    /**
+     * @var array
+     */
     protected $casts = %CASTS%;
 }

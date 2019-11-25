@@ -35,6 +35,19 @@ trait ReplaceModelTrait
     }
 
     /**
+     * 替换时间字段属性
+     * @param string $content
+     * @param string $replace
+     * @return $this
+     */
+    protected function replaceDates(string &$content, string $replace)
+    {
+        $content = str_replace('%DATES%', $replace, $content);
+
+        return $this;
+    }
+
+    /**
      * 替换属性类型转换
      * @param string $content
      * @param string $replace

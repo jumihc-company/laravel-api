@@ -140,15 +140,16 @@ class MakeModelCommand extends MakeCommand
     {
         $content = file_get_contents($this->stubPath);
 
-        $table = Str::snake($this->class);
-        [$annotation, $fillable, $casts] = $this->getReplaceData($this->dbHelper->getAllColumns($table));
+        $table = Str::plural(Str::snake($this->class));
+        [$annotation, $fillable, $dates, $casts] = $this->getReplaceData($this->dbHelper->getAllColumns($table));
 
         // 替换
         $this->replaceNamespace($content, $this->namespace)
             ->replaceClass($content, $this->class)
             ->replaceAnnotations($content, $annotation)
-            ->replaceTable($content, $table)
+            ->replaceTable($content, sprintf("'%s'", $table))
             ->replaceFillable($content, $fillable)
+            ->replaceDates($content, $dates)
             ->replaceCasts($content, $casts);
 
         return $content;
@@ -163,24 +164,35 @@ class MakeModelCommand extends MakeCommand
     {
         $annotation = '';
         $fillable = '[';
+        $dates = '[';
         $casts = '[';
 
         foreach ($columns as $column) {
             $_dataType = $this->formatDataType($column['data_type']);
 
-            $fillable .= $column['column_name'] . ', ';
-
+            // 注释
             $annotation .= PHP_EOL . sprintf(' * @property %s $%s', $this->formatPropertyType($_dataType), $column['column_name']);
 
+            // 批量赋值字段
+            $fillable .= sprintf("'%s', ", $column['column_name']);
+
+            // 时间字段
+            if (in_array($_dataType, ['date', 'datetime', 'timestamp', 'time'])) {
+                $dates .= sprintf("'%s', ", $column['column_name']);
+            }
+
+            // 类型转换
             $casts .= sprintf(
                 "'%s' => '%s', ",
                 $column['column_name'],
                 $_dataType
             );
         }
+
         return [
             $this->formatAnnotation($annotation),
             rtrim($fillable, ', ') . ']',
+            rtrim($dates, ', ') . ']',
             rtrim($casts, ', ') . ']'
         ];
     }
@@ -196,7 +208,7 @@ class MakeModelCommand extends MakeCommand
             return '';
         }
 
-        return PHP_EOL . '/**' . PHP_EOL . $annotation . PHP_EOL . ' * @package ' . $this->namespace . PHP_EOL . ' */';
+        return PHP_EOL . '/**' . $annotation . PHP_EOL . ' * @package ' . $this->namespace . PHP_EOL . ' */';
     }
 
     /**
@@ -221,6 +233,11 @@ class MakeModelCommand extends MakeCommand
             case 'bool':
             case 'boolean':
                 return 'boolean';
+            case 'date':
+            case 'datetime':
+            case 'timestamp':
+            case 'time':
+                return $type;
             default:
                 return 'string';
         }
@@ -238,6 +255,8 @@ class MakeModelCommand extends MakeCommand
                 return 'int';
             case 'date':
             case 'datetime':
+            case 'timestamp':
+            case 'time':
                 return '\Carbon\Carbon';
             case 'json':
                 return 'array';
@@ -246,6 +265,9 @@ class MakeModelCommand extends MakeCommand
         }
     }
 
+    /**
+     * 设置参数、选项
+     */
     protected function setArgumentOption()
     {
         parent::setArgumentOption();

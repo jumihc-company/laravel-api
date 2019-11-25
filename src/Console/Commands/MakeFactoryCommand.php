@@ -76,6 +76,12 @@ class MakeFactoryCommand extends MakeCommand
     }
 
     /**
+     * 执行额外命令
+     */
+    protected function extraCommands()
+    {}
+
+    /**
      * 获取生成内容
      * @return string
      */

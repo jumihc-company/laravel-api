@@ -304,7 +304,7 @@ abstract class MakeCommand extends Command
     protected function setArgumentOption()
     {
         // 命令参数
-        $this->argumentName = $this->argument('name');
+        $this->argumentName = $this->argument('name') ?? '';
 
         // 命令选项
         $this->optionDir = $this->filterOptionDir($this->option('dir'));
