@@ -7,9 +7,7 @@
 namespace Jmhc\Restful\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Throwable;
 
 /**
  * 模型辅助
@@ -21,11 +19,6 @@ trait ModelTrait
     {
         // 初始前置操作
         $this->initializeBefore();
-
-        // 设置保护属性
-        if (! static::$unguarded && empty($this->fillable)) {
-            $this->fillable(static::getTableColumns($this));
-        }
 
         // 实例化
         parent::__construct($attributes);
@@ -93,28 +86,6 @@ trait ModelTrait
     }
 
     /**
-     * 获取表字段
-     * @param Model $model
-     * @return array
-     */
-    protected static function getTableColumns(Model $model)
-    {
-        try {
-            $table = $model->getConnection()->getTablePrefix() . $model->getTable();
-            $schema = $model->getConnection()->getDoctrineSchemaManager();
-
-            $database = null;
-            if (strpos($table, '.')) {
-                [$database, $table] = explode('.', $table);
-            }
-
-            return array_keys($schema->listTableColumns($table, $database));
-        } catch (Throwable $e) {
-            return [];
-        }
-    }
-
-    /**
      * 组装排序
      * @param Builder $builder
      * @param array $params
@@ -123,7 +94,7 @@ trait ModelTrait
     {
         // 排序字段
         if (! empty($params['sort']) && in_array(
-            $params['sort'], static::getTableColumns($builder->getModel())
+            $params['sort'], $builder->getModel()->getFillable()
             )) {
             $direction = static::DEFAULT_DIRECTION;
 

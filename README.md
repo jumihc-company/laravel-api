@@ -15,7 +15,6 @@
 	    - [mongodb模型](#mongodb%E6%A8%A1%E5%9E%8B)
 	- [服务层(逻辑层)](#%E6%9C%8D%E5%8A%A1%E5%B1%82%E9%80%BB%E8%BE%91%E5%B1%82-1)
 	- [命令行](#%E5%91%BD%E4%BB%A4%E8%A1%8C)
-	    - [创建公用模型文件](#%E5%88%9B%E5%BB%BA%E5%85%AC%E7%94%A8%E6%A8%A1%E5%9E%8B%E6%96%87%E4%BB%B6)
 	    - [创建控制器](#%E5%88%9B%E5%BB%BA%E6%8E%A7%E5%88%B6%E5%99%A8)
 	    - [创建服务层(逻辑层)](#%E5%88%9B%E5%BB%BA%E6%9C%8D%E5%8A%A1%E5%B1%82%E9%80%BB%E8%BE%91%E5%B1%82)
 	    - [创建模型](#%E5%88%9B%E5%BB%BA%E6%A8%A1%E5%9E%8B)
@@ -43,6 +42,7 @@
 		- [UserInfoTrait.php](#userinfotraitphp)
 	- [工具类介绍](#%E5%B7%A5%E5%85%B7%E7%B1%BB%E4%BB%8B%E7%BB%8D)
 	    - [Collection.php](#collectionphp)
+	    - [DbHelper.php](#dbhelperphp)
 	    - [FileSize.php](#filesizephp)
 	    - [Log.php](#logphp)
 	    - [RequestClient.php](#requestclientphp)
@@ -168,20 +168,6 @@ class TestController extends BaseController
 
 ### 命令行
 
-#### 创建公用模型文件
-
-> 从数据库查询表生成、删除模型
-
-```php
-// 生成模型文件到 app/Common/Models
-php artisan jmhc-api:make-common-model
-// 生成模型文件到 app/Test/Models
-php artisan jmhc-api:make-common-model --dir test/models
-// 清除所有模型文件
-php artisan jmhc-api:make-common-model -c
-...
-```
-
 #### 创建控制器
 
 > 创建的控制器默认继承基础控制器 BaseController
@@ -212,7 +198,11 @@ php artisan jmhc-api:make-service test -m index
 
 #### 创建模型
 
+> 不传 name 将会从数据库读取所有表创建
+
 ```php
+// 创建公用模型位于 app/Common/Models 并排除 test，foos 表
+php artisan jmhc-api:make-model --dir Common/Models -t test -t foos
 // 创建 Test 模型位于 app/Http/Models/Test.php
 php artisan jmhc-api:make-model test
 // 创建 Test 服务并添加后缀，位于 app/Http/Models/TestModel.php
@@ -409,6 +399,22 @@ T::getInstance([
 
 - 修改`__get` 魔术方法
 - 新增`__set` , `__isset` , `__unset` 魔术方法
+
+#### DbHelper.php
+
+> `Jmhc\Restful\Utils\DbHelper`
+>
+> 数据库辅助方法
+
+```php
+// 返回所有表名
+DbHelper::getInstance()->getAllTables();
+
+// 返回 mysql 链接下 users 表字段数据
+DbHelper::getInstance([
+    'name' => 'mysql'
+])->getAllColumns('users');
+```
 
 #### FileSize.php
 

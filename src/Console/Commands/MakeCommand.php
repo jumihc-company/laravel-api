@@ -6,13 +6,19 @@
 
 namespace Jmhc\Restful\Console\Commands;
 
+use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use Jmhc\Restful\Console\Commands\Traits\MakeTrait;
+use Jmhc\Restful\Console\Commands\Traits\ReplaceTrait;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-abstract class MakeCommand extends AbstractMakeCommand
+abstract class MakeCommand extends Command
 {
+    use MakeTrait;
+    use ReplaceTrait;
+
     /**
      * 命令描述
      * @var string
@@ -30,6 +36,36 @@ abstract class MakeCommand extends AbstractMakeCommand
      * @var string
      */
     protected $defaultDir = 'Http/';
+
+    /**
+     * 文件保存路径
+     * @var string
+     */
+    protected $dir;
+
+    /**
+     * 命名空间
+     * @var string
+     */
+    protected $namespace;
+
+    /**
+     * 模板路径
+     * @var string
+     */
+    protected $stubPath;
+
+    /**
+     * 生成类名称
+     * @var string
+     */
+    protected $class;
+
+    /**
+     * 保存文件路径
+     * @var string
+     */
+    protected $saveFilePath;
 
     /**
      * 参数 name
@@ -61,8 +97,6 @@ abstract class MakeCommand extends AbstractMakeCommand
      */
     protected $optionSuffix;
 
-    abstract protected function getBuildContent(string $name);
-
     public function __construct()
     {
         $this->description = sprintf(
@@ -73,24 +107,51 @@ abstract class MakeCommand extends AbstractMakeCommand
         parent::__construct();
     }
 
+    public function handle()
+    {
+        // 设置参数、选项
+        $this->setArgumentOption();
+
+        // 获取保存文件夹
+        $dir = $this->getSaveDir();
+        // 保存文件夹
+        $this->dir = app_path($dir);
+        // 命名空间
+        $this->namespace = $this->getNamespace($dir);
+
+        // 创建文件夹
+        $this->createDir($this->dir);
+
+        // 运行
+        $this->mainHandle();
+
+        // 运行完成
+        $this->runComplete();
+    }
+
     /**
      * 主要操作
      */
     protected function mainHandle()
     {
-        // 生成名称
-        $name = $this->getBuildName($this->argumentName);
+        // 生成类名称
+        $this->class = $this->getClass($this->argumentName);
 
         // 保存文件
-        $filePath = $this->dir . $name . '.php';
-        if (! file_exists($filePath) || $this->optionForce) {
-            $content = $this->getBuildContent($name);
-            file_put_contents($filePath, $content);
-            $this->info($filePath . ' create Succeed!');
+        $this->saveFilePath = $this->dir . $this->class . '.php';
+
+        // 存在且不覆盖
+        if (file_exists($this->saveFilePath) && ! $this->optionForce) {
+            return false;
         }
+
+        // 生成操作
+        $this->buildHandle();
 
         // 执行额外命令
         $this->extraCommands();
+
+        return true;
     }
 
     /**
@@ -122,11 +183,20 @@ abstract class MakeCommand extends AbstractMakeCommand
     }
 
     /**
-     * 获取生成名称
+     * 生成操作
+     */
+    protected function buildHandle()
+    {
+        file_put_contents($this->saveFilePath, $this->getBuildContent());
+        $this->info($this->saveFilePath . ' create Succeed!');
+    }
+
+    /**
+     * 获取生成类名称
      * @param string $name
      * @return string
      */
-    protected function getBuildName(string $name)
+    protected function getClass(string $name)
     {
         $name = Str::singular($this->filterStr($name));
         // 判断是否添加后缀
@@ -134,6 +204,21 @@ abstract class MakeCommand extends AbstractMakeCommand
             $name .= '_' . $this->entityName;
         }
         return Str::studly($name);
+    }
+
+    /**
+     * 获取生成内容
+     * @return string
+     */
+    protected function getBuildContent()
+    {
+        $content = file_get_contents($this->stubPath);
+
+        // 替换
+        $this->replaceNamespace($content, $this->namespace)
+            ->replaceClass($content, $this->class);
+
+        return $content;
     }
 
     /**
@@ -223,29 +308,17 @@ abstract class MakeCommand extends AbstractMakeCommand
     }
 
     /**
-     * 获取参数
-     * @return array
+     * 命令配置
      */
-    protected function getArguments()
+    protected function configure()
     {
-        return [
-            ['name', InputArgument::REQUIRED, $this->entityName . ' name'],
-        ];
-    }
+        $this->addArgument('name', InputArgument::REQUIRED, $this->entityName . ' name');
 
-    /**
-     * 获取选项
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return [
-            ['dir', null, InputOption::VALUE_REQUIRED, 'File saving path, relative to app directory', $this->defaultDir . $this->entityName . 's/'],
-            ['module', 'm', InputOption::VALUE_REQUIRED, 'Module name'],
-            ['force', 'f', InputOption::VALUE_NONE, 'Overwrite existing file'],
-            ['suffix', 's', InputOption::VALUE_NONE, sprintf('Add the `%s` suffix', $this->entityName)],
-            ['migration', null, InputOption::VALUE_NONE, 'Generate the migration file with the same name'],
-            ['seeder', null, InputOption::VALUE_NONE, 'Generate the seeder file with the same name'],
-        ];
+        $this->addOption('dir', null, InputOption::VALUE_REQUIRED, 'File saving path, relative to app directory', $this->defaultDir . $this->entityName . 's/');
+        $this->addOption('module', 'm', InputOption::VALUE_REQUIRED, 'Module name');
+        $this->addOption('force', 'f', InputOption::VALUE_NONE, 'Overwrite existing file');
+        $this->addOption('suffix', 's', InputOption::VALUE_NONE, sprintf('Add the `%s` suffix', $this->entityName));
+        $this->addOption('migration', null, InputOption::VALUE_NONE, 'Generate the migration file with the same name');
+        $this->addOption('seeder', null, InputOption::VALUE_NONE, 'Generate the seeder file with the same name');
     }
 }

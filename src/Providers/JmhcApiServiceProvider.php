@@ -7,7 +7,6 @@
 namespace Jmhc\Restful\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Jmhc\Restful\Console\Commands\MakeCommonModelCommand;
 use Jmhc\Restful\Console\Commands\MakeControllerCommand;
 use Jmhc\Restful\Console\Commands\MakeFactoryCommand;
 use Jmhc\Restful\Console\Commands\MakeModelCommand;
@@ -35,12 +34,11 @@ class JmhcApiServiceProvider extends ServiceProvider
      * @var array
      */
     protected $commands = [
-        MakeCommonModelCommand::class,
         MakeControllerCommand::class,
-        MakeServiceCommand::class,
         MakeModelCommand::class,
-        MakeWithFileCommand::class,
+        MakeServiceCommand::class,
         MakeFactoryCommand::class,
+        MakeWithFileCommand::class,
     ];
 
     /**

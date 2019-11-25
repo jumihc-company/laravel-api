@@ -221,24 +221,21 @@ class MakeWithFileCommand extends Command
     }
 
     /**
-     * 获取选项
-     * @return array
+     * 命令配置
      */
-    public function getOptions()
+    protected function configure()
     {
-        return [
-            ['dir', null, InputOption::VALUE_REQUIRED, 'File saving path, relative to app directory', $this->defaultDir],
-            ['module', 'm', InputOption::VALUE_REQUIRED, 'Module name'],
-            ['force', 'f', InputOption::VALUE_NONE, 'Overwrite existing file'],
-            ['force-controller', null, InputOption::VALUE_NONE, 'Overwrite existing controller file'],
-            ['force-service', null, InputOption::VALUE_NONE, 'Overwrite existing service file'],
-            ['force-model', null, InputOption::VALUE_NONE, 'Overwrite existing model file'],
-            ['suffix', 's', InputOption::VALUE_NONE, sprintf('Add suffix')],
-            ['controller', null, InputOption::VALUE_NONE, 'Generate the controller file with the same name'],
-            ['service', null, InputOption::VALUE_NONE, 'Generate the service file with the same name'],
-            ['model', null, InputOption::VALUE_NONE, 'Generate the model file with the same name'],
-            ['migration', null, InputOption::VALUE_NONE, 'Generate the migration file with the same name'],
-            ['seeder', null, InputOption::VALUE_NONE, 'Generate the seeder file with the same name'],
-        ];
+        $this->addOption('dir', null, InputOption::VALUE_REQUIRED, 'File saving path, relative to app directory', $this->defaultDir);
+        $this->addOption('module', 'm', InputOption::VALUE_REQUIRED, 'Module name');
+        $this->addOption('force', 'f', InputOption::VALUE_NONE, 'Overwrite existing file');
+        $this->addOption('force-controller', null, InputOption::VALUE_NONE, 'Overwrite existing controller file');
+        $this->addOption('force-service', null, InputOption::VALUE_NONE, 'Overwrite existing service file');
+        $this->addOption('force-model', null, InputOption::VALUE_NONE, 'Overwrite existing model file');
+        $this->addOption('suffix', 's', InputOption::VALUE_NONE, sprintf('Add suffix'));
+        $this->addOption('controller', null, InputOption::VALUE_NONE, 'Generate the controller file with the same name');
+        $this->addOption('service', null, InputOption::VALUE_NONE, 'Generate the service file with the same name');
+        $this->addOption('model', null, InputOption::VALUE_NONE, 'Generate the model file with the same name');
+        $this->addOption('migration', null, InputOption::VALUE_NONE, 'Generate the migration file with the same name');
+        $this->addOption('seeder', null, InputOption::VALUE_NONE, 'Generate the seeder file with the same name');
     }
 }
