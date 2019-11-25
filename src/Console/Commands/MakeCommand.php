@@ -38,6 +38,12 @@ abstract class MakeCommand extends Command
     protected $defaultDir = 'Http/';
 
     /**
+     * 参数 name 模式
+     * @var int
+     */
+    protected $argumentNameMode = InputArgument::REQUIRED;
+
+    /**
      * 文件保存路径
      * @var string
      */
@@ -312,7 +318,7 @@ abstract class MakeCommand extends Command
      */
     protected function configure()
     {
-        $this->addArgument('name', InputArgument::REQUIRED, $this->entityName . ' name');
+        $this->addArgument('name', $this->argumentNameMode, $this->entityName . ' name');
 
         $this->addOption('dir', null, InputOption::VALUE_REQUIRED, 'File saving path, relative to app directory', $this->defaultDir . $this->entityName . 's/');
         $this->addOption('module', 'm', InputOption::VALUE_REQUIRED, 'Module name');

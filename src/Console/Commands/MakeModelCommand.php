@@ -39,6 +39,12 @@ class MakeModelCommand extends MakeCommand
     protected $stubPath = __DIR__ . '/stubs/model.stub';
 
     /**
+     * 参数 name 模式
+     * @var int
+     */
+    protected $argumentNameMode = InputArgument::OPTIONAL;
+
+    /**
      * 选项 connection
      * @var string
      */
@@ -256,8 +262,6 @@ class MakeModelCommand extends MakeCommand
     protected function configure()
     {
         parent::configure();
-
-        $this->addArgument('name', InputArgument::OPTIONAL, $this->entityName . ' name');
 
         $this->addOption('controller', null, InputOption::VALUE_NONE, 'Generate the controller file with the same name');
         $this->addOption('service', null, InputOption::VALUE_NONE, 'Generate the service file with the same name');
