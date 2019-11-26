@@ -45,6 +45,18 @@ class MakeModelCommand extends MakeCommand
     protected $argumentNameMode = InputArgument::OPTIONAL;
 
     /**
+     * 导入对象
+     * @var string
+     */
+    protected $uses;
+
+    /**
+     * 继承对象
+     * @var string
+     */
+    protected $extends;
+
+    /**
      * 选项 connection
      * @var string
      */
@@ -146,6 +158,8 @@ class MakeModelCommand extends MakeCommand
         // 替换
         $this->replaceNamespace($content, $this->namespace)
             ->replaceClass($content, $this->class)
+            ->replaceUses($content, $this->uses)
+            ->replaceExtends($content, $this->extends)
             ->replaceAnnotations($content, $annotation)
             ->replaceTable($content, sprintf("'%s'", $table))
             ->replaceFillable($content, $fillable)
@@ -276,6 +290,20 @@ class MakeModelCommand extends MakeCommand
         $this->optionTable = array_map(function ($v) {
             return str_replace($this->prefix, '', $v);
         }, $this->option('table'));
+
+        // 继承基础模型
+        $this->uses = PHP_EOL . 'use Jmhc\Restful\Models\BaseModel;';
+        $this->extends = ' extends BaseModel';
+
+        if ($this->optionModelExtendsPivot) {
+            // 继承中间模型
+            $this->uses = PHP_EOL . 'use Jmhc\Restful\Models\BasePivot;';
+            $this->extends = ' extends BasePivot';
+        } elseif ($this->optionModelExtendsMongo) {
+            // 继承 mongo 模型
+            $this->uses = PHP_EOL . 'use Jmhc\Restful\Models\BaseMongo;';
+            $this->extends = ' extends BaseMongo';
+        }
     }
 
     /**

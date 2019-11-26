@@ -6,6 +6,10 @@
 
 namespace Jmhc\Restful\Console\Commands\Traits;
 
+/**
+ * 替换模型辅助
+ * @package Jmhc\Restful\Console\Commands\Traits
+ */
 trait ReplaceModelTrait
 {
     /**

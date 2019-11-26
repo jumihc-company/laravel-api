@@ -103,6 +103,18 @@ abstract class MakeCommand extends Command
      */
     protected $optionSuffix;
 
+    /**
+     * 选项 model_extends_pivot
+     * @var bool
+     */
+    protected $optionModelExtendsPivot;
+
+    /**
+     * 选项 model_extends_mongo
+     * @var bool
+     */
+    protected $optionModelExtendsMongo;
+
     public function __construct()
     {
         $this->description = sprintf(
@@ -241,6 +253,8 @@ abstract class MakeCommand extends Command
             '--module' => $this->optionModule,
             '--force' => $this->optionForce,
             '--suffix' => $this->optionSuffix,
+            '--model-extends-pivot' => $this->optionModelExtendsPivot,
+            '--model-extends-mongo' => $this->optionModelExtendsMongo,
         ];
         // 保存路径
         $saveDir = $this->getSaveDir();
@@ -311,6 +325,8 @@ abstract class MakeCommand extends Command
         $this->optionModule = ucfirst($this->option('module'));
         $this->optionForce = $this->option('force');
         $this->optionSuffix = $this->option('suffix');
+        $this->optionModelExtendsPivot = $this->option('model-extends-pivot');
+        $this->optionModelExtendsMongo = $this->option('model-extends-mongo');
     }
 
     /**
@@ -326,5 +342,7 @@ abstract class MakeCommand extends Command
         $this->addOption('suffix', 's', InputOption::VALUE_NONE, sprintf('Add the `%s` suffix', $this->entityName));
         $this->addOption('migration', null, InputOption::VALUE_NONE, 'Generate the migration file with the same name');
         $this->addOption('seeder', null, InputOption::VALUE_NONE, 'Generate the seeder file with the same name');
+        $this->addOption('model-extends-pivot', null, InputOption::VALUE_NONE, 'The model extends Jmhc\Restful\Models\BasePivot');
+        $this->addOption('model-extends-mongo', null, InputOption::VALUE_NONE, 'The model extends Jmhc\Restful\Models\BaseMongo');
     }
 }

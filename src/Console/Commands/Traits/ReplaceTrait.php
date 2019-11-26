@@ -6,6 +6,10 @@
 
 namespace Jmhc\Restful\Console\Commands\Traits;
 
+/**
+ * 替换辅助
+ * @package Jmhc\Restful\Console\Commands\Traits
+ */
 trait ReplaceTrait
 {
     /**
@@ -17,6 +21,32 @@ trait ReplaceTrait
     protected function replaceNameSpace(string &$content, string $replace)
     {
         $content = str_replace('%NAMESPACE%', $replace, $content);
+
+        return $this;
+    }
+
+    /**
+     * 替换导入
+     * @param string $content
+     * @param string $replace
+     * @return $this
+     */
+    protected function replaceUses(string &$content, string $replace)
+    {
+        $content = str_replace('%USES%', $replace, $content);
+
+        return $this;
+    }
+
+    /**
+     * 替换 trait 导入
+     * @param string $content
+     * @param string $replace
+     * @return $this
+     */
+    protected function replaceTraitUses(string &$content, string $replace)
+    {
+        $content = str_replace('%TRAIT_USES%', $replace, $content);
 
         return $this;
     }

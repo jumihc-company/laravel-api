@@ -1,9 +1,8 @@
 <?php
 namespace %NAMESPACE%;
-
-use Jmhc\Restful\Models\BaseModel;
+%USERS%
 %ANNOTATIONS%
-class %CLASS% extends BaseModel
+class %CLASS%%EXTENDS%
 {
     /**
      * @var string
