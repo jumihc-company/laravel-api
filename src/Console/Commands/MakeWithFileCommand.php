@@ -232,7 +232,6 @@ class MakeWithFileCommand extends Command
         $this->isForceModel = $this->option('force') || $this->option('force-model');
         $this->optionMigration = $this->option('migration');
         $this->optionSeeder = $this->option('seeder');
-
         $this->optionModelExtendsPivot = $this->option('model-extends-pivot');
         $this->optionModelExtendsMongo = $this->option('model-extends-mongo');
     }
