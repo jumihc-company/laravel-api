@@ -1,6 +1,6 @@
 <?php
 namespace %NAMESPACE%;
-%USERS%
+%USES%
 %ANNOTATIONS%
 class %CLASS%%EXTENDS%
 {
