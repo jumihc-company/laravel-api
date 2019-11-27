@@ -2,6 +2,7 @@
     "name": "jmhc/laravel-api",
     "description": "Laravel restful api.",
     "keywords": [
+        "jmhc",
         "restful",
         "api",
         "laravel"
