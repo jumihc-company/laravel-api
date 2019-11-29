@@ -8,6 +8,7 @@ namespace Jmhc\Restful\Models;
 
 use Jenssegers\Mongodb\Eloquent\Model;
 use Jmhc\Restful\Contracts\ConstAttributeInterface;
+use Jmhc\Restful\Scopes\PrimaryKeyDescScope;
 use Jmhc\Restful\Traits\ModelTrait;
 
 /**
@@ -36,5 +37,17 @@ class BaseMongo extends Model implements ConstAttributeInterface
         if (empty($this->table)) {
             $this->setTable(static::getSnakePluralName());
         }
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(PrimaryKeyDescScope::getInstance());
+    }
+
+    public function getForeignKey()
+    {
+        return static::getSnakeSingularName() . '_' . ltrim($this->getKeyName(), '_');
     }
 }
