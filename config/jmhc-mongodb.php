@@ -1,8 +1,4 @@
 <?php
-/**
- * User: YL
- * Date: 2019/10/18
- */
 
 return [
     'driver'   => 'mongodb',
