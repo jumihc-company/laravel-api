@@ -110,7 +110,6 @@ php artisan vendor:publish --tag=jmhc-api-resources
 
 - 可使用 `Jmhc\Restful\Traits\RequestInfoTrait` 里的参数
 - 可使用 `Jmhc\Restful\Traits\UserInfoTrait` 里的参数、方法
-- 可使用 `Jmhc\Restful\Traits\ResourceController` 里的方法
 
 ### 模型
 
@@ -139,7 +138,6 @@ php artisan vendor:publish --tag=jmhc-api-resources
 
 - 可使用 `Jmhc\Restful\Traits\RequestInfoTrait` 里的参数
 - 可使用 `Jmhc\Restful\Traits\UserInfoTrait` 里的参数、方法
-- 可使用 `Jmhc\Restful\Traits\ResourceService` 里的方法
 
 ```php
 class TestController extends BaseController
