@@ -14,12 +14,17 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler;
 use Illuminate\Foundation\Http\Exceptions\MaintenanceModeException;
+use Illuminate\Validation\ValidationException;
 use Jmhc\Restful\Exceptions\ResultException;
 use Jmhc\Restful\ResultCode;
 use Jmhc\Restful\ResultMsg;
 use Jmhc\Restful\Utils\Cipher;
+use Jmhc\Restful\Utils\Log;
 use Jmhc\Restful\Utils\LogHelper;
+use Jmhc\Sms\Exceptions\SmsException;
 use LogicException;
+use Overtrue\EasySms\Exceptions\InvalidArgumentException;
+use Overtrue\EasySms\Exceptions\NoGatewayAvailableException;
 use ReflectionException;
 use RuntimeException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -42,6 +47,9 @@ class ExceptionHandler extends Handler
 
     public function render($request, Exception $e)
     {
+        // 重置属性
+        $this->resetProperty();
+
         // 设置响应数据
         $this->response($e);
 
@@ -71,6 +79,17 @@ class ExceptionHandler extends Handler
         return response()->json($response, $this->httpCode, $headers, JSON_UNESCAPED_UNICODE);
     }
 
+    /**
+     * 重置属性
+     */
+    protected function resetProperty()
+    {
+        $this->code = ResultCode::ERROR;
+        $this->msg = ResultMsg::ERROR;
+        $this->data = null;
+        $this->httpCode = ResultCode::HTTP_ERROR_CODE;
+    }
+
     protected function response(Exception $e)
     {
         if ($e instanceof ResultException) {
@@ -95,6 +114,19 @@ class ExceptionHandler extends Handler
                 config('jmhc-api.db_exception_file_name', 'handle_db.exception'),
                 $e
             );
+        } elseif ($e instanceof ValidationException) {
+            // 验证器异常
+            $this->msg = $e->validator->errors()->first();
+        } elseif ($e instanceof InvalidArgumentException || $e instanceof NoGatewayAvailableException) {
+            // easySms 短信异常
+            Log::save(
+                config('jmhc-api.sms_exception_file_name', 'sms.exception'),
+                $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL . json_encode($e->getExceptions(), JSON_UNESCAPED_UNICODE)
+            );
+        } elseif ($e instanceof SmsException) {
+            // 短信异常
+            $this->msg = $e->getMessage();
+            $this->data = $e->getData();
         } elseif ($e instanceof ReflectionException || $e instanceof LogicException || $e instanceof RuntimeException || $e instanceof BindingResolutionException) {
             // 反射、逻辑、运行、绑定解析异常
             $this->code = ResultCode::SYS_EXCEPTION;
