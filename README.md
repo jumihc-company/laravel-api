@@ -168,10 +168,14 @@ class TestController extends BaseController
 #### 创建控制器
 
 > 创建的控制器默认继承基础控制器 BaseController
+>
+> `--controller-extends-custom` 参数修改继承基础控制器
 
 ```php
 // 创建 Test 控制器位于 app/Http/Controllers/Test.php
 php artisan jmhc-api:make-controller test
+// 创建 Test 控制器修改继承父类
+php artisan jmhc-api:make-controller test --controller-extends-custom App/BaseController
 // 创建 Test 控制器并添加后缀，位于 app/Http/Controllers/TestController.php
 php artisan jmhc-api:make-controller test -s
 // 创建 Test 控制器位于 app/Http/Index/Controllers/Test.php
@@ -182,10 +186,14 @@ php artisan jmhc-api:make-controller test -m index
 #### 创建服务层(逻辑层)
 
 > 创建的服务默认继承基础服务 BaseService
+>
+> `--service-extends-custom` 参数修改继承基础服务
 
 ```php
 // 创建 Test 服务位于 app/Http/Services/Test.php
 php artisan jmhc-api:make-service test
+// 创建 Test 服务修改继承父类
+php artisan jmhc-api:make-service test --service-extends-custom App\BaseService
 // 创建 Test 服务并添加后缀，位于 app/Http/Services/TestService.php
 php artisan jmhc-api:make-service test -s
 // 创建 Test 服务位于 app/Http/Index/Services/Test.php
@@ -196,12 +204,16 @@ php artisan jmhc-api:make-service test -m index
 #### 创建模型
 
 > 不传 name 将会从数据库读取所有表创建
+>
+> `--model-extends-custom` 参数修改继承基础模型
 
 ```php
 // 创建公用模型位于 app/Common/Models 并排除 test，foos 表
 php artisan jmhc-api:make-model --dir Common/Models -t test -t foos
 // 创建 Test 模型位于 app/Http/Models/Test.php
 php artisan jmhc-api:make-model test
+// 创建 Test 模型修改继承父类
+php artisan jmhc-api:make-model test --model-extends-custom App\BaseModel
 // 创建 Test 服务并添加后缀，位于 app/Http/Models/TestModel.php
 php artisan jmhc-api:make-model test -s
 // 创建 Test 模型位于 app/Http/Index/Models/Test.php
@@ -212,6 +224,8 @@ php artisan jmhc-api:make-model test -m index
 #### 通过文件创建所需文件
 
 > 此命令通过 `config('jmhc-build-file')` 获取需要创建的文件名称
+>
+> 使用 `*-extends-custom` 修改对应继承父类
 
 ```php
 // 生成控制器、模型、服务、迁移、填充
