@@ -39,6 +39,7 @@ class ExceptionHandler extends Handler
     protected $code = ResultCode::ERROR;
     protected $msg = ResultMsg::ERROR;
     protected $data;
+    protected $debug;
 
     protected $httpCode = ResultCode::HTTP_ERROR_CODE;
 
@@ -59,6 +60,10 @@ class ExceptionHandler extends Handler
             'msg' => $this->msg,
             'data' => $this->data,
         ];
+        // 如果是调试模式
+        if (config('jmhc-api.exception_debug', true)) {
+            $response['debug'] = $this->debug;
+        }
         // 响应处理
         $response = $this->responseHandler($response);
 
@@ -87,11 +92,19 @@ class ExceptionHandler extends Handler
         $this->code = ResultCode::ERROR;
         $this->msg = ResultMsg::ERROR;
         $this->data = null;
+        $this->debug = null;
         $this->httpCode = ResultCode::HTTP_ERROR_CODE;
     }
 
     protected function response(Exception $e)
     {
+        // 调试信息
+        $this->debug = [
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'message' => $e->getMessage(),
+        ];
+
         if ($e instanceof ResultException) {
             // 返回异常
             $this->code = $e->getCode();
