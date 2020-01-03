@@ -134,7 +134,7 @@ class ExceptionHandler extends Handler
             // easySms 短信异常
             Log::save(
                 config('jmhc-api.sms_exception_file_name', 'sms.exception'),
-                $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL . json_encode($e->getExceptions(), JSON_UNESCAPED_UNICODE)
+                json_encode($e->getExceptions(), JSON_UNESCAPED_UNICODE) . PHP_EOL . $e->getMessage() . PHP_EOL . $e->getTraceAsString()
             );
         } elseif ($e instanceof SmsException) {
             // 短信异常
