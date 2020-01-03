@@ -11,9 +11,11 @@ use ErrorException;
 use Exception;
 use Illuminate\Contracts\Cache\Lock as LockContract;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler;
 use Illuminate\Foundation\Http\Exceptions\MaintenanceModeException;
+use Illuminate\Routing\Router;
 use Illuminate\Validation\ValidationException;
 use Jmhc\Restful\Exceptions\ResultException;
 use Jmhc\Restful\ResultCode;
@@ -48,6 +50,12 @@ class ExceptionHandler extends Handler
 
     public function render($request, Exception $e)
     {
+        if (method_exists($e, 'render') && $response = $e->render($request)) {
+            return Router::toResponse($request, $response);
+        } elseif ($e instanceof Responsable) {
+            return $e->toResponse($request);
+        }
+
         // 重置属性
         $this->resetProperty();
 
