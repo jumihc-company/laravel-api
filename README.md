@@ -254,7 +254,7 @@ php artisan jmhc-api:make-factory service --scan-dir Http/Services --dir Commons
 
 |   中间件   |   别名   |   用法   |   需要实现的契约或继承模型   |
 | ---- | ---- | ---- | ---- |
-| `Jmhc\Restful\Middleware\CorsMiddleware` | `jmhc.allow.cors` | 允许跨域 | --- |
+| `Jmhc\Restful\Middleware\CorsMiddleware` | `jmhc.cors` | 允许跨域 | --- |
 | `Jmhc\Restful\Middleware\ParamsHandlerMiddleware`  | `jmhc.params.handler` | **参数处理** | --- |
 | `Jmhc\Restful\Middleware\ConvertEmptyStringsToNullMiddleware` | `jmhc.convert.empty.strings.to.null` | 转换空字符串为null | --- |
 | `Jmhc\Restful\Middleware\TrimStringsMiddleware` | `jmhc.trim.strings` | 清除字符串空格 | --- |
