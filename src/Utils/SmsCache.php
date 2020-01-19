@@ -66,4 +66,23 @@ class SmsCache implements CacheInterface
     {
         return !! $this->redis->del($key);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function lock(string $key): bool
+    {
+        return $this->redis->set($key, 1, [
+            'nx',
+            'ex' => config('jmhc-api.sms_send_lock_seconds', 5),
+        ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function unlock(string $key): bool
+    {
+        return $this->del($key);
+    }
 }
