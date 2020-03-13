@@ -122,7 +122,7 @@ class ExceptionHandler extends Handler
         } elseif ($e instanceof MaintenanceModeException) {
             // 系统维护中
             $this->code = ResultCode::MAINTENANCE;
-            $this->msg = $e->getMessage() ?? ResultMsg::MAINTENANCE;
+            $this->msg = ResultMsg::MAINTENANCE;
         } elseif ($e instanceof HttpException) {
             // 请求异常
             $this->code = ResultCode::ERROR;
