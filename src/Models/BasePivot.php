@@ -6,6 +6,7 @@
 
 namespace Jmhc\Restful\Models;
 
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Jmhc\Restful\Contracts\ConstAttributeInterface;
 use Jmhc\Restful\Traits\ModelTrait;
@@ -25,5 +26,10 @@ class BasePivot extends Pivot implements ConstAttributeInterface
         if (empty($this->table)) {
             $this->setTable(static::getSnakeSingularName());
         }
+    }
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format($this->getDateFormat());
     }
 }

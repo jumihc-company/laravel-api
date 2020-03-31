@@ -6,6 +6,7 @@
 
 namespace Jmhc\Restful\Models;
 
+use DateTimeInterface;
 use Jenssegers\Mongodb\Eloquent\Model;
 use Jmhc\Restful\Contracts\ConstAttributeInterface;
 use Jmhc\Restful\Scopes\PrimaryKeyDescScope;
@@ -49,5 +50,10 @@ class BaseMongo extends Model implements ConstAttributeInterface
     public function getForeignKey()
     {
         return static::getSnakeSingularName() . '_' . ltrim($this->getKeyName(), '_');
+    }
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format($this->getDateFormat());
     }
 }

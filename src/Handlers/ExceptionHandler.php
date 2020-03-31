@@ -45,10 +45,10 @@ class ExceptionHandler extends Handler
 
     protected $httpCode = ResultCode::HTTP_ERROR_CODE;
 
-    public function report(Exception $e)
+    public function report(Throwable $e)
     {}
 
-    public function render($request, Exception $e)
+    public function render($request, Throwable $e)
     {
         if (method_exists($e, 'render') && $response = $e->render($request)) {
             return Router::toResponse($request, $response);

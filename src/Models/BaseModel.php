@@ -6,6 +6,7 @@
 
 namespace Jmhc\Restful\Models;
 
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Jmhc\Restful\Contracts\ConstAttributeInterface;
 use Jmhc\Restful\Scopes\PrimaryKeyDescScope;
@@ -38,5 +39,10 @@ class BaseModel extends Model implements ConstAttributeInterface
     public function getForeignKey()
     {
         return static::getSnakeSingularName() . '_' . $this->getKeyName();
+    }
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format($this->getDateFormat());
     }
 }
