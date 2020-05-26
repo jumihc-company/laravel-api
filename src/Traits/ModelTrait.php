@@ -40,6 +40,28 @@ trait ModelTrait
     {}
 
     /**
+     * 组装参数
+     * @param array $params
+     * @return Builder
+     */
+    public static function assemble(array $params)
+    {
+        /**
+         * @var Builder $builder
+         */
+        $builder = static::query();
+
+        // 组装排序
+        static::assembleOrder($builder, $params);
+        // 组装limit分页
+        static::assembleLimit($builder, $params);
+        // 组装page分页
+        static::assemblePage($builder, $params);
+
+        return $builder;
+    }
+
+    /**
      * 获取蛇形复数名称
      * @return string
      */
@@ -61,28 +83,6 @@ trait ModelTrait
             '/model$/i', '', class_basename(get_called_class())
         );
         return Str::singular(Str::snake($table));
-    }
-
-    /**
-     * 组装参数
-     * @param array $params
-     * @return Builder
-     */
-    protected static function assemble(array $params)
-    {
-        /**
-         * @var Builder $builder
-         */
-        $builder = static::query();
-
-        // 组装排序
-        static::assembleOrder($builder, $params);
-        // 组装limit分页
-        static::assembleLimit($builder, $params);
-        // 组装page分页
-        static::assemblePage($builder, $params);
-
-        return $builder;
     }
 
     /**
