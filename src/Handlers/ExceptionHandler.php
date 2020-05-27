@@ -8,7 +8,6 @@ namespace Jmhc\Restful\Handlers;
 
 use Error;
 use ErrorException;
-use Exception;
 use Illuminate\Contracts\Cache\Lock as LockContract;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Support\Responsable;
@@ -21,12 +20,8 @@ use Jmhc\Restful\Exceptions\ResultException;
 use Jmhc\Restful\ResultCode;
 use Jmhc\Restful\ResultMsg;
 use Jmhc\Restful\Utils\Cipher;
-use Jmhc\Restful\Utils\Log;
 use Jmhc\Restful\Utils\LogHelper;
-use Jmhc\Sms\Exceptions\SmsException;
 use LogicException;
-use Overtrue\EasySms\Exceptions\InvalidArgumentException;
-use Overtrue\EasySms\Exceptions\NoGatewayAvailableException;
 use ReflectionException;
 use RuntimeException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -139,16 +134,6 @@ class ExceptionHandler extends Handler
         } elseif ($e instanceof ValidationException) {
             // 验证器异常
             $this->msg = $e->validator->errors()->first();
-        } elseif ($e instanceof InvalidArgumentException || $e instanceof NoGatewayAvailableException) {
-            // easySms 短信异常
-            Log::save(
-                config('jmhc-api.sms_exception_file_name', 'sms.exception'),
-                json_encode($e->getExceptions(), JSON_UNESCAPED_UNICODE) . PHP_EOL . $e->getMessage() . PHP_EOL . $e->getTraceAsString()
-            );
-        } elseif ($e instanceof SmsException) {
-            // 短信异常
-            $this->msg = $e->getMessage();
-            $this->data = $e->getData();
         } elseif ($e instanceof ReflectionException || $e instanceof LogicException || $e instanceof RuntimeException || $e instanceof BindingResolutionException) {
             // 反射、逻辑、运行、绑定解析异常
             $this->code = ResultCode::SYS_EXCEPTION;
