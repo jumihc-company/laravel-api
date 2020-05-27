@@ -48,18 +48,6 @@ class LogHelper
     }
 
     /**
-     * 队列日志
-     * @param array $config
-     * @return Log
-     */
-    public static function queue(array $config = [])
-    {
-        return Log::setConfig(array_merge([
-            'path' => static::dir('queue'),
-        ], $config));
-    }
-
-    /**
      * 保存路径
      * @param string $dir
      * @return string

@@ -38,11 +38,11 @@ class BaseValidate
     /**
      * 验证
      * @param array $data
-     * @return \Illuminate\Contracts\Validation\Validator|\Illuminate\Validation\Validator
+     * @return array
      */
     public function check(array $data)
     {
-        return Validator::make($data, $this->rules, $this->messages, $this->attributes);
+        return Validator::make($data, $this->rules, $this->messages, $this->attributes)->validate();
     }
 
     /**

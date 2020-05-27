@@ -6,7 +6,6 @@
 
 namespace Jmhc\Restful\Traits;
 
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Jmhc\Restful\Utils\Helper;
 
 /**
@@ -19,7 +18,6 @@ trait InstanceTrait
      * getInstance
      * @param array $params
      * @return static
-     * @throws BindingResolutionException
      */
     public static function getInstance(array $params = [])
     {

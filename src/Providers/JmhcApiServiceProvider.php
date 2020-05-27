@@ -100,12 +100,6 @@ class JmhcApiServiceProvider extends ServiceProvider
             jmhc_api_config_path('jmhc-build-file.php'),
             'jmhc-build-file'
         );
-
-        // 合并 mongodb 配置
-        $this->mergeConfigFrom(
-            jmhc_api_config_path('jmhc-mongodb.php'),
-            'database.connections.mongodb'
-        );
     }
 
     /**
@@ -117,7 +111,6 @@ class JmhcApiServiceProvider extends ServiceProvider
         $this->publishes([
             jmhc_api_config_path('jmhc-api.php') => config_path('jmhc-api.php'),
             jmhc_api_config_path('jmhc-build-file.php') => config_path('jmhc-build-file.php'),
-            jmhc_api_config_path('jmhc-sms.php') => config_path('jmhc-sms.php'),
         ], 'jmhc-api-config');
 
         // 发布迁移文件
@@ -134,7 +127,6 @@ class JmhcApiServiceProvider extends ServiceProvider
         $this->publishes([
             jmhc_api_config_path('jmhc-api.php') => config_path('jmhc-api.php'),
             jmhc_api_config_path('jmhc-build-file.php') => config_path('jmhc-build-file.php'),
-            jmhc_api_config_path('jmhc-sms.php') => config_path('jmhc-sms.php'),
             jmhc_api_database_path('migrations') => database_path('migrations'),
             jmhc_api_resource_path('lang') => resource_path('lang'),
         ], 'jmhc-api');

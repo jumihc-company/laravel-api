@@ -104,13 +104,14 @@ class ExceptionHandler extends Handler
         $this->httpCode = ResultCode::HTTP_ERROR_CODE;
     }
 
-    protected function response(Exception $e)
+    protected function response(Throwable $e)
     {
         // 调试信息
         $this->debug = [
             'file' => $e->getFile(),
             'line' => $e->getLine(),
             'message' => $e->getMessage(),
+            'trace' => $e->getTrace(),
         ];
 
         if ($e instanceof ResultException) {

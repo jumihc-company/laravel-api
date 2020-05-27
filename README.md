@@ -12,7 +12,6 @@
 	- [模型](#%E6%A8%A1%E5%9E%8B-1)
 	    - [普通模型](#%E6%99%AE%E9%80%9A%E6%A8%A1%E5%9E%8B)
 	    - [中间表模型](#%E4%B8%AD%E9%97%B4%E8%A1%A8%E6%A8%A1%E5%9E%8B)
-	    - [mongodb模型](#mongodb%E6%A8%A1%E5%9E%8B)
 	- [服务层(逻辑层)](#%E6%9C%8D%E5%8A%A1%E5%B1%82%E9%80%BB%E8%BE%91%E5%B1%82-1)
 	- [命令行](#%E5%91%BD%E4%BB%A4%E8%A1%8C)
 	    - [创建控制器](#%E5%88%9B%E5%BB%BA%E6%8E%A7%E5%88%B6%E5%99%A8)
@@ -21,8 +20,6 @@
 	    - [通过文件创建所需文件](#%E9%80%9A%E8%BF%87%E6%96%87%E4%BB%B6%E5%88%9B%E5%BB%BA%E6%89%80%E9%9C%80%E6%96%87%E4%BB%B6)
 	    - [生成工厂文件](%23%E7%94%9F%E6%88%90%E5%B7%A5%E5%8E%82%E6%96%87%E4%BB%B6)
 	- [中间件](#%E4%B8%AD%E9%97%B4%E4%BB%B6-1)
-	- [队列](#%E9%98%9F%E5%88%97)
-	    - [rabbitmq](#rabbitmq)
 	- [异常处理](#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86-1)
 	- [服务提供者](#%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85)
 	    - [API服务提供者](#api%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85)
@@ -124,13 +121,6 @@ php artisan vendor:publish --tag=jmhc-api-resources
 > 需继承 `Jmhc\Restful\Models\BasePivot`
 
 - 可使用 `Jmhc\Restful\Traits\ModelTrait` 里的方法
-
-#### mongodb模型
-
-> 需继承 `Jmhc\Restful\Models\BaseMongo`
-
-- 可使用 `Jmhc\Restful\Traits\ModelTrait` 里的方法
-- 配置参考：[jmhc-mongodb.php](config/jmhc-mongodb.php)
 
 ### 服务层(逻辑层)
 
@@ -265,14 +255,6 @@ php artisan jmhc-api:make-factory service --scan-dir Http/Services --dir Commons
 | `Jmhc\Restful\Middleware\CheckSignatureMiddleware` | `jmhc.check.signature` | 验证请求签名 | --- |
 | `Jmhc\Restful\Middleware\CheckTokenMiddleware` | `jmhc.check.token` | 检测token，设置用户数据 | `Jmhc\Restful\Contracts\UserModelInterface`<br />`Jmhc\Restful\Models\UserModel` |
 | `Jmhc\Restful\Middleware\CheckSdlMiddleware` | `jmhc.check.sdl` | 单设备登录，需要复写 `Jmhc\Restful\Handlers\ExceptionHandler->sdlHandler()` | --- |
-
-
-### 队列
-
-#### rabbitmq
-> 需要继承  `Jmhc\Restful\Jobs\BaseRabbitmq` 
->
-> 详细配置查看：[rabbitmq.conf](https://github.com/vyuldashev/laravel-queue-rabbitmq/blob/master/config/rabbitmq.php)
 
 ### 异常处理
 
