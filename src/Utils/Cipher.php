@@ -6,7 +6,6 @@
 
 namespace Jmhc\Restful\Utils;
 
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Jmhc\Restful\Utils\Cipher\Runtime;
 
 /**
@@ -19,7 +18,6 @@ class Cipher
      * 请求
      * @param $params
      * @return string
-     * @throws BindingResolutionException
      */
     public static function request($params)
     {
@@ -35,7 +33,6 @@ class Cipher
      * 响应
      * @param array $data
      * @return array|string
-     * @throws BindingResolutionException
      */
     public static function response(array $data)
     {

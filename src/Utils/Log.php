@@ -6,7 +6,6 @@
 
 namespace Jmhc\Restful\Utils;
 
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Jmhc\Restful\Utils\Log\FileHandler;
 
 /**
@@ -38,7 +37,6 @@ class Log
      * @param string $msg
      * @param mixed ...$params
      * @return bool
-     * @throws BindingResolutionException
      */
     public static function debug(string $name, string $msg, ...$params)
     {
@@ -58,7 +56,6 @@ class Log
      * @param string $msg
      * @param mixed ...$params
      * @return mixed
-     * @throws BindingResolutionException
      */
     public static function save(string $name, string $msg, ...$params)
     {
@@ -77,7 +74,6 @@ class Log
     /**
      * 获取文件操作
      * @return FileHandler
-     * @throws BindingResolutionException
      */
     protected static function getFileHandler()
     {

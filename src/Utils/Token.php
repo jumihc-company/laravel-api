@@ -6,7 +6,6 @@
 
 namespace Jmhc\Restful\Utils;
 
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Jmhc\Restful\ResultCode;
 use Jmhc\Restful\ResultMsg;
 use Jmhc\Restful\Utils\Cipher\Token as TokenCipher;
@@ -39,7 +38,6 @@ class Token
      * 创建token
      * @param int $id
      * @return string
-     * @throws BindingResolutionException
      */
     public static function create(int $id)
     {
@@ -53,7 +51,6 @@ class Token
      * [加密数据, 加密时间]
      * @param string $token
      * @return array
-     * @throws BindingResolutionException
      */
     public static function parse(string $token)
     {
