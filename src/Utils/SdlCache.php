@@ -7,8 +7,8 @@
 namespace Jmhc\Restful\Utils;
 
 use Illuminate\Redis\Connections\Connection;
-use Jmhc\Restful\Traits\InstanceTrait;
-use Jmhc\Restful\Traits\RedisHandlerTrait;
+use Jmhc\Support\Traits\InstanceTrait;
+use Jmhc\Support\Traits\RedisHandlerTrait;
 
 /**
  * 单设备缓存

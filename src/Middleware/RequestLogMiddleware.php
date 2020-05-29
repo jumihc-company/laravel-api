@@ -8,7 +8,7 @@ namespace Jmhc\Restful\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Jmhc\Restful\Utils\LogHelper;
+use Jmhc\Support\Utils\LogHelper;
 
 /**
  * 请求日志中间件
@@ -19,7 +19,7 @@ class RequestLogMiddleware
     public function handle(Request $request, Closure $next)
     {
         // 记录请求日志
-        LogHelper::request()
+        LogHelper::dir('request')
             ->debug('', $this->buildContent($request));
 
         return $next($request);

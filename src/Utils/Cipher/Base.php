@@ -6,7 +6,7 @@
 
 namespace Jmhc\Restful\Utils\Cipher;
 
-use Jmhc\Restful\Traits\InstanceTrait;
+use Jmhc\Support\Traits\InstanceTrait;
 
 /**
  * 加密基类

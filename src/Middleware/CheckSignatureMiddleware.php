@@ -9,10 +9,10 @@ namespace Jmhc\Restful\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Jmhc\Restful\Exceptions\ResultException;
-use Jmhc\Restful\Traits\RedisHandlerTrait;
 use Jmhc\Restful\Traits\ResultThrowTrait;
-use Jmhc\Restful\Utils\Log;
 use Jmhc\Restful\Utils\Signature;
+use Jmhc\Support\Traits\RedisHandlerTrait;
+use Jmhc\Support\Utils\Log;
 
 /**
  * 检测签名中间件
@@ -20,8 +20,8 @@ use Jmhc\Restful\Utils\Signature;
  */
 class CheckSignatureMiddleware
 {
-    use ResultThrowTrait;
     use RedisHandlerTrait;
+    use ResultThrowTrait;
 
     public function handle(Request $request, Closure $next)
     {

@@ -7,7 +7,7 @@
 namespace Jmhc\Restful\Traits;
 
 use Illuminate\Database\Eloquent\Model;
-use Jmhc\Restful\Utils\Collection;
+use Jmhc\Support\Utils\Collection;
 
 /**
  * 用户信息

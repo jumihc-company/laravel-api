@@ -20,7 +20,7 @@ use Jmhc\Restful\Exceptions\ResultException;
 use Jmhc\Restful\ResultCode;
 use Jmhc\Restful\ResultMsg;
 use Jmhc\Restful\Utils\Cipher;
-use Jmhc\Restful\Utils\LogHelper;
+use Jmhc\Support\Utils\LogHelper;
 use LogicException;
 use ReflectionException;
 use RuntimeException;

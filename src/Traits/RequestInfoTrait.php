@@ -9,7 +9,7 @@ namespace Jmhc\Restful\Traits;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Jmhc\Restful\PlatformInfo;
-use Jmhc\Restful\Utils\Collection;
+use Jmhc\Support\Utils\Collection;
 
 /**
  * 请求信息

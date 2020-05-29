@@ -7,7 +7,7 @@
 namespace Jmhc\Restful\Validates;
 
 use Illuminate\Support\Facades\Validator;
-use Jmhc\Restful\Traits\InstanceTrait;
+use Jmhc\Support\Traits\InstanceTrait;
 
 /**
  * 基础验证器

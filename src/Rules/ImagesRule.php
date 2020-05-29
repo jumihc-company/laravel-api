@@ -7,7 +7,7 @@
 namespace Jmhc\Restful\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
-use Jmhc\Restful\Traits\InstanceTrait;
+use Jmhc\Support\Traits\InstanceTrait;
 
 /**
  * 图片后缀验证规则

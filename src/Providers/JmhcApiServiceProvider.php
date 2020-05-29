@@ -7,11 +7,6 @@
 namespace Jmhc\Restful\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Jmhc\Restful\Console\Commands\MakeControllerCommand;
-use Jmhc\Restful\Console\Commands\MakeFactoryCommand;
-use Jmhc\Restful\Console\Commands\MakeModelCommand;
-use Jmhc\Restful\Console\Commands\MakeServiceCommand;
-use Jmhc\Restful\Console\Commands\MakeWithFileCommand;
 use Jmhc\Restful\Middleware\CheckSdlMiddleware;
 use Jmhc\Restful\Middleware\CheckSignatureMiddleware;
 use Jmhc\Restful\Middleware\CheckTokenMiddleware;
@@ -33,17 +28,6 @@ class JmhcApiServiceProvider extends ServiceProvider
     /**
      * @var array
      */
-    protected $commands = [
-        MakeControllerCommand::class,
-        MakeModelCommand::class,
-        MakeServiceCommand::class,
-        MakeFactoryCommand::class,
-        MakeWithFileCommand::class,
-    ];
-
-    /**
-     * @var array
-     */
     protected $routeMiddleware = [
         'jmhc.cors' => CorsMiddleware::class,
         'jmhc.params.handler' => ParamsHandlerMiddleware::class,
@@ -62,9 +46,6 @@ class JmhcApiServiceProvider extends ServiceProvider
     {
         // 注册路由中间件
         $this->registerRouteMiddleware();
-
-        // 注册命令
-        $this->commands($this->commands);
 
         // 合并配置
         $this->mergeConfig();
@@ -94,12 +75,6 @@ class JmhcApiServiceProvider extends ServiceProvider
             jmhc_api_config_path('jmhc-api.php'),
             'jmhc-api'
         );
-
-        // 合并 build-file 配置
-        $this->mergeConfigFrom(
-            jmhc_api_config_path('jmhc-build-file.php'),
-            'jmhc-build-file'
-        );
     }
 
     /**
@@ -110,7 +85,6 @@ class JmhcApiServiceProvider extends ServiceProvider
         // 发布配置文件
         $this->publishes([
             jmhc_api_config_path('jmhc-api.php') => config_path('jmhc-api.php'),
-            jmhc_api_config_path('jmhc-build-file.php') => config_path('jmhc-build-file.php'),
         ], 'jmhc-api-config');
 
         // 发布迁移文件
@@ -118,17 +92,10 @@ class JmhcApiServiceProvider extends ServiceProvider
             jmhc_api_database_path('migrations') => database_path('migrations'),
         ], 'jmhc-api-migrations');
 
-        // 发布资源文件
-        $this->publishes([
-            jmhc_api_resource_path('lang') => resource_path('lang'),
-        ], 'jmhc-api-resources');
-
         // 发布所有文件
         $this->publishes([
             jmhc_api_config_path('jmhc-api.php') => config_path('jmhc-api.php'),
-            jmhc_api_config_path('jmhc-build-file.php') => config_path('jmhc-build-file.php'),
             jmhc_api_database_path('migrations') => database_path('migrations'),
-            jmhc_api_resource_path('lang') => resource_path('lang'),
         ], 'jmhc-api');
     }
 }

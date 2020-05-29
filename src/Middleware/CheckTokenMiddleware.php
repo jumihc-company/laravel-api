@@ -17,9 +17,9 @@ use Jmhc\Restful\Models\UserModel;
 use Jmhc\Restful\ResultCode;
 use Jmhc\Restful\ResultMsg;
 use Jmhc\Restful\Traits\ResultThrowTrait;
-use Jmhc\Restful\Utils\Collection;
-use Jmhc\Restful\Utils\Helper;
 use Jmhc\Restful\Utils\Token;
+use Jmhc\Support\Utils\Collection;
+use Jmhc\Support\Utils\Helper;
 
 /**
  * 检测令牌中间件

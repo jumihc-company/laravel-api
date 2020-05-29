@@ -6,7 +6,7 @@
 
 namespace Jmhc\Restful\Factory;
 
-use Jmhc\Restful\Utils\Helper;
+use Jmhc\Support\Utils\Helper;
 use ReflectionClass;
 use ReflectionException;
 

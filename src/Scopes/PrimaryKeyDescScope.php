@@ -9,7 +9,7 @@ namespace Jmhc\Restful\Scopes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
-use Jmhc\Restful\Traits\InstanceTrait;
+use Jmhc\Support\Traits\InstanceTrait;
 
 /**
  * 主键倒序作用域

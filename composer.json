@@ -28,8 +28,7 @@
         "ext-json": "*",
         "ext-openssl": "*",
         "laravel/framework": "^7.0",
-        "doctrine/dbal": "^2.0",
-        "guzzlehttp/guzzle": "^6.0"
+        "jmhc/laravesupport": "^2.0"
     },
     "extra": {
         "laravel": {
