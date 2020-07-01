@@ -1,12 +1,13 @@
 <?php
 /**
  * User: YL
- * Date: 2019/10/16
+ * Date: 2020/07/01
  */
 
 namespace Jmhc\Restful\Services;
 
 use Jmhc\Restful\Contracts\ConstAttributeInterface;
+use Jmhc\Restful\Contracts\ServiceInterface;
 use Jmhc\Restful\Traits\RequestInfoTrait;
 use Jmhc\Restful\Traits\ResultThrowTrait;
 use Jmhc\Restful\Traits\UserInfoTrait;
@@ -18,7 +19,7 @@ use Jmhc\Support\Traits\RedisHandlerTrait;
  * @method UserInfoTrait initialize()
  * @package Jmhc\Restful\Services
  */
-class BaseService implements ConstAttributeInterface
+class BaseService implements ConstAttributeInterface, ServiceInterface
 {
     use InstanceTrait;
     use RedisHandlerTrait;
@@ -31,17 +32,5 @@ class BaseService implements ConstAttributeInterface
         // 设置请求信息
         $this->setRequestInfo();
         $this->initialize();
-    }
-
-    /**
-     * 更新属性
-     * @return $this
-     */
-    public function updateAttribute()
-    {
-        // 设置请求信息
-        $this->setRequestInfo();
-
-        return $this;
     }
 }

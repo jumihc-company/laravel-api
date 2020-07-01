@@ -1,7 +1,7 @@
 <?php
 /**
  * User: YL
- * Date: 2019/10/17
+ * Date: 2020/07/01
  */
 
 namespace Jmhc\Restful\Providers;
@@ -12,11 +12,9 @@ use Jmhc\Restful\Middleware\CheckSignatureMiddleware;
 use Jmhc\Restful\Middleware\CheckTokenMiddleware;
 use Jmhc\Restful\Middleware\CheckVersionMiddleware;
 use Jmhc\Restful\Middleware\ConvertEmptyStringsToNullMiddleware;
-use Jmhc\Restful\Middleware\CorsMiddleware;
 use Jmhc\Restful\Middleware\ParamsHandlerMiddleware;
 use Jmhc\Restful\Middleware\RequestLockMiddleware;
 use Jmhc\Restful\Middleware\RequestLogMiddleware;
-use Jmhc\Restful\Middleware\RequestPlatformMiddleware;
 use Jmhc\Restful\Middleware\TrimStringsMiddleware;
 
 /**
@@ -29,13 +27,11 @@ class JmhcApiServiceProvider extends ServiceProvider
      * @var array
      */
     protected $routeMiddleware = [
-        'jmhc.cors' => CorsMiddleware::class,
         'jmhc.params.handler' => ParamsHandlerMiddleware::class,
         'jmhc.convert.empty.strings.to.null' => ConvertEmptyStringsToNullMiddleware::class,
         'jmhc.trim.strings' => TrimStringsMiddleware::class,
         'jmhc.request.lock' => RequestLockMiddleware::class,
         'jmhc.request.log' => RequestLogMiddleware::class,
-        'jmhc.request.platform' => RequestPlatformMiddleware::class,
         'jmhc.check.version' => CheckVersionMiddleware::class,
         'jmhc.check.signature' => CheckSignatureMiddleware::class,
         'jmhc.check.token' => CheckTokenMiddleware::class,

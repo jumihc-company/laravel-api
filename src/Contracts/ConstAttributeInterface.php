@@ -1,7 +1,7 @@
 <?php
 /**
  * User: YL
- * Date: 2019/10/17
+ * Date: 2020/07/01
  */
 
 namespace Jmhc\Restful\Contracts;
@@ -20,4 +20,6 @@ interface ConstAttributeInterface
     const DEFAULT_PAGE      = 1;
     const DEFAULT_PAGE_SIZE = 10;
     const DEFAULT_DIRECTION = 'asc';
+
+    const BOOLEAN_TEXTS = ['否', '是'];
 }

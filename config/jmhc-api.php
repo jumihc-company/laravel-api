@@ -5,24 +5,11 @@ return [
     'exception_debug' => env('JMHC_EXCEPTION_DEBUG', true),
     // 异常文件名称
     'db_exception_file_name' => env('JMHC_DB_EXCEPTION_FILE_NAME', 'handle_db.exception'),
-    'sms_exception_file_name' => env('JMHC_SMS_EXCEPTION_FILE_NAME', 'sms.exception'),
     'exception_file_name' => env('JMHC_EXCEPTION_FILE_NAME', 'handle.exception'),
     'error_file_name' => env('JMHC_ERROR_FILE_NAME', 'handle.error'),
 
     // 单设备登录临时缓存过期时间（秒）
     'sdl_tmp_expire' => env('JMHC_SDL_TMP_EXPIRE', 10),
-
-    // 短信发送锁定时间（秒）
-    'sms_send_lock_seconds' => env('JMHC_SMS_SEND_LOCK_SECONDS', 5),
-
-    // 跨域配置
-    'cors' => [
-        'Access-Control-Allow-Origin' => '*',
-        'Access-Control-Allow-Credentials' => 'true',
-        'Access-Control-Allow-Methods' => 'GET, POST, PATCH, PUT, DELETE',
-        'Access-Control-Allow-Headers' => '*',
-        'Access-Control-Max-Age' =>  86400, // 1d
-    ],
 
     // 日志配置
     'log' => [
@@ -74,6 +61,8 @@ return [
         'key' => env('JMHC_SIGNATURE_KEY', ''),
         // 签名时间戳超时（秒）
         'timestamp_timeout' => env('JMHC_SIGNATURE_TIMESTAMP_TIMEOUT', 60),
+        // 验证时间戳
+        'check_timestamp' => env('JMHC_SIGNATURE_CHECK_TIMESTAMP', true),
     ],
 
     // 请求锁定配置

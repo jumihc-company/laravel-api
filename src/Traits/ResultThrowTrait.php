@@ -1,14 +1,14 @@
 <?php
 /**
  * User: YL
- * Date: 2019/10/16
+ * Date: 2020/07/01
  */
 
 namespace Jmhc\Restful\Traits;
 
+use Jmhc\Restful\Contracts\ResultCodeInterface;
+use Jmhc\Restful\Contracts\ResultMsgInterface;
 use Jmhc\Restful\Exceptions\ResultException;
-use Jmhc\Restful\ResultCode;
-use Jmhc\Restful\ResultMsg;
 
 /**
  * 抛出结果异常
@@ -23,7 +23,7 @@ trait ResultThrowTrait
      * @param int $code
      * @throws ResultException
      */
-    protected function success($data = null, string $msg = ResultMsg::SUCCESS, int $code = ResultCode::SUCCESS)
+    protected function success($data = null, string $msg = ResultMsgInterface::SUCCESS, int $code = ResultCodeInterface::SUCCESS)
     {
         $this->abort($code, $msg, $data);
     }
@@ -36,7 +36,7 @@ trait ResultThrowTrait
      * @param int $httpCode
      * @throws ResultException
      */
-    protected function error(string $msg, int $code = ResultCode::ERROR, $data = null, int $httpCode = ResultCode::HTTP_ERROR_CODE)
+    protected function error(string $msg, int $code = ResultCodeInterface::ERROR, $data = null, int $httpCode = ResultCodeInterface::HTTP_ERROR_CODE)
     {
         $this->abort($code, $msg, $data, $httpCode);
     }
@@ -46,9 +46,9 @@ trait ResultThrowTrait
      * @param string $msg
      * @throws ResultException
      */
-    protected function noData(string $msg = ResultMsg::NO_DATA)
+    protected function noData(string $msg = ResultMsgInterface::NO_DATA)
     {
-        $this->abort(ResultCode::NO_DATA, $msg, null);
+        $this->abort(ResultCodeInterface::NO_DATA, $msg, null);
     }
 
     /**
@@ -59,7 +59,7 @@ trait ResultThrowTrait
      * @param int $httpCode
      * @throws ResultException
      */
-    private function abort(int $code, string $msg, $data, int $httpCode = ResultCode::HTTP_SUCCESS_CODE)
+    private function abort(int $code, string $msg, $data, int $httpCode = ResultCodeInterface::HTTP_SUCCESS_CODE)
     {
         throw new ResultException($code, $msg, $data, $httpCode);
     }

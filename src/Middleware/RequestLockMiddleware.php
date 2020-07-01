@@ -1,7 +1,7 @@
 <?php
 /**
  * User: YL
- * Date: 2019/10/23
+ * Date: 2020/07/01
  */
 
 namespace Jmhc\Restful\Middleware;
@@ -9,7 +9,8 @@ namespace Jmhc\Restful\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Jmhc\Restful\ResultCode;
+use Jmhc\Restful\Contracts\RequestParamsInterface;
+use Jmhc\Restful\Contracts\ResultCodeInterface;
 use Jmhc\Restful\Traits\ResultThrowTrait;
 
 /**
@@ -38,7 +39,7 @@ class RequestLockMiddleware
         if (! $request->requestLock->get()) {
             $this->error(
                 config('jmhc-api.request_lock.tips', '请求已被锁定，请稍后重试~'),
-                ResultCode::REQUEST_LOCKED
+                ResultCodeInterface::REQUEST_LOCKED
             );
         }
 
@@ -52,6 +53,6 @@ class RequestLockMiddleware
      */
     protected function getLockKey(Request $request)
     {
-        return 'lock-' . md5($request->ip() . $request->path() . json_encode($request->params));
+        return 'lock-' . md5($request->ip() . $request->path() . json_encode(app()->get(RequestParamsInterface::class)));
     }
 }

@@ -7,11 +7,8 @@
 namespace Jmhc\Restful\Contracts;
 
 /**
- * 版本模型
+ * 服务
  * @package Jmhc\Restful\Contracts
  */
-interface VersionModelInterface
-{
-    // 获取最新版本信息
-    public function getLastInfo();
-}
+interface ServiceInterface
+{}

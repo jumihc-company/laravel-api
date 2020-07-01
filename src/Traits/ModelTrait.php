@@ -1,7 +1,7 @@
 <?php
 /**
  * User: YL
- * Date: 2019/10/17
+ * Date: 2020/07/01
  */
 
 namespace Jmhc\Restful\Traits;

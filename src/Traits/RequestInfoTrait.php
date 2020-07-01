@@ -1,14 +1,15 @@
 <?php
 /**
  * User: YL
- * Date: 2019/10/17
+ * Date: 2020/07/01
  */
 
 namespace Jmhc\Restful\Traits;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
-use Jmhc\Restful\PlatformInfo;
+use Jmhc\Restful\Contracts\RequestParamsInterface;
+use Jmhc\Restful\Utils\Agent;
 use Jmhc\Support\Utils\Collection;
 
 /**
@@ -42,10 +43,10 @@ trait RequestInfoTrait
     protected $ip;
 
     /**
-     * 请求平台 PlatformInfo::other
-     * @var string
+     * 请求 Agent
+     * @var Agent
      */
-    protected $platform;
+    protected $agent;
 
     /**
      * 设置请求信息
@@ -54,8 +55,11 @@ trait RequestInfoTrait
     {
         $this->app = app('app');
         $this->request = request();
-        $this->params = new Collection($this->request->params);
+        $this->params = app()->get(RequestParamsInterface::class);
         $this->ip = $this->request->ip();
-        $this->platform = $this->request->platform ?? PlatformInfo::OTHER;
+        $this->agent = Agent::getInstance([
+            'request' => $this->request,
+            'userAgent' => $this->request->header('user-agent', ''),
+        ]);
     }
 }

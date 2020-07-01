@@ -1,7 +1,7 @@
 <?php
 /**
  * User: YL
- * Date: 2019/10/17
+ * Date: 2020/07/01
  */
 
 namespace Jmhc\Restful\Middleware;
@@ -11,11 +11,11 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Jmhc\Restful\Contracts\ConstAttributeInterface;
+use Jmhc\Restful\Contracts\ResultCodeInterface;
+use Jmhc\Restful\Contracts\ResultMsgInterface;
 use Jmhc\Restful\Contracts\UserModelInterface;
 use Jmhc\Restful\Exceptions\ResultException;
-use Jmhc\Restful\Models\UserModel;
-use Jmhc\Restful\ResultCode;
-use Jmhc\Restful\ResultMsg;
 use Jmhc\Restful\Traits\ResultThrowTrait;
 use Jmhc\Restful\Utils\Token;
 use Jmhc\Support\Utils\Collection;
@@ -65,7 +65,7 @@ class CheckTokenMiddleware
 
         // 判断token是否存在
         if (empty($token)) {
-            $this->error(ResultMsg::TOKEN_NO_EXISTS, ResultCode::TOKEN_NO_EXISTS);
+            $this->error(ResultMsgInterface::TOKEN_NO_EXISTS, ResultCodeInterface::TOKEN_NO_EXISTS);
         }
 
         // 解析token
@@ -84,9 +84,10 @@ class CheckTokenMiddleware
         // 判断token是否有效
         $info = app()->get(UserModelInterface::class)->getInfoById($id);
         if (empty($info)) {
-            $this->error(ResultMsg::TOKEN_INVALID, ResultCode::TOKEN_INVALID);
-        } elseif ($info->status != UserModel::YES) {
-            $this->error(ResultMsg::PROHIBIT_LOGIN, ResultCode::PROHIBIT_LOGIN);
+            $this->error(ResultMsgInterface::TOKEN_INVALID, ResultCodeInterface::TOKEN_INVALID);
+        } elseif ($info->is_freeze == ConstAttributeInterface::YES) {
+            // 是否冻结
+            $this->error(ResultMsgInterface::PROHIBIT_LOGIN, ResultCodeInterface::PROHIBIT_LOGIN);
         }
 
         // 判断是否刷新token

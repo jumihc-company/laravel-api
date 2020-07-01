@@ -1,7 +1,7 @@
 <?php
 /**
  * User: YL
- * Date: 2019/10/18
+ * Date: 2020/07/01
  */
 
 namespace Jmhc\Restful\Handlers;
@@ -16,9 +16,9 @@ use Illuminate\Foundation\Exceptions\Handler;
 use Illuminate\Foundation\Http\Exceptions\MaintenanceModeException;
 use Illuminate\Routing\Router;
 use Illuminate\Validation\ValidationException;
+use Jmhc\Restful\Contracts\ResultCodeInterface;
+use Jmhc\Restful\Contracts\ResultMsgInterface;
 use Jmhc\Restful\Exceptions\ResultException;
-use Jmhc\Restful\ResultCode;
-use Jmhc\Restful\ResultMsg;
 use Jmhc\Restful\Utils\Cipher;
 use Jmhc\Support\Utils\LogHelper;
 use LogicException;
@@ -33,11 +33,11 @@ use Throwable;
  */
 class ExceptionHandler extends Handler
 {
-    protected $code = ResultCode::ERROR;
-    protected $msg = ResultMsg::ERROR;
+    protected $code = ResultCodeInterface::ERROR;
+    protected $msg = ResultMsgInterface::ERROR;
     protected $data;
 
-    protected $httpCode = ResultCode::HTTP_ERROR_CODE;
+    protected $httpCode = ResultCodeInterface::HTTP_ERROR_CODE;
 
     public function report(Throwable $e)
     {}
@@ -91,10 +91,10 @@ class ExceptionHandler extends Handler
      */
     protected function resetProperty()
     {
-        $this->code = ResultCode::ERROR;
-        $this->msg = ResultMsg::ERROR;
+        $this->code = ResultCodeInterface::ERROR;
+        $this->msg = ResultMsgInterface::ERROR;
         $this->data = null;
-        $this->httpCode = ResultCode::HTTP_ERROR_CODE;
+        $this->httpCode = ResultCodeInterface::HTTP_ERROR_CODE;
     }
 
     protected function response(Throwable $e)
@@ -107,16 +107,16 @@ class ExceptionHandler extends Handler
             $this->httpCode = $e->getHttpCode();
         } elseif ($e instanceof MaintenanceModeException) {
             // 系统维护中
-            $this->code = ResultCode::MAINTENANCE;
-            $this->msg = ResultMsg::MAINTENANCE;
+            $this->code = ResultCodeInterface::MAINTENANCE;
+            $this->msg = $e->getMessage() ?: ResultMsgInterface::MAINTENANCE;
         } elseif ($e instanceof HttpException) {
             // 请求异常
-            $this->code = ResultCode::ERROR;
-            $this->msg = ResultMsg::INVALID_REQUEST;
+            $this->code = ResultCodeInterface::ERROR;
+            $this->msg = ResultMsgInterface::INVALID_REQUEST;
         } elseif ($e instanceof QueryException) {
             // 数据库异常
-            $this->code = ResultCode::SYS_EXCEPTION;
-            $this->msg = ResultMsg::SYS_EXCEPTION;
+            $this->code = ResultCodeInterface::SYS_EXCEPTION;
+            $this->msg = ResultMsgInterface::SYS_EXCEPTION;
             LogHelper::throwableSave(
                 config('jmhc-api.db_exception_file_name', 'handle_db.exception'),
                 $e
@@ -126,16 +126,16 @@ class ExceptionHandler extends Handler
             $this->msg = $e->validator->errors()->first();
         } elseif ($e instanceof ReflectionException || $e instanceof LogicException || $e instanceof RuntimeException || $e instanceof BindingResolutionException) {
             // 反射、逻辑、运行、绑定解析异常
-            $this->code = ResultCode::SYS_EXCEPTION;
-            $this->msg = ResultMsg::SYS_EXCEPTION;
+            $this->code = ResultCodeInterface::SYS_EXCEPTION;
+            $this->msg = ResultMsgInterface::SYS_EXCEPTION;
             LogHelper::throwableSave(
                 config('jmhc-api.exception_file_name', 'handle.exception'),
                 $e
             );
         } elseif ($e instanceof Error || $e instanceof ErrorException) {
             // 发生错误
-            $this->code = ResultCode::SYS_ERROR;
-            $this->msg = ResultMsg::SYS_ERROR;
+            $this->code = ResultCodeInterface::SYS_ERROR;
+            $this->msg = ResultMsgInterface::SYS_ERROR;
             LogHelper::throwableSave(
                 config('jmhc-api.error_file_name', 'handle.error'),
                 $e
@@ -197,7 +197,7 @@ class ExceptionHandler extends Handler
      */
     protected function unRequestLocke($request)
     {
-        if ($this->code != ResultCode::REQUEST_LOCKED &&
+        if ($this->code != ResultCodeInterface::REQUEST_LOCKED &&
             $request->requestLock instanceof LockContract) {
             $request->requestLock->forceRelease();
         }

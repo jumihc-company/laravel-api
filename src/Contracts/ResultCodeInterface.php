@@ -1,16 +1,16 @@
 <?php
 /**
  * User: YL
- * Date: 2019/10/16
+ * Date: 2020/07/01
  */
 
-namespace Jmhc\Restful;
+namespace Jmhc\Restful\Contracts;
 
 /**
  * 请求结果状态码
- * @package Jmhc\Restful
+ * @package Jmhc\Restful\Contracts
  */
-class ResultCode
+interface ResultCodeInterface
 {
     const HTTP_SUCCESS_CODE        = 200;
     const HTTP_ERROR_CODE          = 200;

@@ -5,6 +5,7 @@
 	- [快速使用](#%E5%BF%AB%E9%80%9F%E4%BD%BF%E7%94%A8)
 		- [中间件](#%E4%B8%AD%E9%97%B4%E4%BB%B6)
 		- [异常处理](#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86)
+		- [使用路由服务提供者](#%E4%BD%BF%E7%94%A8%E8%B7%AF%E7%94%B1%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85)
 		- [控制器](#%E6%8E%A7%E5%88%B6%E5%99%A8)
 		- [模型](#%E6%A8%A1%E5%9E%8B)
 		- [服务层(逻辑层)](#%E6%9C%8D%E5%8A%A1%E5%B1%82%E9%80%BB%E8%BE%91%E5%B1%82)
@@ -48,9 +49,6 @@ php artisan vendor:publish --tag=jmhc-api-config
 
 // 只发布迁移文件
 php artisan vendor:publish --tag=jmhc-api-migrations
-
-// 只发布资源文件
-php artisan vendor:publish --tag=jmhc-api-resources
 ```
 
 ## 使用说明
@@ -65,6 +63,8 @@ php artisan vendor:publish --tag=jmhc-api-resources
 2. [发布配置[可选]](#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE)
 3. [注册中间件](#%E4%B8%AD%E9%97%B4%E4%BB%B6)
 4. [继承异常处理程序](#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86)
+5. [使用路由服务提供者](#%E4%BD%BF%E7%94%A8%E8%B7%AF%E7%94%B1%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85)
+6. [示例代码](#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81)
 
 #### 中间件
 - 必须注册全局中间件 `Jmhc\Restful\Middleware\ParamsHandlerMiddleware`
@@ -75,13 +75,43 @@ php artisan vendor:publish --tag=jmhc-api-resources
 - 修改 `App\Exceptions\Handler` 继承的方法为  `Jmhc\Restful\Handlers\ExceptionHandler`
 - 其他异常捕获调用父类 `response()`  方法并重写，参考 `Jmhc\Restful\Handlers\ExceptionHandler->response()`
 
+#### 使用路由服务提供者
+
+- 修改 `App\Providers\RouteServiceProvider` 继承的方法为  `Jmhc\Restful\Providers\JmhcRouteServiceProvider`
+- 路由服务提供者会自动扫描 `routes` 目录生成路由
+
+#### 示例代码
+```php
+// route
+Route::get('tests', 'TestController@index');
+
+// controller
+use Jmhc\Restful\Controllers\BaseController;
+use \Jmhc\Restful\Traits\ResourceControllerTrait;
+
+class TestController extends BaseController
+{
+    use ResourceControllerTrait;
+}
+
+// service
+use \Jmhc\Restful\Services\BaseService;
+class TestService extends BaseService
+{
+    public function index()
+    {
+        $this->success('this is tests');
+    }
+}
+```
+
 #### 控制器
 
 - 直接继承 `Jmhc\Restful\Controllers\BaseController`
 
 #### 模型
 
-- 可选继承 `Jmhc\Restful\Models\BaseModel` 、 `Jmhc\Restful\Models\BaseMongo` 、 `Jmhc\Restful\Models\BasePivot` 、 `Jmhc\Restful\Models\UserModel`  、`Jmhc\Restful\Models\VersionModel`
+- 可选继承 `Jmhc\Restful\Models\BaseModel` 、 `Jmhc\Restful\Models\BasePivot` 、 `Jmhc\Restful\Models\UserModel`  、`Jmhc\Restful\Models\VersionModel`
 
 #### 服务层(逻辑层)
 
@@ -115,43 +145,17 @@ php artisan vendor:publish --tag=jmhc-api-resources
 - 可使用 `Jmhc\Restful\Traits\RequestInfoTrait` 里的参数
 - 可使用 `Jmhc\Restful\Traits\UserInfoTrait` 里的参数、方法
 
-```php
-class TestController extends BaseController
-{
-	public function initialize()
-    {
-        parent::initialize();
-        $this->service = TestService::getInstance();
-    }
-    
-    public function index()
-    {
-    	$this->request->params->a = 'a';
-    	// 当初始化实例化service后，方法中有更新$this->request->params时,应当调用服务层updateAttribute方法更新$this->request->params
-    	$this->service->updateAttribute()->index();
-    }
-    
-    public function index()
-    {
-    	// 当初始化实例化service后，方法中无更新$this->request->params
-    	$this->service->index();
-    }
-}
-```
-
 ### 中间件
 
 > 用法加粗为必须调用
 
 |   中间件   |   别名   |   用法   |   需要实现的契约或继承模型   |
 | ---- | ---- | ---- | ---- |
-| `Jmhc\Restful\Middleware\CorsMiddleware` | `jmhc.cors` | 允许跨域 | --- |
 | `Jmhc\Restful\Middleware\ParamsHandlerMiddleware`  | `jmhc.params.handler` | **参数处理** | --- |
 | `Jmhc\Restful\Middleware\ConvertEmptyStringsToNullMiddleware` | `jmhc.convert.empty.strings.to.null` | 转换空字符串为null | --- |
 | `Jmhc\Restful\Middleware\TrimStringsMiddleware` | `jmhc.trim.strings` | 清除字符串空格 | --- |
 | `Jmhc\Restful\Middleware\RequestLockMiddleware` | `jmhc.request.lock` | 请求锁定 | --- |
 | `Jmhc\Restful\Middleware\RequestLogMiddleware` | `jmhc.request.log` | 记录请求日志(debug) | --- |
-| `Jmhc\Restful\Middleware\RequestPlatformMiddleware` | `jmhc.request.platform` | 设置请求平台，参考`Jmhc\Restful\PlatformInfo` | --- |
 | `Jmhc\Restful\Middleware\CheckVersionMiddleware` | `jmhc.check.version` | 检测应用版本 | `Jmhc\Restful\Contracts\VersionModelInterface`<br />`Jmhc\Restful\Models\VersionModel` |
 | `Jmhc\Restful\Middleware\CheckSignatureMiddleware` | `jmhc.check.signature` | 验证请求签名 | --- |
 | `Jmhc\Restful\Middleware\CheckTokenMiddleware` | `jmhc.check.token` | 检测token，设置用户数据 | `Jmhc\Restful\Contracts\UserModelInterface`<br />`Jmhc\Restful\Models\UserModel` |

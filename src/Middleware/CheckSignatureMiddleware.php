@@ -1,13 +1,14 @@
 <?php
 /**
  * User: YL
- * Date: 2019/10/17
+ * Date: 2020/07/01
  */
 
 namespace Jmhc\Restful\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Jmhc\Restful\Contracts\RequestParamsInterface;
 use Jmhc\Restful\Exceptions\ResultException;
 use Jmhc\Restful\Traits\ResultThrowTrait;
 use Jmhc\Restful\Utils\Signature;
@@ -29,13 +30,14 @@ class CheckSignatureMiddleware
             return $next($request);
         }
 
-        // 判断时间戳是否超时
+        // 读取配置
         $timeout = config('jmhc-api.signature.timestamp_timeout', 60);
+        $checkTimestamp = config('jmhc-api.signature.check_timestamp', true);
+
+        // 判断时间戳是否超时
         $timestamp = $request->originParams['timestamp'] ?? 0;
         $time = time();
-        if ($timestamp > ($time + $timeout) || ($timestamp + $timeout) < $time) {
-            $this->error('请求已过期~');
-        }
+        $this->validateTimestamp($checkTimestamp, $time, $timestamp, $timeout);
 
         // 判断随机数是否有效
         $nonce = $request->originParams['nonce'] ?? '';
@@ -43,7 +45,7 @@ class CheckSignatureMiddleware
 
         // 验证签名是否正确
         $sign = $request->originParams['sign'] ?? '';
-        $data = $request->params ?? [];
+        $data = app()->get(RequestParamsInterface::class)->toArray();
         $data['timestamp'] = $timestamp;
         $data['nonce'] = $nonce;
         $key = config('jmhc-api.signature.key', '');
@@ -57,6 +59,29 @@ class CheckSignatureMiddleware
         }
 
         return $next($request);
+    }
+
+    /**
+     * 验证时间戳
+     * @param bool $checkTimestamp
+     * @param int $time
+     * @param int $timestamp
+     * @param int $timeout
+     * @throws ResultException
+     */
+    protected function validateTimestamp(bool $checkTimestamp, int $time, int $timestamp, int $timeout)
+    {
+        if (! $checkTimestamp) {
+            return;
+        }
+
+        if ($timestamp > ($time + $timeout)) {
+            $this->error('请求时间过大~');
+        }
+
+        if (($timestamp + $timeout) < $time) {
+            $this->error('请求已过期~');
+        }
     }
 
     /**

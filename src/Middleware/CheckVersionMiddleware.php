@@ -1,16 +1,16 @@
 <?php
 /**
  * User: YL
- * Date: 2019/10/17
+ * Date: 2020/07/01
  */
 
 namespace Jmhc\Restful\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Jmhc\Restful\Contracts\ResultCodeInterface;
+use Jmhc\Restful\Contracts\ResultMsgInterface;
 use Jmhc\Restful\Contracts\VersionModelInterface;
-use Jmhc\Restful\ResultCode;
-use Jmhc\Restful\ResultMsg;
 use Jmhc\Restful\Traits\ResultThrowTrait;
 
 /**
@@ -38,7 +38,7 @@ class CheckVersionMiddleware
         $info = app()->get(VersionModelInterface::class)->getLastInfo();
         if (! empty($info)) {
             if ($version < $info->code && $info->is_force) {
-                $this->error(ResultMsg::OLD_VERSION, ResultCode::OLD_VERSION, [
+                $this->error(ResultMsgInterface::OLD_VERSION, ResultCodeInterface::OLD_VERSION, [
                     'content' => $info->content,
                     'url' => $info->url,
                 ]);

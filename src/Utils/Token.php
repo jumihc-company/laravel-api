@@ -1,13 +1,13 @@
 <?php
 /**
  * User: YL
- * Date: 2019/10/16
+ * Date: 2020/07/01
  */
 
 namespace Jmhc\Restful\Utils;
 
-use Jmhc\Restful\ResultCode;
-use Jmhc\Restful\ResultMsg;
+use Jmhc\Restful\Contracts\ResultCodeInterface;
+use Jmhc\Restful\Contracts\ResultMsgInterface;
 use Jmhc\Restful\Utils\Cipher\Token as TokenCipher;
 
 /**
@@ -68,13 +68,13 @@ class Token
     {
         // 验证格式
         if (count($parse) != 2) {
-            return [ResultCode::TOKEN_INVALID, ResultMsg::TOKEN_INVALID];
+            return [ResultCodeInterface::TOKEN_INVALID, ResultMsgInterface::TOKEN_INVALID];
         }
 
         // 验证token是否有效
         $refreshTime = config('jmhc-api.token.allow_refresh_time', 0);
-        if (($parse[1] + $refreshTime) < time()) {
-            return [ResultCode::TOKEN_EXPIRE, ResultMsg::TOKEN_EXPIRE];
+        if (((int) $parse[1] + $refreshTime) < time()) {
+            return [ResultCodeInterface::TOKEN_EXPIRE, ResultMsgInterface::TOKEN_EXPIRE];
         }
 
         return true;

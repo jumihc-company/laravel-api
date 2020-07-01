@@ -1,16 +1,16 @@
 <?php
 /**
  * User: YL
- * Date: 2019/10/16
+ * Date: 2020/07/01
  */
 
-namespace Jmhc\Restful;
+namespace Jmhc\Restful\Contracts;
 
 /**
  * 请求结果消息
- * @package Jmhc\Restful
+ * @package Jmhc\Restful\Contracts
  */
-class ResultMsg
+interface ResultMsgInterface
 {
     const SUCCESS                 = 'success';
     const NO_DATA                 = '暂无数据';

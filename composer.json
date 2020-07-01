@@ -28,6 +28,7 @@
         "ext-json": "*",
         "ext-openssl": "*",
         "laravel/framework": "^7.0",
+        "jenssegers/agent": "^2.0",
         "jmhc/laravel-support": "^2.0"
     },
     "extra": {
