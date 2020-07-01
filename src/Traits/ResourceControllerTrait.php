@@ -27,7 +27,7 @@ trait ResourceControllerTrait
 
     public function index()
     {
-        $this->service->index();
+        return $this->service->index();
     }
 
     public function show(int $id)
@@ -36,12 +36,12 @@ trait ResourceControllerTrait
             $this->params->id = $id;
         }
 
-        $this->service->show();
+        return $this->service->show();
     }
 
     public function store()
     {
-        $this->service->store();
+        return $this->service->store();
     }
 
     public function update(string $id = '')
@@ -50,7 +50,7 @@ trait ResourceControllerTrait
             $this->params->id = $id;
         }
 
-        $this->service->update();
+        return $this->service->update();
     }
 
     public function destroy(string $id = '')
@@ -59,7 +59,7 @@ trait ResourceControllerTrait
             $this->params->id = $id;
         }
 
-        $this->service->destroy();
+        return $this->service->destroy();
     }
 
     /**
