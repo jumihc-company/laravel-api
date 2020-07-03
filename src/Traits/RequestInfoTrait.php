@@ -8,6 +8,7 @@ namespace Jmhc\Restful\Traits;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
+use Jmhc\Restful\Contracts\AgentInterface;
 use Jmhc\Restful\Contracts\RequestParamsInterface;
 use Jmhc\Restful\Utils\Agent;
 use Jmhc\Support\Utils\Collection;
@@ -57,9 +58,6 @@ trait RequestInfoTrait
         $this->request = request();
         $this->params = app()->get(RequestParamsInterface::class);
         $this->ip = $this->request->ip();
-        $this->agent = Agent::getInstance([
-            'request' => $this->request,
-            'userAgent' => $this->request->header('user-agent', ''),
-        ]);
+        $this->agent = app()->get(AgentInterface::class);
     }
 }
