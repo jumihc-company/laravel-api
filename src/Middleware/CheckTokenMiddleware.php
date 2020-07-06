@@ -82,7 +82,7 @@ class CheckTokenMiddleware
         [$id, $time] = $parse;
 
         // 判断token是否有效
-        $info = app()->get(UserModelInterface::class)->getInfoById($id);
+        $info = $this->getUserInfo($id);
         if (empty($info)) {
             $this->error(ResultMsgInterface::TOKEN_INVALID, ResultCodeInterface::TOKEN_INVALID);
         } elseif ($info->is_freeze == ConstAttributeInterface::YES) {
@@ -98,5 +98,15 @@ class CheckTokenMiddleware
         }
 
         return $info;
+    }
+
+    /**
+     * 获取用户信息
+     * @param int $id
+     * @return mixed
+     */
+    protected function getUserInfo(int $id)
+    {
+        return app()->get(UserModelInterface::class)->getInfoById($id);
     }
 }
