@@ -35,7 +35,7 @@ class CheckVersionMiddleware
         }
 
         // 验证版本
-        $info = app()->get(VersionModelInterface::class)->getLastInfo();
+        $info = $this->getVersionLastInfo();
         if (! empty($info)) {
             if ($version < $info->code && $info->is_force) {
                 $this->error(ResultMsgInterface::OLD_VERSION, ResultCodeInterface::OLD_VERSION, [
@@ -62,5 +62,14 @@ class CheckVersionMiddleware
         }
 
         return $version;
+    }
+
+    /**
+     * 获取版本最新信息
+     * @return mixed
+     */
+    protected function getVersionLastInfo()
+    {
+        return app()->get(VersionModelInterface::class)->getLastInfo();
     }
 }

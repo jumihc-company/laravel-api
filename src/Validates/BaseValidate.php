@@ -57,11 +57,16 @@ class BaseValidate
     /**
      * 选取需要的规则
      * @param array $fields
+     * @param array $data
      * @return array
      */
-    protected function only(array $fields)
+    protected function only(array $fields, array $data = [])
     {
-        return array_filter($this->rules(), function ($key) use ($fields) {
+        if (empty($data)) {
+            $data = $this->rules();
+        }
+
+        return array_filter($data, function ($key) use ($fields) {
             return $this->inArray($key, $fields);
         }, ARRAY_FILTER_USE_KEY);
     }
@@ -69,11 +74,16 @@ class BaseValidate
     /**
      * 移除需要的规则
      * @param array $fields
+     * @param array $data
      * @return array
      */
-    protected function remove(array $fields)
+    protected function remove(array $fields, array $data = [])
     {
-        return array_filter($this->rules(), function ($key) use ($fields) {
+        if (empty($data)) {
+            $data = $this->rules();
+        }
+
+        return array_filter($data, function ($key) use ($fields) {
             return ! $this->inArray($key, $fields);
         }, ARRAY_FILTER_USE_KEY);
     }

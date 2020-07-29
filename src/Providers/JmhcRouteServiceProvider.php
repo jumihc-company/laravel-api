@@ -15,6 +15,13 @@ use Illuminate\Support\Facades\Route;
  */
 class JmhcRouteServiceProvider extends RouteServiceProvider
 {
+    public function boot()
+    {
+        Route::pattern('id', '[0-9]+');
+
+        parent::boot();
+    }
+
     public function map()
     {
         $files = glob(base_path('routes/*.php'));

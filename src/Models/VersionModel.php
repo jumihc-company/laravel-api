@@ -30,4 +30,16 @@ class VersionModel extends BaseModel implements VersionModelInterface
         return static::query()
             ->first();
     }
+
+    /**
+     * 通过平台获取最新版本信息
+     * @param int $platform
+     * @return Builder|Model|object|null
+     */
+    public function getLastInfoByPlatform(int $platform)
+    {
+        return static::query()
+            ->where('platform', $platform)
+            ->first();
+    }
 }
