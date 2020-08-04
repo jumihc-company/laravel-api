@@ -21,6 +21,12 @@ class BaseModel extends Model implements ConstAttributeInterface
 {
     use ModelTrait;
 
+    /**
+     * 是否使用主键倒序作用域
+     * @var bool
+     */
+    protected static $usePrimaryKeyDescScope = true;
+
     protected function initializeBefore()
     {
         // 设置当前表名
@@ -33,7 +39,9 @@ class BaseModel extends Model implements ConstAttributeInterface
     {
         parent::boot();
 
-        static::addGlobalScope(PrimaryKeyDescScope::getInstance());
+        if (static::$usePrimaryKeyDescScope) {
+            static::addGlobalScope(PrimaryKeyDescScope::getInstance());
+        }
     }
 
     public function getForeignKey()

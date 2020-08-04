@@ -90,7 +90,7 @@ trait ModelTrait
      * @param Builder $builder
      * @param array $params
      */
-    private static function assembleOrder(Builder &$builder, array $params)
+    private static function assembleOrder(Builder $builder, array $params)
     {
         // 排序字段
         if (! empty($params['sort']) && in_array(
@@ -113,7 +113,7 @@ trait ModelTrait
      * @param Builder $builder
      * @param array $params
      */
-    private static function assembleLimit(Builder &$builder, array $params)
+    private static function assembleLimit(Builder $builder, array $params)
     {
         if ((! empty($params['limit']) || ! empty($params['offset'])) && empty($params['page']) && empty($params['page_size'])) {
             // 判断参数
@@ -134,7 +134,7 @@ trait ModelTrait
      * @param Builder $builder
      * @param array $params
      */
-    private static function assemblePage(Builder &$builder, array $params)
+    private static function assemblePage(Builder $builder, array $params)
     {
         if (empty($params['limit']) && empty($params['offset']) && (! empty($params['page']) || ! empty($params['page_size']))) {
             // 判断参数
