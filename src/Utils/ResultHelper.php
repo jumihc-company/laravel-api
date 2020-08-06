@@ -9,6 +9,10 @@ namespace Jmhc\Restful\Utils;
 use Jmhc\Restful\Contracts\ResultCodeInterface;
 use Jmhc\Restful\Contracts\ResultMsgInterface;
 
+/**
+ * 返回结果辅助
+ * @package Jmhc\Restful\Utils
+ */
 class ResultHelper
 {
     /**
