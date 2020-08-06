@@ -26,39 +26,54 @@ class CheckSignatureMiddleware
 
     public function handle(Request $request, Closure $next)
     {
-        if (! config('jmhc-api.signature.check')) {
+        // 加载配置
+        $config = $this->withConfig();
+        if (! $config['check']) {
             return $next($request);
         }
-
-        // 读取配置
-        $timeout = config('jmhc-api.signature.timestamp_timeout', 60);
-        $checkTimestamp = config('jmhc-api.signature.check_timestamp', true);
 
         // 判断时间戳是否超时
         $timestamp = $request->originParams['timestamp'] ?? 0;
         $time = time();
-        $this->validateTimestamp($checkTimestamp, $time, $timestamp, $timeout);
+        $this->validateTimestamp($config['check_timestamp'], $time, $timestamp, $config['timestamp_timeout']);
 
         // 判断随机数是否有效
         $nonce = $request->originParams['nonce'] ?? '';
-        $this->validateNonce($nonce, $timestamp, $timeout);
+        $this->validateNonce($nonce, $timestamp, $config['timestamp_timeout']);
 
         // 验证签名是否正确
         $sign = $request->originParams['sign'] ?? '';
         $data = app()->get(RequestParamsInterface::class)->toArray();
         $data['timestamp'] = $timestamp;
         $data['nonce'] = $nonce;
-        $key = config('jmhc-api.signature.key', '');
-        if (! Signature::verify($sign, $data, $key)) {
+        if (! Signature::verify($sign, $data, $config['key'])) {
             // 签名验证失败记录
             Log::save(
                 'signature.error',
-                $this->getSignatureErrorMsg($request, $sign, $data, $key)
+                $this->getSignatureErrorMsg($request, $sign, $data, $config['key'])
             );
             $this->error('签名验证失败~');
         }
 
         return $next($request);
+    }
+
+    /**
+     * 加载配置
+     * @return array
+     */
+    protected function withConfig()
+    {
+        return [
+            // 是否检测签名
+            'check' => config('jmhc-api.signature.check'),
+            // 签名秘钥
+            'key' => config('jmhc-api.signature.key', ''),
+            // 签名时间戳超时（秒）
+            'timestamp_timeout' => config('jmhc-api.signature.timestamp_timeout', 60),
+            // 验证时间戳
+            'check_timestamp' => config('jmhc-api.signature.check_timestamp', true),
+        ];
     }
 
     /**

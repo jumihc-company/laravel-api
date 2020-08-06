@@ -29,6 +29,12 @@ class CheckTokenMiddleware
 {
     use ResultThrowTrait;
 
+    /**
+     * 默认场景
+     * @var string
+     */
+    protected $scene = 'api';
+
     public function handle(Request $request, Closure $next, $force = true)
     {
         try {
@@ -72,7 +78,7 @@ class CheckTokenMiddleware
         $parse = Token::parse($token);
 
         // 验证token
-        $verify = Token::verify($parse);
+        $verify = Token::verify($parse, $this->scene);
         if ($verify !== true) {
             [$code, $msg] = $verify;
             $this->error($msg, $code);
