@@ -119,7 +119,8 @@ class ExceptionHandler extends Handler
             $this->msg = ResultMsgInterface::SYS_EXCEPTION;
             LogHelper::throwableSave(
                 config('jmhc-api.db_exception_file_name', 'handle_db.exception'),
-                $e
+                $e,
+                config('jmhc-api.db_exception_request_message', false)
             );
         } elseif ($e instanceof ValidationException) {
             // 验证器异常
@@ -130,7 +131,8 @@ class ExceptionHandler extends Handler
             $this->msg = ResultMsgInterface::SYS_EXCEPTION;
             LogHelper::throwableSave(
                 config('jmhc-api.exception_file_name', 'handle.exception'),
-                $e
+                $e,
+                config('jmhc-api.exception_request_message', false)
             );
         } elseif ($e instanceof Error || $e instanceof ErrorException) {
             // 发生错误
@@ -138,7 +140,8 @@ class ExceptionHandler extends Handler
             $this->msg = ResultMsgInterface::SYS_ERROR;
             LogHelper::throwableSave(
                 config('jmhc-api.error_file_name', 'handle.error'),
-                $e
+                $e,
+                config('jmhc-api.error_request_message', false)
             );
         }
     }

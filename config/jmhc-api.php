@@ -7,6 +7,10 @@ return [
     'db_exception_file_name' => env('JMHC_DB_EXCEPTION_FILE_NAME', 'handle_db.exception'),
     'exception_file_name' => env('JMHC_EXCEPTION_FILE_NAME', 'handle.exception'),
     'error_file_name' => env('JMHC_ERROR_FILE_NAME', 'handle.error'),
+    // 是否记录异常请求消息
+    'db_exception_request_message' => env('JMHC_DB_EXCEPTION_REQUEST_MESSAGE', false),
+    'exception_request_message' => env('JMHC_EXCEPTION_REQUEST_MESSAGE', false),
+    'error_request_message' => env('JMHC_ERROR_REQUEST_MESSAGE', false),
 
     // 单设备登录临时缓存过期时间（秒）
     'sdl_tmp_expire' => env('JMHC_SDL_TMP_EXPIRE', 10),

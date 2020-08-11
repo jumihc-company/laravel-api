@@ -7,6 +7,12 @@ JMHC_EXCEPTION_FILE_NAME=handle.exception
 JMHC_DB_EXCEPTION_FILE_NAME=handle_db.exception
 # 错误文件名称
 JMHC_ERROR_FILE_NAME=handle.error
+# 是否记录反射、逻辑、运行异常请求消息
+JMHC_EXCEPTION_REQUEST_MESSAGE=false
+# 是否记录数据库查询异常请求消息
+JMHC_DB_EXCEPTION_REQUEST_MESSAGE=false
+# 是否记录错误请求消息
+JMHC_ERROR_REQUEST_MESSAGE=false
 ```
 
 ```apacheconfig
