@@ -6,7 +6,6 @@
 
 namespace Jmhc\Restful\Traits;
 
-use Jmhc\Restful\Contracts\ServiceInterface;
 use Jmhc\Restful\Utils\ParseService;
 
 /**
@@ -64,12 +63,11 @@ trait ResourceControllerTrait
 
     /**
      * 添加 service 属性
-     * @param ServiceInterface|null $service
      * @return $this
      */
-    private function withService(ServiceInterface $service = null)
+    private function withService()
     {
-        $this->service = ParseService::run($service ?: $this->service, get_called_class());
+        $this->service = ParseService::run($this->service, get_called_class());
 
         return $this;
     }
