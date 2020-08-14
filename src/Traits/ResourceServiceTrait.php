@@ -59,7 +59,7 @@ trait ResourceServiceTrait
      * @var array
      * ['column', ['column' => 'column', 'default' => '', 'custom' => '']]
      */
-    protected $updateColumns = ['*'];
+    protected $updateColumns = [];
 
     /**
      * 是否返回 index 页码相关字段
@@ -75,6 +75,9 @@ trait ResourceServiceTrait
 
     public function index()
     {
+        // 查询前操作
+        $this->indexBeforeHandler();
+
         // 查询构造器
         $builder = $this->withModel();
 
@@ -113,6 +116,9 @@ trait ResourceServiceTrait
 
     public function show()
     {
+        // 查询前操作
+        $this->showBeforeHandler();
+
         // 查询构造器
         $builder = $this->withModel();
 
@@ -264,6 +270,12 @@ trait ResourceServiceTrait
     }
 
     /**
+     * index 查询前操作
+     */
+    protected function indexBeforeHandler()
+    {}
+
+    /**
      * 设置 index 查询构造器
      * function($builder) {}
      */
@@ -282,6 +294,12 @@ trait ResourceServiceTrait
      * function(Collection $list) {}
      */
     protected function withIndexResult()
+    {}
+
+    /**
+     * show 查询前操作
+     */
+    protected function showBeforeHandler()
     {}
 
     /**
