@@ -33,7 +33,7 @@ class CheckTokenMiddleware
      * 默认场景
      * @var string
      */
-    protected $scene = 'api';
+    protected $scene = ConstAttributeInterface::DEFAULT_SCENE;
 
     public function handle(Request $request, Closure $next, $force = true)
     {

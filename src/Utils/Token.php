@@ -6,6 +6,7 @@
 
 namespace Jmhc\Restful\Utils;
 
+use Jmhc\Restful\Contracts\ConstAttributeInterface;
 use Jmhc\Restful\Contracts\ResultCodeInterface;
 use Jmhc\Restful\Contracts\ResultMsgInterface;
 use Jmhc\Restful\Utils\Cipher\Token as TokenCipher;
@@ -40,7 +41,7 @@ class Token
      * @param string $scene
      * @return string
      */
-    public static function create(int $id, string $scene = 'api')
+    public static function create(int $id, string $scene = ConstAttributeInterface::DEFAULT_SCENE)
     {
         $id .= ':' . time() . ':' . $scene;
         return TokenCipher::getInstance()
@@ -66,7 +67,7 @@ class Token
      * @param string $scene
      * @return array|bool
      */
-    public static function verify(array $parse, string $scene = 'api')
+    public static function verify(array $parse, string $scene = ConstAttributeInterface::DEFAULT_SCENE)
     {
         // 验证格式
         if (count($parse) != 3) {

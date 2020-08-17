@@ -7,6 +7,7 @@
 namespace Jmhc\Restful\Utils;
 
 use Illuminate\Redis\Connections\Connection;
+use Jmhc\Restful\Contracts\ConstAttributeInterface;
 use Jmhc\Support\Traits\InstanceTrait;
 use Jmhc\Support\Traits\RedisHandlerTrait;
 
@@ -24,12 +25,29 @@ class SdlCache
      */
     protected $handler;
 
-    protected static $cacheKey = 'sdl_%d';
-    protected static $cacheTmpKey = 'sdl_tmp_%d';
+    /**
+     * 场景
+     * @var string
+     */
+    protected $scene = ConstAttributeInterface::DEFAULT_SCENE;
+
+    protected static $cacheKey = 'sdl_%s%d';
+    protected static $cacheTmpKey = 'sdl_tmp_%s%d';
 
     public function __construct()
     {
         $this->handler = $this->getPhpRedisHandler();
+    }
+
+    /**
+     * 设置场景
+     * @param string $scene
+     * @return $this
+     */
+    public function scene(string $scene)
+    {
+        $this->scene = $scene;
+        return $this;
     }
 
     /**
@@ -82,7 +100,9 @@ class SdlCache
      */
     protected function getCacheKey(int $id)
     {
-        return sprintf(static::$cacheKey, $id);
+        // 当前场景
+        $scene = $this->scene ? $this->scene . '_' : '';
+        return sprintf(static::$cacheKey, $scene, $id);
     }
 
     /**
@@ -92,6 +112,8 @@ class SdlCache
      */
     protected function getCacheTmpKey(int $id)
     {
-        return sprintf(static::$cacheTmpKey, $id);
+        // 当前场景
+        $scene = $this->scene ? $this->scene . '_' : '';
+        return sprintf(static::$cacheTmpKey, $scene, $id);
     }
 }

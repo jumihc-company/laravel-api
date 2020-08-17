@@ -21,5 +21,7 @@ interface ConstAttributeInterface
     const DEFAULT_PAGE_SIZE = 10;
     const DEFAULT_DIRECTION = 'asc';
 
+    const DEFAULT_SCENE = 'api';
+
     const BOOLEAN_TEXTS = ['否', '是'];
 }

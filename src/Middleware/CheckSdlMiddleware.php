@@ -24,12 +24,28 @@ class CheckSdlMiddleware
 
     public function handle(Request $request, Closure $next)
     {
+        // 令牌
         $token = Token::get();
-        // token和用户id存在
-        if (! empty($token) && ! empty($request->userInfo->id)) {
-            if (! SdlCache::getInstance()->verify($request->userInfo->id, $token)) {
-                $this->error(ResultMsgInterface::SDL, ResultCodeInterface::SDL);
-            }
+
+        // 令牌或用户id不存在
+        if (empty($token) || empty($request->userInfo->id)) {
+            return $next($request);
+        }
+
+        // [加密字符, 加密时间, 加密场景]
+        [, , $scene] = Token::parse($token);
+
+        // 缓存
+        $cache = SdlCache::getInstance();
+
+        // 场景存在
+        if ($scene) {
+            $cache->scene($scene);
+        }
+
+        // 验证缓存
+        if (! $cache->verify($request->userInfo->id, $token)) {
+            $this->error(ResultMsgInterface::SDL, ResultCodeInterface::SDL);
         }
 
         return $next($request);
