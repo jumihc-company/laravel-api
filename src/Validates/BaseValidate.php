@@ -24,7 +24,7 @@ class BaseValidate
      */
     public function check(array $data)
     {
-        return Validator::make($data, $this->rules(), $this->messages(), $this->attributes())->validate();
+        return $this->validate($data);
     }
 
     /**
@@ -52,6 +52,31 @@ class BaseValidate
     public function attributes() : array
     {
         return [];
+    }
+
+    /**
+     * 验证
+     * @param array $data
+     * @param array $rules
+     * @param array $messages
+     * @param array $customAttributes
+     * @return mixed
+     */
+    protected function validate(array $data, array $rules = [], array $messages = [], array $customAttributes = [])
+    {
+        // 参数默认值
+        empty($rules) && $rules = $this->rules();
+        empty($messages) && $messages = $this->messages();
+        empty($customAttributes) && $customAttributes = $this->attributes();
+
+        // 验证器
+        $validate = Validator::make($data, $rules, $messages, $customAttributes);
+
+        // 验证
+        $validate->validate();
+
+        // 返回验证数据
+        return $validate->validated();
     }
 
     /**

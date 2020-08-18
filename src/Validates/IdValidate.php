@@ -6,8 +6,6 @@
 
 namespace Jmhc\Restful\Validates;
 
-use Illuminate\Support\Facades\Validator;
-
 class IdValidate extends BaseValidate
 {
     public function rules(): array
@@ -25,6 +23,6 @@ class IdValidate extends BaseValidate
     public function checkZero(array $data)
     {
         $rules['id'] = 'bail|required|integer';
-        return Validator::make($data, $rules, $this->messages(), $this->attributes())->validate();
+        return $this->validate($data, $rules, $this->messages(), $this->attributes());
     }
 }
