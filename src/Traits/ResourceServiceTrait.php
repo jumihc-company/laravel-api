@@ -75,6 +75,9 @@ trait ResourceServiceTrait
 
     public function index()
     {
+        // 操作是否返回 index 页码相关字段
+        $this->handlerIsResultIndexPages();
+
         // 查询前操作
         $this->indexBeforeHandler();
 
@@ -100,7 +103,7 @@ trait ResourceServiceTrait
         $this->indexSearch($builder);
 
         // 查询
-        $list = $this->indexSelectList($builder, $params);
+        $list = $this->indexSelectList($builder, $params, $this->indexColumns);
         if ($list->isEmpty()) {
             $this->noData();
         }
@@ -108,10 +111,13 @@ trait ResourceServiceTrait
         // 执行返回数据函数
         $callback = $this->withIndexResult();
         if ($callback instanceof Closure) {
-            $callback($this->isResultIndexPages ? $list->getCollection() : $list);
+            $callback($this->indexSelectResultList($list));
         }
 
-        $this->success($this->isResultIndexPages ? PaginateHelper::paginate($list, $this->indexResultPagesColumns) : $list);
+        // 查询后操作
+        $this->indexAfterHandler();
+
+        $this->success($this->indexSuccessList($list, $this->indexResultPagesColumns));
     }
 
     public function show()
@@ -142,6 +148,9 @@ trait ResourceServiceTrait
         if ($callback instanceof Closure) {
             $callback($info);
         }
+
+        // 查询后操作
+        $this->showAfterHandler();
 
         $this->success($info);
     }
@@ -297,6 +306,12 @@ trait ResourceServiceTrait
     {}
 
     /**
+     * index 查询后操作
+     */
+    protected function indexAfterHandler()
+    {}
+
+    /**
      * show 查询前操作
      */
     protected function showBeforeHandler()
@@ -314,6 +329,12 @@ trait ResourceServiceTrait
      * function(Model $info) {}
      */
     protected function withShowResult()
+    {}
+
+    /**
+     * show 查询后操作
+     */
+    protected function showAfterHandler()
     {}
 
     /**
@@ -375,6 +396,65 @@ trait ResourceServiceTrait
     {}
 
     /**
+     * 操作是否返回 index 页码相关字段
+     */
+    protected function handlerIsResultIndexPages()
+    {
+        // 请求设置的
+        if (! is_null($this->params->is_result_index_pages)) {
+            $this->isResultIndexPages = !! $this->params->is_result_index_pages;
+        }
+    }
+
+    /**
+     * index 查询列表
+     * @param Builder $builder
+     * @param array $params
+     * @param array $columns
+     * @return LengthAwarePaginator|Builder[]|Collection
+     */
+    protected function indexSelectList(Builder $builder, array $params, array $columns)
+    {
+        // 如果需要返回分页参数
+        if ($this->isResultIndexPages) {
+            // 分页参数
+            $page = $this->params->page ?: ConstAttributeInterface::DEFAULT_PAGE;
+            $pageSize = $this->params->page_size ?: ConstAttributeInterface::DEFAULT_PAGE_SIZE;
+            return $builder
+                ->paginate($pageSize, $columns, 'page', $page);
+        }
+
+        // 组装limit分页
+        static::assembleLimit($builder, $params);
+        // 组装page分页
+        static::assemblePage($builder, $params);
+        return $builder
+            ->select($columns)
+            ->get();
+    }
+
+    /**
+     * index 查询结果列表
+     * @param LengthAwarePaginator|Builder[]|Collection $list
+     * @return mixed
+     */
+    protected function indexSelectResultList($list)
+    {
+        return $this->isResultIndexPages ? $list->getCollection() : $list;
+    }
+
+    /**
+     * index 执行成功返回列表
+     * @param $list
+     * @param array $indexResultPagesColumns
+     * @return array|mixed
+     */
+    protected function indexSuccessList($list, array $indexResultPagesColumns)
+    {
+        return $this->isResultIndexPages ? PaginateHelper::paginate($list, $indexResultPagesColumns) : $list;
+    }
+
+    /**
      * 获取填充字段
      * @param Builder $builder
      * @param array $columns
@@ -389,32 +469,6 @@ trait ResourceServiceTrait
         }
 
         return $res;
-    }
-
-    /**
-     * index 查询列表
-     * @param Builder $builder
-     * @param array $params
-     * @return LengthAwarePaginator|Builder[]|Collection
-     */
-    private function indexSelectList(Builder $builder, array $params)
-    {
-        // 如果需要返回分页参数
-        if ($this->isResultIndexPages) {
-            // 分页参数
-            $page = $this->params->page ?: ConstAttributeInterface::DEFAULT_PAGE;
-            $pageSize = $this->params->page_size ?: ConstAttributeInterface::DEFAULT_PAGE_SIZE;
-            return $builder
-                ->paginate($pageSize, $this->indexColumns, 'page', $page);
-        }
-
-        // 组装limit分页
-        static::assembleLimit($builder, $params);
-        // 组装page分页
-        static::assemblePage($builder, $params);
-        return $builder
-            ->select($this->indexColumns)
-            ->get();
     }
 
     /**

@@ -50,7 +50,7 @@ class Token
 
     /**
      * 解析token
-     * [加密数据, 加密时间]
+     * [加密字符, 加密时间, 加密场景]
      * @param string $token
      * @return array
      */

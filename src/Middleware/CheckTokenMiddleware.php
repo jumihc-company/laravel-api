@@ -84,7 +84,7 @@ class CheckTokenMiddleware
             $this->error($msg, $code);
         }
 
-        // 解析[加密字符, 加密时间]
+        // 解析[加密字符, 加密时间, 加密场景]
         [$id, $time] = $parse;
 
         // 判断token是否有效

@@ -83,6 +83,16 @@ class SdlCache
     }
 
     /**
+     * 删除缓存数据
+     * @param int $id
+     * @return int
+     */
+    public function del(int $id)
+    {
+        return $this->handler->del([$this->getCacheKey($id), $this->getCacheTmpKey($id)]);
+    }
+
+    /**
      * 验证是否通过
      * @param int $id
      * @param string $token
