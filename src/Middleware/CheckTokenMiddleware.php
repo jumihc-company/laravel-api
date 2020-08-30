@@ -100,7 +100,7 @@ class CheckTokenMiddleware
         $noticeTime = config('jmhc-api.token.notice_refresh_time', 0);
         if ((time() - $time) >= $noticeTime) {
             // 设置刷新的token
-            $request->refreshToken = Token::create($id);
+            $request->refreshToken = Token::create($id, $this->scene);
         }
 
         return $info;
