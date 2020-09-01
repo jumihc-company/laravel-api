@@ -62,6 +62,12 @@ trait ResourceServiceTrait
     protected $updateColumns = [];
 
     /**
+     * 是否启用分页
+     * @var bool
+     */
+    protected $isEnablePaging = true;
+
+    /**
      * 是否返回 index 页码相关字段
      * @var bool
      */
@@ -415,8 +421,8 @@ trait ResourceServiceTrait
      */
     protected function indexSelectList(Builder $builder, array $params, array $columns)
     {
-        // 如果需要返回分页参数
-        if ($this->isResultIndexPages) {
+        // 是否分页
+        if ($this->isPaging()) {
             // 分页参数
             $page = $this->params->page ?: ConstAttributeInterface::DEFAULT_PAGE;
             $pageSize = $this->params->page_size ?: ConstAttributeInterface::DEFAULT_PAGE_SIZE;
@@ -424,10 +430,14 @@ trait ResourceServiceTrait
                 ->paginate($pageSize, $columns, 'page', $page);
         }
 
-        // 组装limit分页
-        static::assembleLimit($builder, $params);
-        // 组装page分页
-        static::assemblePage($builder, $params);
+        // 启用分页
+        if ($this->isEnablePaging) {
+            // 组装limit分页
+            static::assembleLimit($builder, $params);
+            // 组装page分页
+            static::assemblePage($builder, $params);
+        }
+
         return $builder
             ->select($columns)
             ->get();
@@ -440,7 +450,7 @@ trait ResourceServiceTrait
      */
     protected function indexSelectResultList($list)
     {
-        return $this->isResultIndexPages ? $list->getCollection() : $list;
+        return $this->isPaging() ? $list->getCollection() : $list;
     }
 
     /**
@@ -451,7 +461,17 @@ trait ResourceServiceTrait
      */
     protected function indexSuccessList($list, array $indexResultPagesColumns)
     {
-        return $this->isResultIndexPages ? PaginateHelper::paginate($list, $indexResultPagesColumns) : $list;
+        return $this->isPaging() ? PaginateHelper::paginate($list, $indexResultPagesColumns) : $list;
+    }
+
+    /**
+     * 是否分页
+     * @return bool
+     */
+    private function isPaging()
+    {
+        // 启用分页并且返回分页字段
+        return $this->isEnablePaging && $this->isResultIndexPages;
     }
 
     /**
