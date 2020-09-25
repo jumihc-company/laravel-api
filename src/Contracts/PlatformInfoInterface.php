@@ -20,6 +20,8 @@ interface PlatformInfoInterface
     const IOS = 'ios';
     const WECHAT = 'wechat';
     const WECHAT_MP = 'wechat_mp';
+    const WORK_WECHAT = 'work_wechat';
+    const WORK_WECHAT_MP = 'work_wechat_mp';
     const ALIPAY = 'alipay';
     const ALIPAY_MP = 'alipay_mp';
 
@@ -34,6 +36,8 @@ interface PlatformInfoInterface
         'JmhcIos' => self::IOS,
         'JmhcWechat' => self::WECHAT,
         'JmhcWechatMp' => self::WECHAT_MP,
+        'JmhcWorkWechat' => self::WORK_WECHAT,
+        'JmhcWorkWechatMp' => self::WORK_WECHAT_MP,
         'JmhcAlipay' => self::ALIPAY,
         'JmhcAlipayMp' => self::ALIPAY_MP,
     ];

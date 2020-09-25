@@ -56,6 +56,16 @@ trait AgentIsTrait
         return $this->requestPlatformIs(PlatformInfoInterface::WECHAT_MP, $userAgent, $httpHeaders);
     }
 
+    public function isWorkWechat($userAgent = null, $httpHeaders = null)
+    {
+        return $this->requestPlatformIs(PlatformInfoInterface::WORK_WECHAT, $userAgent, $httpHeaders);
+    }
+
+    public function isWorkWechatMp($userAgent = null, $httpHeaders = null)
+    {
+        return $this->requestPlatformIs(PlatformInfoInterface::WORK_WECHAT_MP, $userAgent, $httpHeaders);
+    }
+
     public function isAlipay($userAgent = null, $httpHeaders = null)
     {
         return $this->requestPlatformIs(PlatformInfoInterface::ALIPAY, $userAgent, $httpHeaders);

@@ -15,6 +15,18 @@ use Jmhc\Restful\Contracts\PlatformInfoInterface;
  */
 class RequestPlatform
 {
+    /**
+     * 其他平台关键字
+     * @var string
+     */
+    protected static $other = PlatformInfoInterface::OTHER;
+
+    /**
+     * 平台关键字
+     * @var array
+     */
+    protected static $keywordsPlatforms = PlatformInfoInterface::KEYWORDS_PLATFORMS;
+
     public static function run(Request $request)
     {
         // 请求平台
@@ -34,8 +46,8 @@ class RequestPlatform
     public static function check(string $requestPlatform)
     {
         // 平台
-        $platforms[] = PlatformInfoInterface::OTHER;
-        foreach (PlatformInfoInterface::KEYWORDS_PLATFORMS as $k => $v) {
+        $platforms[] = static::$other;
+        foreach (static::$keywordsPlatforms as $k => $v) {
             if (preg_match(sprintf('/(%s)/', $k), $requestPlatform, $_match) && ! empty($_match[0])) {
                 $platforms[] = $v;
             }
