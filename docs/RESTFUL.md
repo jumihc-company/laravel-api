@@ -42,7 +42,7 @@
 
 ## 请求令牌
 
-传递请求令牌使用以下方式：
+可使用以下方式：
 
 ```php
 // header头: bearer token
@@ -57,7 +57,7 @@ Token: 1234
 
 ## 请求版本
 
-传递请求版本使用以下方式：
+可使用以下方式：
 
 ```php
 // header头
@@ -71,7 +71,7 @@ Version: 1234
 
 > 平台关键字查看 [PlatformInfo.php](https://github.com/jumihc-compony/laravel-api/blob/master/src/PlatformInfo.php)
 
-传递请求平台使用以下方式：
+可使用以下方式：
 
 ```php
 // header头
@@ -81,6 +81,51 @@ Request-Platform: JmhcAndroid/1.0
 
 // 请求参数
 ?request-platform=JmhcAndroid%2F1.0
+```
+
+## 请求时控制返回结果是否分页
+
+> 默认启用分页
+
+可使用以下方式：
+
+```php
+// header头
+Is-Enable-Page: 0
+
+// 请求参数,0=不启用,1=启用
+?is_enable_page=0
+```
+
+## 请求时控制返回结果是否带上分页相关字段
+
+> 默认不启用
+>
+> 不启用分页时此参数无效
+
+可使用以下方式：
+
+```php
+// header头
+Is-Result-Page-Field: 0
+
+// 请求参数,0=不启用,1=启用
+?is_result_page_field=0
+```
+
+启用时 data 字段返回格式：
+
+```js
+{
+// 当前页码
+"current_page": 1,
+// 数据
+"data": null,
+// 每页数量
+"page_size": 10,
+// 总数
+"total": 1
+}
 ```
 
 ## 响应刷新后的令牌

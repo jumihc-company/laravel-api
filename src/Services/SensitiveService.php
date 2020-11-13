@@ -8,8 +8,8 @@ namespace Jmhc\Restful\Services;
 
 use DfaFilter\Exceptions\PdsSystemException;
 use Jmhc\Restful\Exceptions\ResultException;
+use Jmhc\Support\Helper\SensitiveHelper;
 use Jmhc\Support\Utils\Helper;
-use Jmhc\Support\Utils\SensitiveHelper;
 
 /**
  * 敏感词服务
@@ -48,7 +48,12 @@ class SensitiveService extends BaseService
         $badWords = $this->sensitive->getBadWord(str_replace(' ', '', $str));
         $badWords = array_unique($badWords);
         if ($badWords) {
-            $this->error( $prefix . '包含敏感词:' . implode(',', $badWords));
+            $this->error( sprintf(
+                '%s%s%s',
+                $prefix,
+                jmhc_api_lang_messages_trans('contain_sensitive_words'),
+                implode(',', $badWords)
+            ));
         }
     }
 

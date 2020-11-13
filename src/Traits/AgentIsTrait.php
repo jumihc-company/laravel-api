@@ -9,6 +9,10 @@ namespace Jmhc\Restful\Traits;
 use Jmhc\Restful\Contracts\PlatformInfoInterface;
 use Jmhc\Restful\Utils\RequestPlatform;
 
+/**
+ * Agent 判断辅助
+ * @package Jmhc\Restful\Traits
+ */
 trait AgentIsTrait
 {
     public function isDesktop($userAgent = null, $httpHeaders = null)

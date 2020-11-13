@@ -16,11 +16,10 @@ use Illuminate\Foundation\Exceptions\Handler;
 use Illuminate\Foundation\Http\Exceptions\MaintenanceModeException;
 use Illuminate\Routing\Router;
 use Illuminate\Validation\ValidationException;
+use Jmhc\Log\Log;
 use Jmhc\Restful\Contracts\ResultCodeInterface;
-use Jmhc\Restful\Contracts\ResultMsgInterface;
 use Jmhc\Restful\Exceptions\ResultException;
 use Jmhc\Restful\Utils\Cipher;
-use Jmhc\Support\Utils\LogHelper;
 use LogicException;
 use ReflectionException;
 use RuntimeException;
@@ -33,11 +32,13 @@ use Throwable;
  */
 class ExceptionHandler extends Handler
 {
-    protected $code = ResultCodeInterface::ERROR;
-    protected $msg = ResultMsgInterface::ERROR;
+    protected $code;
+    protected $msg;
     protected $data;
 
-    protected $httpCode = ResultCodeInterface::HTTP_ERROR_CODE;
+    protected $httpCode;
+
+    private $key;
 
     public function report(Throwable $e)
     {}
@@ -69,82 +70,32 @@ class ExceptionHandler extends Handler
         // 响应处理
         $response = $this->responseHandler($response);
 
-        // 响应header
+        // 响应头
         $headers = [];
 
-        // 判断刷新的token是否存在
-        if(! empty($request->refreshToken)) {
-            // 刷新token
+        // 判断刷新的令牌是否存在
+        if (! empty($request->refreshToken)) {
+            // 刷新令牌
             $this->refreshToken($request, $request->refreshToken, $headers);
-            // 单设备登录操作
+            // 单设备登录处理
             $this->sdlHandler($request, $request->refreshToken);
         }
 
         // 解除请求锁定
-        $this->unRequestLocke($request);
+        $this->unRequestLock($request);
+
+        // 响应前处理
+        $this->responseBeforeHandler($request);
 
         return response()->json($response, $this->httpCode, $headers, JSON_UNESCAPED_UNICODE);
     }
 
     /**
-     * 重置属性
+     * 自定义响应
+     * @param Throwable $e
      */
-    protected function resetProperty()
-    {
-        $this->code = ResultCodeInterface::ERROR;
-        $this->msg = ResultMsgInterface::ERROR;
-        $this->data = null;
-        $this->httpCode = ResultCodeInterface::HTTP_ERROR_CODE;
-    }
-
-    protected function response(Throwable $e)
-    {
-        if ($e instanceof ResultException) {
-            // 返回异常
-            $this->code = $e->getCode();
-            $this->msg = $e->getMessage();
-            $this->data = $e->getData();
-            $this->httpCode = $e->getHttpCode();
-        } elseif ($e instanceof MaintenanceModeException) {
-            // 系统维护中
-            $this->code = ResultCodeInterface::MAINTENANCE;
-            $this->msg = $e->getMessage() ?: ResultMsgInterface::MAINTENANCE;
-        } elseif ($e instanceof HttpException) {
-            // 请求异常
-            $this->code = ResultCodeInterface::ERROR;
-            $this->msg = ResultMsgInterface::INVALID_REQUEST;
-        } elseif ($e instanceof QueryException) {
-            // 数据库异常
-            $this->code = ResultCodeInterface::SYS_EXCEPTION;
-            $this->msg = ResultMsgInterface::SYS_EXCEPTION;
-            LogHelper::throwableSave(
-                config('jmhc-api.db_exception_file_name', 'handle_db.exception'),
-                $e,
-                config('jmhc-api.db_exception_request_message', false)
-            );
-        } elseif ($e instanceof ValidationException) {
-            // 验证器异常
-            $this->msg = $e->validator->errors()->first();
-        } elseif ($e instanceof ReflectionException || $e instanceof LogicException || $e instanceof RuntimeException || $e instanceof BindingResolutionException) {
-            // 反射、逻辑、运行、绑定解析异常
-            $this->code = ResultCodeInterface::SYS_EXCEPTION;
-            $this->msg = ResultMsgInterface::SYS_EXCEPTION;
-            LogHelper::throwableSave(
-                config('jmhc-api.exception_file_name', 'handle.exception'),
-                $e,
-                config('jmhc-api.exception_request_message', false)
-            );
-        } elseif ($e instanceof Error || $e instanceof ErrorException) {
-            // 发生错误
-            $this->code = ResultCodeInterface::SYS_ERROR;
-            $this->msg = ResultMsgInterface::SYS_ERROR;
-            LogHelper::throwableSave(
-                config('jmhc-api.error_file_name', 'handle.error'),
-                $e,
-                config('jmhc-api.error_request_message', false)
-            );
-        }
-    }
+    protected function customResponse(Throwable $e)
+    {}
 
     /**
      * 返回调试数据
@@ -162,21 +113,7 @@ class ExceptionHandler extends Handler
     }
 
     /**
-     * 响应处理
-     * @param array $response
-     * @return array|string
-     */
-    protected function responseHandler(array $response)
-    {
-        try {
-            $response = Cipher::response($response);
-        } catch (Throwable $e) {}
-
-        return $response;
-    }
-
-    /**
-     * 刷新token
+     * 刷新令牌
      * @param $request
      * @param string $token
      * @param array $headers
@@ -187,7 +124,7 @@ class ExceptionHandler extends Handler
     }
 
     /**
-     * 单设备登录操作
+     * 单设备登录处理
      * @param $request
      * @param string $token
      */
@@ -198,11 +135,138 @@ class ExceptionHandler extends Handler
      * 解除请求锁定
      * @param $request
      */
-    protected function unRequestLocke($request)
+    protected function unRequestLock($request)
     {
         if ($this->code != ResultCodeInterface::REQUEST_LOCKED &&
             $request->requestLock instanceof LockContract) {
             $request->requestLock->forceRelease();
         }
+    }
+
+    /**
+     * 响应前处理
+     * @param $request
+     */
+    protected function responseBeforeHandler($request)
+    {}
+
+    /**
+     * 生成秘钥
+     * @return string
+     */
+    private function buildKey()
+    {
+        return md5(sprintf(
+            '%s-%s-%s-%s',
+            $this->code,
+            $this->msg,
+            json_encode($this->data),
+            $this->httpCode
+        ));
+    }
+
+    /**
+     * 验证秘钥
+     * @return bool
+     */
+    private function validateKey()
+    {
+        return $this->key === $this->buildKey();
+    }
+
+    /**
+     * 重置属性
+     */
+    private function resetProperty()
+    {
+        $this->code = ResultCodeInterface::ERROR;
+        $this->msg = jmhc_api_lang_messages_trans('error');
+        $this->data = null;
+        $this->httpCode = ResultCodeInterface::HTTP_ERROR_CODE;
+        $this->key = $this->buildKey();
+    }
+
+    /**
+     * 设置响应数据
+     * @param Throwable $e
+     */
+    private function response(Throwable $e)
+    {
+        // 自定义响应
+        $this->customResponse($e);
+
+        // 秘钥不同,阻止执行
+        if (! $this->validateKey()) {
+            return;
+        }
+
+        if ($e instanceof ResultException) {
+            // 返回异常
+            $this->code = $e->getCode();
+            $this->msg = $e->getMessage();
+            $this->data = $e->getData();
+            $this->httpCode = $e->getHttpCode();
+        } elseif ($e instanceof MaintenanceModeException) {
+            // 系统维护中
+            $this->code = ResultCodeInterface::MAINTENANCE;
+            $this->msg = $e->getMessage() ?: jmhc_api_lang_messages_trans('maintenance');
+        } elseif ($e instanceof HttpException) {
+            // 请求异常
+            $this->code = ResultCodeInterface::ERROR;
+            $this->msg = jmhc_api_lang_messages_trans('invalid_request');
+        } elseif ($e instanceof QueryException) {
+            // 数据库异常
+            $this->code = ResultCodeInterface::SYS_EXCEPTION;
+            $this->msg = jmhc_api_lang_messages_trans('sys_exception');
+            Log::name(
+                config('jmhc-api.db_exception_file_name', 'handle_db.exception')
+            )
+                ->withDateToName()
+                ->withRequestInfo(
+                    config('jmhc-api.db_exception_request_message', false)
+                )
+                ->throwable($e);
+        } elseif ($e instanceof ValidationException) {
+            // 验证器异常
+            $this->msg = $e->validator->errors()->first();
+        } elseif ($e instanceof ReflectionException || $e instanceof LogicException || $e instanceof RuntimeException || $e instanceof BindingResolutionException) {
+            // 反射、逻辑、运行、绑定解析异常
+            $this->code = ResultCodeInterface::SYS_EXCEPTION;
+            $this->msg = jmhc_api_lang_messages_trans('sys_exception');
+            Log::name(
+                config('jmhc-api.exception_file_name', 'handle.exception')
+            )
+                ->withDateToName()
+                ->withRequestInfo(
+                    config('jmhc-api.exception_request_message', false)
+                )
+                ->throwable($e);
+        } elseif ($e instanceof Error || $e instanceof ErrorException) {
+            // 发生错误
+            $this->code = ResultCodeInterface::SYS_ERROR;
+            $this->msg = jmhc_api_lang_messages_trans('sys_error');
+            Log::name(
+                config('jmhc-api.error_file_name', 'handle.error')
+            )
+                ->withDateToName()
+                ->withRequestInfo(
+                    config('jmhc-api.error_request_message', false)
+                )
+                ->throwable($e);
+        }
+    }
+
+    /**
+     * 响应处理
+     * @param array $response
+     * @return array|string
+     */
+    private function responseHandler(array $response)
+    {
+        try {
+            $response = Cipher::response($response);
+        } catch (Throwable $e) {}
+
+        return $response;
     }
 }

@@ -7,13 +7,12 @@
 namespace Jmhc\Restful\Traits;
 
 use Closure;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Jmhc\Restful\Contracts\ConstAttributeInterface;
 use Jmhc\Restful\Utils\PaginateHelper;
 use Jmhc\Restful\Utils\ParseModel;
-use Jmhc\Support\Utils\DbHelper;
+use Jmhc\Support\Helper\DBHelper;
 
 /**
  * 资源服务方法
@@ -21,19 +20,23 @@ use Jmhc\Support\Utils\DbHelper;
  */
 trait ResourceServiceTrait
 {
+    use RequestInfoTrait;
+    use ResultThrowTrait;
     use BuilderAssembleTrait;
+    use ResourceServiceHooksTrait;
+    use ResourceServicePageTrait;
 
     /**
-     * 当前模型
+     * 模型
      * @var string
      */
     protected $model = '';
 
     /**
-     * 标题
-     * @var string
+     * 查询构造器
+     * @var Builder
      */
-    protected $title = '';
+    protected $query;
 
     /**
      * index 查询字段
@@ -62,367 +65,251 @@ trait ResourceServiceTrait
     protected $updateColumns = [];
 
     /**
-     * 是否启用分页
-     * @var bool
+     * index 查询结果
+     * @var Model
      */
-    protected $isEnablePaging = true;
+    protected $indexQueryResult;
 
     /**
-     * 是否返回 index 页码相关字段
-     * @var bool
+     * show 查询结果
+     * @var Model
      */
-    protected $isResultIndexPages = false;
+    protected $showQueryResult;
 
     /**
-     * index 返回页码相关字段
-     * @var array
+     * 添加数据过滤
+     * @var bool|Closure
      */
-    protected $indexResultPagesColumns = ['current_page', 'data', 'per_page', 'total'];
+    protected $storeDataFilter = false;
+
+    /**
+     * 更新数据过滤
+     * @var bool|Closure
+     */
+    protected $updateDataFilter = false;
 
     public function index()
     {
-        // 操作是否返回 index 页码相关字段
-        $this->handlerIsResultIndexPages();
+        // 处理是否启用分页
+        $this->handleIsEnablePage();
+        // 处理是否返回分页字段
+        $this->handlerIsResultPageField();
 
-        // 查询前操作
-        $this->indexBeforeHandler();
+        // 初始化查询构造器
+        $this->initQuery();
 
-        // 查询构造器
-        $builder = $this->withModel();
+        // 前置操作
+        $this->indexBefore();
 
-        // 执行构造查询构造器函数
-        $callback = $this->withIndexBuilder();
-        if ($callback instanceof Closure) {
-            $callback($builder);
-        }
+        // 处理
+        $this->indexHandler();
 
-        // 获取填充字段
-        $columns = $this->getFillable($builder, $this->indexColumns);
+        // 后置操作
+        $this->indexAfter();
 
-        // 参数
-        $params = $this->params->toArray();
-
-        // 组装排序
-        static::assembleOrder($builder, $params, $columns);
-
-        // 组装搜索条件
-        $this->indexSearch($builder);
-
-        // 查询
-        $list = $this->indexSelectList($builder, $params, $this->indexColumns);
-        if ($list->isEmpty()) {
-            $this->noData();
-        }
-
-        // 执行返回数据函数
-        $callback = $this->withIndexResult();
-        if ($callback instanceof Closure) {
-            $callback($this->indexSelectResultList($list));
-        }
-
-        // 查询后操作
-        $this->indexAfterHandler();
-
-        $this->success($this->indexSuccessList($list, $this->indexResultPagesColumns));
+        $this->success($this->indexSuccessResult($this->indexQueryResult));
     }
 
     public function show()
     {
-        // 查询前操作
-        $this->showBeforeHandler();
+        // 初始化查询构造器
+        $this->initQuery();
 
-        // 查询构造器
-        $builder = $this->withModel();
+        // 前置操作
+        $this->showBefore();
 
-        // 执行构造查询构造器函数
-        $callback = $this->withShowBuilder();
-        if ($callback instanceof Closure) {
-            $callback($builder);
-        }
+        // 处理
+        $this->showHandler();
 
-        // 默认通过主键查询
-        $builder->where($builder->getModel()->getKeyName(), $this->params->id);
+        // 后置操作
+        $this->showAfter();
 
-        // 查询
-        $info = $builder
-            ->firstOr($this->showColumns, function () {
-                $this->noData();
-            });
-
-        // 执行返回数据函数
-        $callback = $this->withShowResult();
-        if ($callback instanceof Closure) {
-            $callback($info);
-        }
-
-        // 查询后操作
-        $this->showAfterHandler();
-
-        $this->success($info);
+        $this->success($this->showQueryResult);
     }
 
     public function store()
     {
-        // 添加前操作
-        $this->storeBeforeHandler();
+        // 初始化查询构造器
+        $this->initQuery();
 
-        // 执行操作
-        $callback = $this->withStoreHandler();
-        if ($callback instanceof Closure) {
-            $callback();
-        } else {
-            // 查询构造器
-            $builder = $this->withModel();
+        // 前置操作
+        $this->storeBefore();
 
-            // 操作保存数据
-            $columns = $this->getFillable($builder, $this->storeColumns);
-            $data = $this->handlerSaveData($columns);
-            if (empty($data)) {
-                $this->error('保存数据不存在');
-            }
+        // 处理
+        $this->storeHandler();
 
-            // 保存
-            $model = $builder
-                ->create($data);
-            // 当前这条数据id
-            $this->params->id = $model->id;
-        }
-
-        // 添加后操作
-        $this->storeAfterHandler();
+        // 后置操作
+        $this->storeAfter();
 
         $this->success();
     }
 
     public function update()
     {
-        // 更新前操作
-        $this->updateBeforeHandler();
+        // 初始化查询构造器
+        $this->initQuery();
 
-        // 执行操作
-        $callback = $this->withUpdateHandler();
-        if ($callback instanceof Closure) {
-            $callback();
-        } else {
-            // 字段数据
-            $columns = $this->updateColumns;
-            if (empty($columns)) {
-                $columns = $this->storeColumns;
-            }
+        // 前置操作
+        $this->updateBefore();
 
-            // 查询构造器
-            $builder = $this->withModel();
+        // 处理
+        $this->updateHandler();
 
-            // 操作保存数据
-            $columns = $this->getFillable($builder, $columns);
-            $data = $this->handlerSaveData($columns);
-            if (empty($data) || ! $this->params->id) {
-                $this->error('更新数据不存在');
-            }
-
-            // 更新
-            $info = $builder
-                ->where($builder->getModel()->getKeyName(), $this->params->id)
-                ->first(['id']);
-            foreach ($data as $k => $v) {
-                $info->{$k} = $v;
-            }
-            $info->save();
-        }
-
-        // 更新后操作
-        $this->updateAfterHandler();
+        // 后置操作
+        $this->updateAfter();
 
         $this->success();
     }
 
     public function destroy()
     {
-        // 简单验证id
-        $ids = explode(',', $this->params->id);
-        if (empty($ids)) {
-            $this->error(sprintf('删除%s不存在', $this->title));
-        }
+        // 初始化查询构造器
+        $this->initQuery();
 
-        // 删除前操作
-        $callback = $this->withDestroyBeforeHandler();
-        if ($callback instanceof Closure) {
-            $callback($ids);
-        }
+        // 前置操作
+        $this->destroyBefore();
 
-        // 执行操作
-        $callback = $this->withDestroyHandler();
-        if ($callback instanceof Closure) {
-            $callback($ids);
-        } else {
-            // 查询构造器
-            $builder = $this->withModel();
+        // 处理
+        $this->destroyHandler();
 
-            // 删除
-            $builder
-                ->whereIn($builder->getModel()->getKeyName(), $ids)
-                ->delete();
-        }
-
-        // 删除后操作
-        $this->destroyAfterHandler();
+        // 后置操作
+        $this->destroyAfter();
 
         $this->success();
     }
 
     /**
-     * 设置操作模型
-     * @return Builder
+     * index 处理
+     * @throws \Jmhc\Restful\Exceptions\ResultException
      */
-    protected function withModel() : Builder
+    protected function indexHandler()
     {
-        $model = ParseModel::run($this->model, get_called_class());
-        if (! method_exists($this->model, 'newQuery')) {
-            $this->error('属性 model 不是有效的模型类');
-        }
+        // 获取填充字段
+        $columns = $this->getFillable($this->indexColumns);
 
-        return $model->newQuery();
-    }
+        // 参数
+        $params = $this->params->toArray();
 
-    /**
-     * index 查询前操作
-     */
-    protected function indexBeforeHandler()
-    {}
+        // 组装排序
+        static::assembleOrder($this->query, $params, $columns);
 
-    /**
-     * 设置 index 查询构造器
-     * function($builder) {}
-     */
-    protected function withIndexBuilder()
-    {}
-
-    /**
-     * index 搜索条件
-     * @param Builder $builder
-     */
-    protected function indexSearch(Builder $builder)
-    {}
-
-    /**
-     * 设置 index 返回数据
-     * function(Collection $list) {}
-     */
-    protected function withIndexResult()
-    {}
-
-    /**
-     * index 查询后操作
-     */
-    protected function indexAfterHandler()
-    {}
-
-    /**
-     * show 查询前操作
-     */
-    protected function showBeforeHandler()
-    {}
-
-    /**
-     * 设置 show 查询构造器
-     * function($builder) {}
-     */
-    protected function withShowBuilder()
-    {}
-
-    /**
-     * 设置 show 返回数据
-     * function(Model $info) {}
-     */
-    protected function withShowResult()
-    {}
-
-    /**
-     * show 查询后操作
-     */
-    protected function showAfterHandler()
-    {}
-
-    /**
-     * 添加前操作
-     */
-    protected function storeBeforeHandler()
-    {}
-
-    /**
-     * 设置 store 操作
-     * function() {}
-     */
-    protected function withStoreHandler()
-    {}
-
-    /**
-     * 添加后操作
-     */
-    protected function storeAfterHandler()
-    {}
-
-    /**
-     * 更新前操作
-     */
-    protected function updateBeforeHandler()
-    {}
-
-    /**
-     * 设置 update 操作
-     * function() {}
-     */
-    protected function withUpdateHandler()
-    {}
-
-    /**
-     * 更新后操作
-     */
-    protected function updateAfterHandler()
-    {}
-
-    /**
-     * 删除前操作
-     * function(array $ids) {}
-     */
-    protected function withDestroyBeforeHandler()
-    {}
-
-    /**
-     * 设置 destroy 操作
-     * function(array $ids) {}
-     */
-    protected function withDestroyHandler()
-    {}
-
-    /**
-     * 删除后操作
-     */
-    protected function destroyAfterHandler()
-    {}
-
-    /**
-     * 操作是否返回 index 页码相关字段
-     */
-    protected function handlerIsResultIndexPages()
-    {
-        // 请求设置的
-        if (! is_null($this->params->is_result_index_pages)) {
-            $this->isResultIndexPages = !! $this->params->is_result_index_pages;
+        // 查询
+        $this->indexQueryResult = $this->indexQuery($this->query, $params, $this->indexColumns);
+        if ($this->indexQueryResult->isEmpty()) {
+            $this->noData();
         }
     }
 
     /**
-     * index 查询列表
+     * show 处理
+     */
+    protected function showHandler()
+    {
+        // 默认通过主键查询
+        $this->showQueryResult = $this->query
+            ->where($this->query->getModel()->getKeyName(), $this->params->id)
+            ->firstOr($this->showColumns, function () {
+                $this->noData();
+            });
+    }
+
+    /**
+     * store 处理
+     * @throws \Jmhc\Restful\Exceptions\ResultException
+     */
+    protected function storeHandler()
+    {
+        // 获取保存数据
+        $columns = $this->getFillable($this->storeColumns);
+        $data = $this->filterSaveData(
+            $this->getSaveData($columns),
+            $this->storeDataFilter
+        );
+        if (empty($data)) {
+            $this->error(jmhc_api_lang_messages_trans('save_data_no_exist'));
+        }
+
+        // 保存
+        $model = $this->query
+            ->create($data);
+
+        // 当前这条数据id
+        $this->params->id = $model->id;
+    }
+
+    /**
+     * update 处理
+     * @throws \Jmhc\Restful\Exceptions\ResultException
+     */
+    protected function updateHandler()
+    {
+        // 字段数据
+        $columns = $this->updateColumns;
+        if (empty($columns)) {
+            $columns = $this->storeColumns;
+        }
+
+        // 获取保存数据
+        $columns = $this->getFillable($columns);
+        $data = $this->filterSaveData(
+            $this->getSaveData($columns),
+            $this->updateDataFilter
+        );
+
+        // 无数据不更新
+        if (empty($data)) {
+            return;
+        }
+
+        // 不存在主键
+        if (! $this->params->id) {
+            $this->error(jmhc_api_lang_messages_trans('update_model_no_exist'));
+        }
+
+        // 查询
+        $primaryKey = $this->query->getModel()->getKeyName();
+        $info = $this->query
+            ->where($primaryKey, $this->params->id)
+            ->firstOr([$primaryKey], function () {
+                $this->error(jmhc_api_lang_messages_trans('update_data_query_failed'));
+            });
+
+        // 更新
+        foreach ($data as $k => $v) {
+            $info->{$k} = $v;
+        }
+        $info->save();
+    }
+
+    /**
+     * destroy 处理
+     * @throws \Jmhc\Restful\Exceptions\ResultException
+     */
+    protected function destroyHandler()
+    {
+        // 简单验证id
+        $ids = explode(',', $this->params->id);
+        if (empty($ids)) {
+            $this->error(jmhc_api_lang_messages_trans('destroy_data_no_exist'));
+        }
+
+        // 删除
+        $this->query
+            ->getModel()
+            ->destroy($ids);
+    }
+
+    /**
+     * index 查询
      * @param Builder $builder
      * @param array $params
      * @param array $columns
-     * @return LengthAwarePaginator|Builder[]|Collection
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|Builder[]|\Illuminate\Database\Eloquent\Collection
      */
-    protected function indexSelectList(Builder $builder, array $params, array $columns)
+    protected function indexQuery(Builder $builder, array $params, array $columns)
     {
         // 是否分页
-        if ($this->isPaging()) {
+        if ($this->isPage()) {
             // 分页参数
             $page = $this->params->page ?: ConstAttributeInterface::DEFAULT_PAGE;
             $pageSize = $this->params->page_size ?: ConstAttributeInterface::DEFAULT_PAGE_SIZE;
@@ -431,7 +318,7 @@ trait ResourceServiceTrait
         }
 
         // 启用分页
-        if ($this->isEnablePaging) {
+        if ($this->isEnablePage) {
             // 组装limit分页
             static::assembleLimit($builder, $params);
             // 组装page分页
@@ -444,48 +331,53 @@ trait ResourceServiceTrait
     }
 
     /**
-     * index 查询结果列表
-     * @param LengthAwarePaginator|Builder[]|Collection $list
-     * @return mixed
-     */
-    protected function indexSelectResultList($list)
-    {
-        return $this->isPaging() ? $list->getCollection() : $list;
-    }
-
-    /**
-     * index 执行成功返回列表
+     * index 成功返回
      * @param $list
-     * @param array $indexResultPagesColumns
+     * @param array $fields
      * @return array|mixed
      */
-    protected function indexSuccessList($list, array $indexResultPagesColumns)
+    protected function indexSuccessResult($list, array $fields = [])
     {
-        return $this->isPaging() ? PaginateHelper::paginate($list, $indexResultPagesColumns) : $list;
+        if (empty($fields)) {
+            $fields = $this->resultPageFields;
+        }
+
+        return $this->isPage() ? PaginateHelper::paginate($list, $fields) : $list;
     }
 
     /**
-     * 是否分页
-     * @return bool
+     * 获取新的查询构造器
+     * @return Builder
      */
-    private function isPaging()
+    protected function getNewQuery() : Builder
     {
-        // 启用分页并且返回分页字段
-        return $this->isEnablePaging && $this->isResultIndexPages;
+        $model = ParseModel::run($this->model, get_called_class());
+        if (! ($model instanceof Model)) {
+            $this->error(jmhc_api_lang_messages_trans('model_no_exist'));
+        }
+
+        return $model->newQuery();
+    }
+
+    /**
+     * 初始化查询构造器
+     */
+    private function initQuery()
+    {
+        $this->query = $this->getNewQuery();
     }
 
     /**
      * 获取填充字段
-     * @param Builder $builder
      * @param array $columns
      * @return array
      */
-    private function getFillable(Builder $builder, array $columns)
+    private function getFillable(array $columns)
     {
         $res = $columns;
 
         if (in_array('*', $columns)) {
-            $res = array_column(DbHelper::getInstance()->getAllColumns($builder->getModel()->getTable()), 'column_name');
+            $res = array_column(DBHelper::getInstance()->getAllColumns($this->query->getModel()->getTable()), 'column_name');
         }
 
         return $res;
@@ -496,7 +388,7 @@ trait ResourceServiceTrait
      * @param array $columns
      * @return array
      */
-    private function handlerSaveData(array $columns)
+    private function getSaveData(array $columns)
     {
         $res = [];
         foreach ($columns as $v) {
@@ -507,16 +399,40 @@ trait ResourceServiceTrait
             }
 
             // 存在默认值的字段
-            if (isset($v['column']) && isset($v['default'])) {
+            if (array_key_exists('column', $v) && array_key_exists('default', $v)) {
                 $res[$v['column']] = $this->params->{$v['column']} ?: $v['default'];
                 continue;
             }
 
             // 存在自定义的字段
-            if (isset($v['column']) && isset($v['custom'])) {
+            if (array_key_exists('column', $v) && array_key_exists('custom', $v)) {
                 $res[$v['column']] = $v['custom'];
             }
         }
+
+        return $res;
+    }
+
+    /**
+     * 过滤数据
+     * @param array $res
+     * @param $filter
+     * @return array
+     */
+    private function filterSaveData(array $res, $filter)
+    {
+        // 过滤数据
+        if (is_bool($filter) && $filter) {
+            $filter = function ($v) {
+                return isset($v);
+            };
+        }
+
+        // 使用函数过滤
+        if ($filter instanceof Closure) {
+            $res = array_filter($res, $filter);
+        }
+
         return $res;
     }
 }

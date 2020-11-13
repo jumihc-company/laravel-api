@@ -16,17 +16,6 @@ JMHC_ERROR_REQUEST_MESSAGE=false
 ```
 
 ```apacheconfig
-# 是否允许保存debug日志
-JMHC_LOG_DEBUG=true
-# 日志保存路径
-JMHC_LOG_PATH=storage/logs
-# 日志文件最大内存,0不限制,如（2m,2g）
-JMHC_LOG_MAX_SIZE=0
-# 目录下最大日志文件数量,0不限制
-JMHC_LOG_MAX_FILES=0
-```
-
-```apacheconfig
 # 运行调试模式,true:不加密
 JMHC_RUNTIME_DEBUG=true
 # 运行加密方法
@@ -70,8 +59,6 @@ JMHC_SIGNATURE_CHECK_TIMESTAMP=true
 JMHC_REQUEST_LOCK_DRIVER=redis
 # 请求锁定时间（秒）
 JMHC_REQUEST_LOCK_SECONDS=5
-# 请求锁定提示
-JMHC_REQUEST_LOCK_TIPS=请求已被锁定，请稍后重试~
 ```
 
 ```apacheconfig

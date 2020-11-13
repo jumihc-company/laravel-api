@@ -3,9 +3,9 @@
     "description": "Laravel restful api.",
     "keywords": [
         "jmhc",
-        "restful",
+        "laravel",
         "api",
-        "laravel"
+        "restful"
     ],
     "homepage": "http://jumihc.com/",
     "license": "MIT",
@@ -18,18 +18,16 @@
     "autoload": {
         "psr-4": {
             "Jmhc\\Restful\\": "src/"
-        },
-        "files": [
-            "src/helpers.php"
-        ]
+        }
     },
     "require": {
-        "php": "^7.2",
+        "php": "^7.3",
         "ext-json": "*",
         "ext-openssl": "*",
-        "laravel/framework": "^7.0",
-        "jenssegers/agent": "^2.0",
-        "jmhc/laravel-support": "^2.0"
+        "jmhc/laravel-api-lang": "^1.0",
+        "jmhc/laravel-support": "^8.0",
+        "jmhc/laravel-log": "^8.0",
+        "jenssegers/agent": "^2.0"
     },
     "extra": {
         "laravel": {

@@ -20,16 +20,18 @@
 	    - [API服务提供者](#api%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85)
 	    - [契约服务提供者](#%E5%A5%91%E7%BA%A6%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85)
 	    - [路由服务提供者](#%E8%B7%AF%E7%94%B1%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85)
-	- [验证规则](#%E9%AA%8C%E8%AF%81%E8%A7%84%E5%88%99)
-	    - [Images](#images)
 	- [模型作用域](#%E6%A8%A1%E5%9E%8B%E4%BD%9C%E7%94%A8%E5%9F%9F)
 	    - [主键字段倒序](#%E4%B8%BB%E9%94%AE%E5%AD%97%E6%AE%B5%E5%80%92%E5%BA%8F)
 	- [trait介绍](#trait%E4%BB%8B%E7%BB%8D)
+	    - [BuilderAssembleTrait.php](#builderassembletraitphp)
 		- [ModelTrait.php](#modeltraitphp)
 		- [RequestInfoTrait.php](#requestinfotraitphp)
+		- [ResourceControllerTrait.php](#resourcecontrollertraitphp)
+		- [ResourceServiceTrait.php](#resourceservicetraitphp)
 	    - [ResultThrowTrait.php](#resultthrowtraitphp)
 		- [UserInfoTrait.php](#userinfotraitphp)
 	- [工具类介绍](#%E5%B7%A5%E5%85%B7%E7%B1%BB%E4%BB%8B%E7%BB%8D)
+	    - [Agent.php](#agentphp)
 	    - [SdlCache.php](#sdlcachephp)
 	    - [Token.php](#tokenphp)
 
@@ -73,7 +75,7 @@ php artisan vendor:publish --tag=jmhc-api-migrations
 #### 异常处理
 
 - 修改 `App\Exceptions\Handler` 继承的方法为  `Jmhc\Restful\Handlers\ExceptionHandler`
-- 其他异常捕获调用父类 `response()`  方法并重写，参考 `Jmhc\Restful\Handlers\ExceptionHandler->response()`
+- 其他异常捕获重写父类 `customResponse()`  方法，内容参考 `response`
 
 #### 使用路由服务提供者
 
@@ -182,6 +184,8 @@ class TestService extends BaseService
 
 > `Jmhc\Restful\Providers\JmhcContractServiceProvider`  
 
+- 绑定契约 `Jmhc\Restful\Contracts\RequestParamsInterface` 实现
+- 绑定契约 `Jmhc\Restful\Contracts\AgentInterface` 实现
 - 绑定契约 `Jmhc\Restful\Contracts\UserModelInterface` 实现
 - 绑定契约 `Jmhc\Restful\Contracts\VersionModelInterface` 实现
 
@@ -193,22 +197,6 @@ class TestService extends BaseService
 
 - 注册 `base_path('routes')` 下面所有 php 文件到路由
 
-### 验证规则
-
-#### Images
-
-> `Jmhc\Restful\Rules\ImagesRule`
-
-验证图片字段后缀地址为 `jpeg` , `jpg` , `png` , `bmp` , `gif` , `svg` , `webp`
-
-如：
-
-```php
-1.png // true
-1.pn // false
-1.png,2.png // true
-```
-
 ### 模型作用域
 
 #### 主键字段倒序
@@ -218,6 +206,12 @@ class TestService extends BaseService
 `Jmhc\Restful\Models\BaseModel` 已默认注册此全局作用域
 
 ### trait介绍
+
+#### BuilderAssembleTrait.php
+
+> `Jmhc\Restful\Traits\BuilderAssembleTrait`
+>
+> 查询构造组装辅助 trait
 
 #### ModelTrait.php
 
@@ -235,6 +229,18 @@ class TestService extends BaseService
 
 - `Jmhc\Restful\Controllers\BaseController`
 - `Jmhc\Restful\Services\BaseService`
+
+#### ResourceControllerTrait.php
+
+> `Jmhc\Restful\Traits\ResourceControllerTrait`
+>
+> 资源控制器 trait
+
+#### ResourceServiceTrait.php
+
+> `Jmhc\Restful\Traits\ResourceServiceTrait`
+>
+> 资源服务 trait
 
 #### ResultThrowTrait.php
 
@@ -254,6 +260,12 @@ class TestService extends BaseService
 - `Jmhc\Restful\Services\BaseService`
 
 ### 工具类介绍
+
+#### Agent.php
+
+> `Jmhc\Restful\Utils\Agent`
+>
+> 请求 Agent 类
 
 #### SdlCache.php
 

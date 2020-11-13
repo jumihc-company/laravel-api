@@ -31,7 +31,7 @@ class PaginateHelper
             'last_page_url' => $paginate->url($paginate->lastPage()),
             'next_page_url' => $paginate->nextPageUrl(),
             'path' => $paginate->path(),
-            'per_page' => (int) $paginate->perPage(),
+            'page_size' => (int) $paginate->perPage(),
             'prev_page_url' => $paginate->previousPageUrl(),
             'to' => $paginate->lastItem(),
             'total' => $paginate->total(),

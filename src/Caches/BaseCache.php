@@ -6,8 +6,9 @@
 
 namespace Jmhc\Restful\Caches;
 
+use Illuminate\Redis\Connections\PhpRedisConnection;
+use Jmhc\Support\Helper\RedisConnectionHelper;
 use Jmhc\Support\Traits\InstanceTrait;
-use Jmhc\Support\Traits\RedisHandlerTrait;
 
 /**
  * 基础缓存
@@ -16,16 +17,15 @@ use Jmhc\Support\Traits\RedisHandlerTrait;
 class BaseCache
 {
     use InstanceTrait;
-    use RedisHandlerTrait;
 
     /**
-     * @var \Illuminate\Redis\Connections\Connection|\Redis
+     * @var PhpRedisConnection
      */
-    protected $handler;
+    protected $connection;
 
     public function __construct()
     {
-        $this->handler = $this->getPhpRedisHandler();
+        $this->connection = RedisConnectionHelper::getPhpRedis();
     }
 
     /**

@@ -15,6 +15,12 @@ use Illuminate\Support\Facades\Route;
  */
 class JmhcRouteServiceProvider extends RouteServiceProvider
 {
+    /**
+     * 排除的文件
+     * @var array
+     */
+    protected $except = [];
+
     public function boot()
     {
         Route::pattern('id', '[0-9]+');
@@ -26,7 +32,23 @@ class JmhcRouteServiceProvider extends RouteServiceProvider
     {
         $files = glob(base_path('routes/*.php'));
         foreach ($files as $file) {
+            // 是否排除
+            if ($this->isExcept($file)) {
+                continue;
+            }
+
             Route::prefix('')->group($file);
         }
+    }
+
+    /**
+     * 是否排除
+     * @param string $file
+     * @return bool
+     */
+    protected function isExcept(string $file)
+    {
+        $name = pathinfo($file, PATHINFO_FILENAME);
+        return in_array($name, $this->except) || in_array($name . '.php', $this->except);
     }
 }

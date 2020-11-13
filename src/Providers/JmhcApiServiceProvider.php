@@ -38,8 +38,21 @@ class JmhcApiServiceProvider extends ServiceProvider
         'jmhc.check.sdl' => CheckSdlMiddleware::class,
     ];
 
+    /**
+     * @var string
+     */
+    protected $apiConfigPath;
+
+    /**
+     * @var string
+     */
+    protected $apiDatabaseMigrationsDir;
+
     public function boot()
     {
+        $this->apiConfigPath = __DIR__ . '/../../config/jmhc-api.php';
+        $this->apiDatabaseMigrationsDir = __DIR__ . '/../../database/migrations';
+
         // 注册路由中间件
         $this->registerRouteMiddleware();
 
@@ -68,7 +81,7 @@ class JmhcApiServiceProvider extends ServiceProvider
     {
         // 合并 api 配置
         $this->mergeConfigFrom(
-            jmhc_api_config_path('jmhc-api.php'),
+            $this->apiConfigPath,
             'jmhc-api'
         );
     }
@@ -80,18 +93,18 @@ class JmhcApiServiceProvider extends ServiceProvider
     {
         // 发布配置文件
         $this->publishes([
-            jmhc_api_config_path('jmhc-api.php') => config_path('jmhc-api.php'),
+            $this->apiConfigPath => config_path('jmhc-api.php'),
         ], 'jmhc-api-config');
 
         // 发布迁移文件
         $this->publishes([
-            jmhc_api_database_path('migrations') => database_path('migrations'),
+            $this->apiDatabaseMigrationsDir => database_path('migrations'),
         ], 'jmhc-api-migrations');
 
         // 发布所有文件
         $this->publishes([
-            jmhc_api_config_path('jmhc-api.php') => config_path('jmhc-api.php'),
-            jmhc_api_database_path('migrations') => database_path('migrations'),
+            $this->apiConfigPath => config_path('jmhc-api.php'),
+            $this->apiDatabaseMigrationsDir => database_path('migrations'),
         ], 'jmhc-api');
     }
 }

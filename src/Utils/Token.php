@@ -8,8 +8,8 @@ namespace Jmhc\Restful\Utils;
 
 use Jmhc\Restful\Contracts\ConstAttributeInterface;
 use Jmhc\Restful\Contracts\ResultCodeInterface;
-use Jmhc\Restful\Contracts\ResultMsgInterface;
 use Jmhc\Restful\Utils\Cipher\Token as TokenCipher;
+use Jmhc\Support\Utils\RequestInfo;
 
 /**
  * 令牌加密
@@ -26,10 +26,7 @@ class Token
     {
         $token = request()->bearerToken();
         if (empty($token)) {
-            $token = request()->header(ucwords($name, '-'), '');
-        }
-        if (empty($token)) {
-            $token = request()->input($name, '');
+            $token = RequestInfo::getParam(request(), $name, '');
         }
 
         return $token;
@@ -71,7 +68,7 @@ class Token
     {
         // 验证格式
         if (count($parse) != 3) {
-            return [ResultCodeInterface::TOKEN_INVALID, ResultMsgInterface::TOKEN_INVALID];
+            return [ResultCodeInterface::TOKEN_INVALID, jmhc_api_lang_messages_trans('token_invalid')];
         }
 
         // [加密字符, 加密时间, 加密场景]
@@ -79,13 +76,13 @@ class Token
 
         // 场景不同
         if ($parseScene != $scene) {
-            return [ResultCodeInterface::TOKEN_INVALID, ResultMsgInterface::TOKEN_INVALID];
+            return [ResultCodeInterface::TOKEN_INVALID, jmhc_api_lang_messages_trans('token_invalid')];
         }
 
         // 验证token是否有效
         $refreshTime = config('jmhc-api.token.allow_refresh_time', 0);
         if (((int) $time + $refreshTime) < time()) {
-            return [ResultCodeInterface::TOKEN_EXPIRE, ResultMsgInterface::TOKEN_EXPIRE];
+            return [ResultCodeInterface::TOKEN_EXPIRE, jmhc_api_lang_messages_trans('token_expired')];
         }
 
         return true;

@@ -8,12 +8,12 @@ namespace Jmhc\Restful\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Jmhc\Log\Log;
 use Jmhc\Restful\Contracts\RequestParamsInterface;
 use Jmhc\Restful\Exceptions\ResultException;
 use Jmhc\Restful\Traits\ResultThrowTrait;
 use Jmhc\Restful\Utils\Signature;
-use Jmhc\Support\Traits\RedisHandlerTrait;
-use Jmhc\Support\Utils\Log;
+use Jmhc\Support\Helper\RedisConnectionHelper;
 
 /**
  * 检测签名中间件
@@ -21,7 +21,6 @@ use Jmhc\Support\Utils\Log;
  */
 class CheckSignatureMiddleware
 {
-    use RedisHandlerTrait;
     use ResultThrowTrait;
 
     public function handle(Request $request, Closure $next)
@@ -48,11 +47,12 @@ class CheckSignatureMiddleware
         $data['nonce'] = $nonce;
         if (! Signature::verify($sign, $data, $config['key'])) {
             // 签名验证失败记录
-            Log::save(
-                'signature.error',
-                $this->getSignatureErrorMsg($request, $sign, $data, $config['key'])
-            );
-            $this->error('签名验证失败~');
+            Log::name('signature.error')
+                ->withDateToName()
+                ->info(
+                    $this->getSignatureErrorMsg($request, $sign, $data, $config['key'])
+                );
+                $this->error(jmhc_api_lang_messages_trans('signature_verification_failed'));
         }
 
         return $next($request);
@@ -91,11 +91,11 @@ class CheckSignatureMiddleware
         }
 
         if ($timestamp > ($time + $timeout)) {
-            $this->error('请求时间过大~');
+            $this->error(jmhc_api_lang_messages_trans('please_calibrate_the_time'));
         }
 
         if (($timestamp + $timeout) < $time) {
-            $this->error('请求已过期~');
+            $this->error(jmhc_api_lang_messages_trans('request_expired'));
         }
     }
 
@@ -109,29 +109,29 @@ class CheckSignatureMiddleware
     protected function validateNonce(string $nonce, int $timestamp, int $timeout)
     {
         if (empty($nonce)) {
-            $this->error('请求随机数不存在~');
+            $this->error(jmhc_api_lang_messages_trans('request_random_number_no_exist'));
         }
 
         // 保存的随机数
         $nonce .= $timestamp;
 
-        // redis操作句柄
-        $handler = $this->getPhpRedisHandler();
+        // 缓存链接
+        $connection = RedisConnectionHelper::getPhpRedis();
         // 缓存标识
         $cacheKey = 'nonce-list-' . $timeout;
 
         // 获取已缓存随机数列表
-        $list = $handler->lrange($cacheKey, 0, -1);
+        $list = $connection->lrange($cacheKey, 0, -1);
         if (in_array($nonce, $list)) {
-            $this->error('请求随机数已存在~');
+            $this->error(jmhc_api_lang_messages_trans('request_random_number_already_exist'));
         }
 
         // 添加随机数
-        $handler->lpush($cacheKey, $nonce);
+        $connection->lpush($cacheKey, $nonce);
 
         // 设置过期时间
-        if ($handler->ttl($cacheKey) == -1) {
-            $handler->expire($cacheKey, $timeout);
+        if ($connection->ttl($cacheKey) == -1) {
+            $connection->expire($cacheKey, $timeout);
         }
     }
 

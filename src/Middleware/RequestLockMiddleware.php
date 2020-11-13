@@ -38,7 +38,7 @@ class RequestLockMiddleware
 
         if (! $request->requestLock->get()) {
             $this->error(
-                config('jmhc-api.request_lock.tips', '请求已被锁定，请稍后重试~'),
+                jmhc_api_lang_messages_trans('request_lock_prompt'),
                 ResultCodeInterface::REQUEST_LOCKED
             );
         }

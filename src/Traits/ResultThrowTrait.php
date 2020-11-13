@@ -7,7 +7,6 @@
 namespace Jmhc\Restful\Traits;
 
 use Jmhc\Restful\Contracts\ResultCodeInterface;
-use Jmhc\Restful\Contracts\ResultMsgInterface;
 use Jmhc\Restful\Exceptions\ResultException;
 
 /**
@@ -23,8 +22,9 @@ trait ResultThrowTrait
      * @param int $code
      * @throws ResultException
      */
-    protected function success($data = null, string $msg = ResultMsgInterface::SUCCESS, int $code = ResultCodeInterface::SUCCESS)
+    protected function success($data = null, string $msg = '', int $code = ResultCodeInterface::SUCCESS)
     {
+        $msg = ! empty($msg) ? $msg : jmhc_api_lang_messages_trans('success');
         $this->abort($code, $msg, $data);
     }
 
@@ -32,7 +32,7 @@ trait ResultThrowTrait
      * 抛出失败异常
      * @param string $msg
      * @param int $code
-     * @param array $data
+     * @param $data
      * @param int $httpCode
      * @throws ResultException
      */
@@ -46,8 +46,9 @@ trait ResultThrowTrait
      * @param string $msg
      * @throws ResultException
      */
-    protected function noData(string $msg = ResultMsgInterface::NO_DATA)
+    protected function noData(string $msg = '')
     {
+        $msg = ! empty($msg) ? $msg : jmhc_api_lang_messages_trans('no_data');
         $this->abort(ResultCodeInterface::NO_DATA, $msg, null);
     }
 

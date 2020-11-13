@@ -9,7 +9,6 @@ namespace Jmhc\Restful\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Jmhc\Restful\Contracts\ResultCodeInterface;
-use Jmhc\Restful\Contracts\ResultMsgInterface;
 use Jmhc\Restful\Traits\ResultThrowTrait;
 use Jmhc\Restful\Utils\SdlCache;
 use Jmhc\Restful\Utils\Token;
@@ -45,7 +44,7 @@ class CheckSdlMiddleware
 
         // 验证缓存
         if (! $cache->verify($request->userInfo->id, $token)) {
-            $this->error(ResultMsgInterface::SDL, ResultCodeInterface::SDL);
+            $this->error(jmhc_api_lang_messages_trans('sdl'), ResultCodeInterface::SDL);
         }
 
         return $next($request);

@@ -7,7 +7,6 @@
 namespace Jmhc\Restful\Utils;
 
 use Jmhc\Restful\Contracts\ResultCodeInterface;
-use Jmhc\Restful\Contracts\ResultMsgInterface;
 
 /**
  * 返回结果辅助
@@ -22,8 +21,9 @@ class ResultHelper
      * @param int $code
      * @return \Illuminate\Http\Response|\Illuminate\Contracts\Routing\ResponseFactory
      */
-    public static function success($data = null, string $msg = ResultMsgInterface::SUCCESS, int $code = ResultCodeInterface::SUCCESS)
+    public static function success($data = null, string $msg = '', int $code = ResultCodeInterface::SUCCESS)
     {
+        $msg = ! empty($msg) ? $msg : jmhc_api_lang_messages_trans('success');
         return static::abort($code, $msg, $data);
     }
 
@@ -31,7 +31,7 @@ class ResultHelper
      * 抛出失败异常
      * @param string $msg
      * @param int $code
-     * @param array $data
+     * @param $data
      * @param int $httpCode
      * @return \Illuminate\Http\Response|\Illuminate\Contracts\Routing\ResponseFactory
      */
@@ -45,8 +45,9 @@ class ResultHelper
      * @param string $msg
      * @return \Illuminate\Http\Response|\Illuminate\Contracts\Routing\ResponseFactory
      */
-    public static function noData(string $msg = ResultMsgInterface::NO_DATA)
+    public static function noData(string $msg = '')
     {
+        $msg = ! empty($msg) ? $msg : jmhc_api_lang_messages_trans('no_data');
         return static::abort(ResultCodeInterface::NO_DATA, $msg, null);
     }
 

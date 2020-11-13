@@ -8,6 +8,7 @@ namespace Jmhc\Restful\Utils;
 
 use Illuminate\Http\Request;
 use Jmhc\Restful\Contracts\PlatformInfoInterface;
+use Jmhc\Support\Utils\RequestInfo;
 
 /**
  * 请求平台
@@ -64,12 +65,9 @@ class RequestPlatform
      */
     protected static function getRequestPlatform(Request $request, string $name)
     {
-        $platform = $request->header(ucwords($name, '-'));
-        if (empty($platform)) {
-            $platform = $request->input($name);
-        }
+        $platform = RequestInfo::getParam($request, $name, '');
         if(empty($platform)) {
-            $platform = $request->server('HTTP_USER_AGENT');
+            $platform = $request->server('HTTP_USER_AGENT', '');
         }
 
         return $platform;

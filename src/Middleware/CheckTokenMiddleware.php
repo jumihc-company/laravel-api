@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Jmhc\Restful\Contracts\ConstAttributeInterface;
 use Jmhc\Restful\Contracts\ResultCodeInterface;
-use Jmhc\Restful\Contracts\ResultMsgInterface;
 use Jmhc\Restful\Contracts\UserModelInterface;
 use Jmhc\Restful\Exceptions\ResultException;
 use Jmhc\Restful\Traits\ResultThrowTrait;
@@ -71,7 +70,7 @@ class CheckTokenMiddleware
 
         // 判断token是否存在
         if (empty($token)) {
-            $this->error(ResultMsgInterface::TOKEN_NO_EXISTS, ResultCodeInterface::TOKEN_NO_EXISTS);
+            $this->error(jmhc_api_lang_messages_trans('token_no_exist'), ResultCodeInterface::TOKEN_NO_EXISTS);
         }
 
         // 解析token
@@ -90,10 +89,10 @@ class CheckTokenMiddleware
         // 判断token是否有效
         $info = $this->getUserInfo($id);
         if (empty($info)) {
-            $this->error(ResultMsgInterface::TOKEN_INVALID, ResultCodeInterface::TOKEN_INVALID);
+            $this->error(jmhc_api_lang_messages_trans('token_invalid'), ResultCodeInterface::TOKEN_INVALID);
         } elseif ($info->is_freeze == ConstAttributeInterface::YES) {
             // 是否冻结
-            $this->error(ResultMsgInterface::PROHIBIT_LOGIN, ResultCodeInterface::PROHIBIT_LOGIN);
+            $this->error(jmhc_api_lang_messages_trans('prohibit_login'), ResultCodeInterface::PROHIBIT_LOGIN);
         }
 
         // 判断是否刷新token

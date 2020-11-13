@@ -15,18 +15,6 @@ return [
     // 单设备登录临时缓存过期时间（秒）
     'sdl_tmp_expire' => env('JMHC_SDL_TMP_EXPIRE', 10),
 
-    // 日志配置
-    'log' => [
-        // 是否允许保存debug日志
-        'debug' => env('JMHC_LOG_DEBUG', true),
-        // 日志保存路径
-        'path' => env('JMHC_LOG_PATH', 'storage/logs'),
-        // 日志文件最大内存,0不限制,如（2m,2g）
-        'max_size' => env('JMHC_LOG_MAX_SIZE', 0),
-        // 目录下最大日志文件数量,0不限制
-        'max_files' => env('JMHC_LOG_MAX_FILES', 0),
-    ],
-
     // 运行加密配置
     'runtime' => [
         // 运行调试模式
@@ -75,7 +63,5 @@ return [
         'driver' => env('JMHC_REQUEST_LOCK_DRIVER', 'redis'),
         // 请求锁定时间（秒）
         'seconds' => env('JMHC_REQUEST_LOCK_SECONDS', 5),
-        // 请求锁定提示
-        'tips' => env('JMHC_REQUEST_LOCK_TIPS', '请求已被锁定，请稍后重试~'),
     ],
 ];

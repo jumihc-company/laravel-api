@@ -6,10 +6,10 @@
 
 namespace Jmhc\Restful\Utils;
 
-use Illuminate\Redis\Connections\Connection;
+use Illuminate\Redis\Connections\PhpRedisConnection;
 use Jmhc\Restful\Contracts\ConstAttributeInterface;
+use Jmhc\Support\Helper\RedisConnectionHelper;
 use Jmhc\Support\Traits\InstanceTrait;
-use Jmhc\Support\Traits\RedisHandlerTrait;
 
 /**
  * 单设备缓存
@@ -18,12 +18,11 @@ use Jmhc\Support\Traits\RedisHandlerTrait;
 class SdlCache
 {
     use InstanceTrait;
-    use RedisHandlerTrait;
 
     /**
-     * @var Connection
+     * @var PhpRedisConnection
      */
-    protected $handler;
+    protected $connection;
 
     /**
      * 场景
@@ -36,7 +35,7 @@ class SdlCache
 
     public function __construct()
     {
-        $this->handler = $this->getPhpRedisHandler();
+        $this->connection = RedisConnectionHelper::getPhpRedis();
     }
 
     /**
@@ -58,8 +57,8 @@ class SdlCache
     public function get(int $id)
     {
         return array_filter([
-            $this->handler->get($this->getCacheKey($id)),
-            $this->handler->get($this->getCacheTmpKey($id)),
+            $this->connection->get($this->getCacheKey($id)),
+            $this->connection->get($this->getCacheTmpKey($id)),
         ]);
     }
 
@@ -72,11 +71,11 @@ class SdlCache
      */
     public function set(int $id, string $token, string $oldToken = '')
     {
-        $this->handler->set($this->getCacheKey($id), $token);
+        $this->connection->set($this->getCacheKey($id), $token);
 
         // 旧token存在
         if (! empty($oldToken)) {
-            $this->handler->setex($this->getCacheTmpKey($id), config('jmhc-api.sdl_tmp_expire', 10), $oldToken);
+            $this->connection->setex($this->getCacheTmpKey($id), config('jmhc-api.sdl_tmp_expire', 10), $oldToken);
         }
 
         return true;
@@ -89,7 +88,7 @@ class SdlCache
      */
     public function del(int $id)
     {
-        return $this->handler->del([$this->getCacheKey($id), $this->getCacheTmpKey($id)]);
+        return $this->connection->del([$this->getCacheKey($id), $this->getCacheTmpKey($id)]);
     }
 
     /**
