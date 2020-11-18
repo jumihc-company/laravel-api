@@ -9,7 +9,8 @@ namespace Jmhc\Restful\Traits;
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Jmhc\Restful\Contracts\ConstAttributeInterface;
+use Jmhc\Database\Contracts\DatabaseInterface;
+use Jmhc\Database\Traits\BuilderAssembleTrait;
 use Jmhc\Restful\Utils\PaginateHelper;
 use Jmhc\Restful\Utils\ParseModel;
 use Jmhc\Support\Helper\DBHelper;
@@ -311,8 +312,8 @@ trait ResourceServiceTrait
         // 是否分页
         if ($this->isPage()) {
             // 分页参数
-            $page = $this->params->page ?: ConstAttributeInterface::DEFAULT_PAGE;
-            $pageSize = $this->params->page_size ?: ConstAttributeInterface::DEFAULT_PAGE_SIZE;
+            $page = $this->params->page ?: DatabaseInterface::DEFAULT_PAGE;
+            $pageSize = $this->params->page_size ?: DatabaseInterface::DEFAULT_PAGE_SIZE;
             return $builder
                 ->paginate($pageSize, $columns, 'page', $page);
         }

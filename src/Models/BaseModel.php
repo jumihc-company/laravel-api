@@ -6,20 +6,19 @@
 
 namespace Jmhc\Restful\Models;
 
-use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
-use Jmhc\Restful\Contracts\ConstAttributeInterface;
-use Jmhc\Restful\Scopes\PrimaryKeyDescScope;
-use Jmhc\Restful\Traits\ModelTrait;
+use Jmhc\Database\Contracts\DatabaseInterface;
+use Jmhc\Database\Scopes\PrimaryKeyDescScope;
+use Jmhc\Database\Traits\DatabaseTrait;
 
 /**
  * 基础模型
- * @method ModelTrait initialize()
+ * @method DatabaseTrait initialize()
  * @package Jmhc\Restful\Models
  */
-class BaseModel extends Model implements ConstAttributeInterface
+class BaseModel extends Model implements DatabaseInterface
 {
-    use ModelTrait;
+    use DatabaseTrait;
 
     /**
      * 是否使用主键倒序作用域
@@ -44,13 +43,11 @@ class BaseModel extends Model implements ConstAttributeInterface
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getForeignKey()
     {
         return static::getSnakeSingularName() . '_' . $this->getKeyName();
-    }
-
-    protected function serializeDate(DateTimeInterface $date)
-    {
-        return $date->format($this->getDateFormat());
     }
 }

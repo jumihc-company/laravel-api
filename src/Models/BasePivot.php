@@ -6,19 +6,18 @@
 
 namespace Jmhc\Restful\Models;
 
-use DateTimeInterface;
 use Illuminate\Database\Eloquent\Relations\Pivot;
-use Jmhc\Restful\Contracts\ConstAttributeInterface;
-use Jmhc\Restful\Traits\ModelTrait;
+use Jmhc\Database\Contracts\DatabaseInterface;
+use Jmhc\Database\Traits\DatabaseTrait;
 
 /**
  * 基础中间模型
- * @method ModelTrait initialize()
+ * @method DatabaseTrait initialize()
  * @package Jmhc\Restful\Models
  */
-class BasePivot extends Pivot implements ConstAttributeInterface
+class BasePivot extends Pivot implements DatabaseInterface
 {
-    use ModelTrait;
+    use DatabaseTrait;
 
     protected function initializeBefore()
     {
@@ -26,10 +25,5 @@ class BasePivot extends Pivot implements ConstAttributeInterface
         if (empty($this->table)) {
             $this->setTable(static::getSnakeSingularName());
         }
-    }
-
-    protected function serializeDate(DateTimeInterface $date)
-    {
-        return $date->format($this->getDateFormat());
     }
 }

@@ -20,11 +20,7 @@
 	    - [API服务提供者](#api%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85)
 	    - [契约服务提供者](#%E5%A5%91%E7%BA%A6%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85)
 	    - [路由服务提供者](#%E8%B7%AF%E7%94%B1%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85)
-	- [模型作用域](#%E6%A8%A1%E5%9E%8B%E4%BD%9C%E7%94%A8%E5%9F%9F)
-	    - [主键字段倒序](#%E4%B8%BB%E9%94%AE%E5%AD%97%E6%AE%B5%E5%80%92%E5%BA%8F)
 	- [trait介绍](#trait%E4%BB%8B%E7%BB%8D)
-	    - [BuilderAssembleTrait.php](#builderassembletraitphp)
-		- [ModelTrait.php](#modeltraitphp)
 		- [RequestInfoTrait.php](#requestinfotraitphp)
 		- [ResourceControllerTrait.php](#resourcecontrollertraitphp)
 		- [ResourceServiceTrait.php](#resourceservicetraitphp)
@@ -132,13 +128,13 @@ class TestService extends BaseService
 
 > 需继承 `Jmhc\Restful\Models\BaseModel`
 
-- 可使用 `Jmhc\Restful\Traits\ModelTrait` 里的方法
+- 可使用 `Jmhc\Database\Traits\DatabaseTrait` 里的方法
 
 #### 中间表模型
 
 > 需继承 `Jmhc\Restful\Models\BasePivot`
 
-- 可使用 `Jmhc\Restful\Traits\ModelTrait` 里的方法
+- 可使用 `Jmhc\Database\Traits\DatabaseTrait` 里的方法
 
 ### 服务层(逻辑层)
 
@@ -197,27 +193,7 @@ class TestService extends BaseService
 
 - 注册 `base_path('routes')` 下面所有 php 文件到路由
 
-### 模型作用域
-
-#### 主键字段倒序
-
-> `Jmhc\Restful\Scopes\PrimaryKeyDescScope`
-
-`Jmhc\Restful\Models\BaseModel` 已默认注册此全局作用域
-
 ### trait介绍
-
-#### BuilderAssembleTrait.php
-
-> `Jmhc\Restful\Traits\BuilderAssembleTrait`
->
-> 查询构造组装辅助 trait
-
-#### ModelTrait.php
-
-> `Jmhc\Restful\Traits\ModelTrait`
->
-> 模型辅助 trait
 
 #### RequestInfoTrait.php
 

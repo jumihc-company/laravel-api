@@ -27,6 +27,7 @@
         "jmhc/laravel-api-lang": "^1.0",
         "jmhc/laravel-support": "^8.0",
         "jmhc/laravel-log": "^8.0",
+        "jmhc/laravel-database": "^8.0",
         "jenssegers/agent": "^2.0"
     },
     "extra": {
