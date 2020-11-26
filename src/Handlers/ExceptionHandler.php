@@ -13,7 +13,6 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler;
-use Illuminate\Foundation\Http\Exceptions\MaintenanceModeException;
 use Illuminate\Routing\Router;
 use Illuminate\Validation\ValidationException;
 use Jmhc\Log\Log;
@@ -206,11 +205,14 @@ class ExceptionHandler extends Handler
             $this->msg = $e->getMessage();
             $this->data = $e->getData();
             $this->httpCode = $e->getHttpCode();
-        } elseif ($e instanceof MaintenanceModeException) {
-            // 系统维护中
-            $this->code = ResultCodeInterface::MAINTENANCE;
-            $this->msg = $e->getMessage() ?: jmhc_api_lang_messages_trans('maintenance');
         } elseif ($e instanceof HttpException) {
+            // 系统维护中
+            if ($e->getStatusCode() == 503 && $e->getMessage() == 'Service Unavailable') {
+                $this->code = ResultCodeInterface::MAINTENANCE;
+                $this->msg = jmhc_api_lang_messages_trans('maintenance');
+                return;
+            }
+
             // 请求异常
             $this->code = ResultCodeInterface::ERROR;
             $this->msg = jmhc_api_lang_messages_trans('invalid_request');
@@ -225,6 +227,7 @@ class ExceptionHandler extends Handler
                 ->withRequestInfo(
                     config('jmhc-api.db_exception_request_message', false)
                 )
+                ->withMessageLineBreak()
                 ->throwable($e);
         } elseif ($e instanceof ValidationException) {
             // 验证器异常
@@ -240,6 +243,7 @@ class ExceptionHandler extends Handler
                 ->withRequestInfo(
                     config('jmhc-api.exception_request_message', false)
                 )
+                ->withMessageLineBreak()
                 ->throwable($e);
         } elseif ($e instanceof Error || $e instanceof ErrorException) {
             // 发生错误
@@ -252,6 +256,7 @@ class ExceptionHandler extends Handler
                 ->withRequestInfo(
                     config('jmhc-api.error_request_message', false)
                 )
+                ->withMessageLineBreak()
                 ->throwable($e);
         }
     }

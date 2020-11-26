@@ -80,7 +80,7 @@ User-Agent: JmhcAndroid/1.0
 Request-Platform: JmhcAndroid/1.0
 
 // 请求参数
-?request-platform=JmhcAndroid%2F1.0
+?request_platform=JmhcAndroid%2F1.0
 ```
 
 ## 请求时控制返回结果是否分页

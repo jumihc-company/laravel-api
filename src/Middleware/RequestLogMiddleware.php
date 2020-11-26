@@ -23,6 +23,7 @@ class RequestLogMiddleware
         Log::dir('request')
             ->name('')
             ->withDateToName()
+            ->withMessageLineBreak()
             ->debug(RequestInfo::get());
 
         return $next($request);

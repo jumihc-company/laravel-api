@@ -7,7 +7,6 @@
 namespace Jmhc\Restful\Middleware;
 
 use Closure;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -34,16 +33,25 @@ class CheckTokenMiddleware
      */
     protected $scene = ConstAttributeInterface::DEFAULT_SCENE;
 
-    public function handle(Request $request, Closure $next, $force = true)
+    /**
+     * 多场景
+     * @var array
+     */
+    protected $scenes = [];
+
+    public function handle(Request $request, Closure $next, $force = true, ...$scenes)
     {
+        // 场景存在
+        if (! empty($scenes)) {
+            $this->scenes = $scenes;
+        }
+
         try {
             // 用户信息
             $request->userInfo = $this->check($request);
         } catch (ResultException $e) {
-            if (! Helper::boolean($force)) {
-                // 用户信息
-                $request->userInfo = new Collection();
-            } else {
+            // 需要强制登录
+            if (Helper::boolean($force)) {
                 $this->error(
                     $e->getMessage(),
                     $e->getCode(),
@@ -51,9 +59,22 @@ class CheckTokenMiddleware
                     $e->getHttpCode()
                 );
             }
+
+            // 用户信息
+            $request->userInfo = new Collection();
         }
 
         return $next($request);
+    }
+
+    /**
+     * 获取用户信息
+     * @param int $id
+     * @return mixed
+     */
+    protected function getUserInfo(int $id)
+    {
+        return app()->get(UserModelInterface::class)->getInfoById($id);
     }
 
     /**
@@ -61,9 +82,8 @@ class CheckTokenMiddleware
      * @param Request $request
      * @return Builder|Model|object|null
      * @throws ResultException
-     * @throws BindingResolutionException
      */
-    protected function check(Request $request)
+    private function check(Request $request)
     {
         // token
         $token = Token::get();
@@ -77,11 +97,7 @@ class CheckTokenMiddleware
         $parse = Token::parse($token);
 
         // 验证token
-        $verify = Token::verify($parse, $this->scene);
-        if ($verify !== true) {
-            [$code, $msg] = $verify;
-            $this->error($msg, $code);
-        }
+        $this->verifyToken($parse);
 
         // 解析[加密字符, 加密时间, 加密场景]
         [$id, $time] = $parse;
@@ -106,12 +122,33 @@ class CheckTokenMiddleware
     }
 
     /**
-     * 获取用户信息
-     * @param int $id
-     * @return mixed
+     * 验证token
+     * @param array $parse
+     * @throws ResultException
      */
-    protected function getUserInfo(int $id)
+    private function verifyToken(array $parse)
     {
-        return app()->get(UserModelInterface::class)->getInfoById($id);
+        // 不存在多场景
+        if (empty($this->scenes)) {
+            $this->scenes = [$this->scene];
+        }
+
+        // 默认值
+        $verify = [ResultCodeInterface::TOKEN_INVALID, jmhc_api_lang_messages_trans('token_invalid')];
+
+        // 多场景验证
+        foreach ($this->scenes as $scene) {
+            $verify = Token::verify($parse, $scene);
+            if ($verify === true) {
+                $this->scene = $scene;
+                break;
+            }
+        }
+
+        // 未验证通过
+        if ($verify !== true) {
+            [$code, $msg] = $verify;
+            $this->error($msg, $code);
+        }
     }
 }

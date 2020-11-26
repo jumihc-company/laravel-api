@@ -93,7 +93,7 @@ class BaseFactory
     private static function createMetadata(string $docComment)
     {
         $metadata = [];
-        foreach (explode(PHP_EOL, $docComment) as $meta) {
+        foreach (explode("\n", $docComment) as $meta) {
             if (strpos($meta, static::$methodKeyword) === 0) {
                 [$_class, $_method] = static::transform(trim(str_replace(static::$methodKeyword, '', $meta)));
                 $metadata[$_method] = $_class;

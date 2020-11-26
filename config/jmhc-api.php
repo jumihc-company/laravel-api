@@ -51,10 +51,12 @@ return [
         'check' => env('JMHC_SIGNATURE_CHECK', false),
         // 签名秘钥
         'key' => env('JMHC_SIGNATURE_KEY', ''),
+        // 是否检测时间戳
+        'check_timestamp' => env('JMHC_SIGNATURE_CHECK_TIMESTAMP', true),
         // 签名时间戳超时（秒）
         'timestamp_timeout' => env('JMHC_SIGNATURE_TIMESTAMP_TIMEOUT', 60),
-        // 验证时间戳
-        'check_timestamp' => env('JMHC_SIGNATURE_CHECK_TIMESTAMP', true),
+        // 随机数缓存过期时间（秒）
+        'nonce_expire' => env('JMHC_SIGNATURE_NONCE_EXPIRE', 60),
     ],
 
     // 请求锁定配置

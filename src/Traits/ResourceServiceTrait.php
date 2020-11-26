@@ -7,10 +7,13 @@
 namespace Jmhc\Restful\Traits;
 
 use Closure;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Jmhc\Database\Contracts\DatabaseInterface;
 use Jmhc\Database\Traits\BuilderAssembleTrait;
+use Jmhc\Restful\Exceptions\ResultException;
 use Jmhc\Restful\Utils\PaginateHelper;
 use Jmhc\Restful\Utils\ParseModel;
 use Jmhc\Support\Helper\DBHelper;
@@ -67,7 +70,7 @@ trait ResourceServiceTrait
 
     /**
      * index 查询结果
-     * @var Model
+     * @var LengthAwarePaginator|Builder[]|Collection
      */
     protected $indexQueryResult;
 
@@ -181,7 +184,7 @@ trait ResourceServiceTrait
 
     /**
      * index 处理
-     * @throws \Jmhc\Restful\Exceptions\ResultException
+     * @throws ResultException
      */
     protected function indexHandler()
     {
@@ -216,7 +219,7 @@ trait ResourceServiceTrait
 
     /**
      * store 处理
-     * @throws \Jmhc\Restful\Exceptions\ResultException
+     * @throws ResultException
      */
     protected function storeHandler()
     {
@@ -240,7 +243,7 @@ trait ResourceServiceTrait
 
     /**
      * update 处理
-     * @throws \Jmhc\Restful\Exceptions\ResultException
+     * @throws ResultException
      */
     protected function updateHandler()
     {
@@ -284,7 +287,7 @@ trait ResourceServiceTrait
 
     /**
      * destroy 处理
-     * @throws \Jmhc\Restful\Exceptions\ResultException
+     * @throws ResultException
      */
     protected function destroyHandler()
     {
@@ -305,7 +308,7 @@ trait ResourceServiceTrait
      * @param Builder $builder
      * @param array $params
      * @param array $columns
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @return LengthAwarePaginator|Builder[]|Collection
      */
     protected function indexQuery(Builder $builder, array $params, array $columns)
     {
