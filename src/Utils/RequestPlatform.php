@@ -30,10 +30,7 @@ class RequestPlatform
     public static function run(Request $request)
     {
         // 请求平台
-        $requestPlatform = static::getRequestPlatform(
-            $request,
-            'request-platform'
-        );
+        $requestPlatform = static::getRequestPlatform($request);
 
         return static::check($requestPlatform);
     }
@@ -62,9 +59,9 @@ class RequestPlatform
      * @param string $name
      * @return array|string|null
      */
-    protected static function getRequestPlatform(Request $request, string $name)
+    public static function getRequestPlatform(Request $request, string $name = 'request_platform')
     {
-        $platform = $request->header(ucwords($name, '-'));
+        $platform = $request->header(ucwords(str_replace('_', '-', $name), '-'));
         if (empty($platform)) {
             $platform = $request->input($name);
         }
