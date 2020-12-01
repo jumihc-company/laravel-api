@@ -61,12 +61,12 @@ class RequestPlatform
      */
     public static function getRequestPlatform(Request $request, string $name = 'request_platform')
     {
-        $platform = $request->header(ucwords(str_replace('_', '-', $name), '-'));
+        $platform = $request->header(ucwords(str_replace('_', '-', $name), '-'), '');
         if (empty($platform)) {
-            $platform = $request->input($name);
+            $platform = $request->input($name, '');
         }
         if(empty($platform)) {
-            $platform = $request->server('HTTP_USER_AGENT');
+            $platform = $request->server('HTTP_USER_AGENT', '');
         }
 
         return $platform;

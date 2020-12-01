@@ -24,7 +24,7 @@ class RequestParams
 
         // 请求解密
         if ($request->exists('params') && ! $jsonParams) {
-            $params = Cipher::request($request->input('params'));
+            $params = Cipher::request($request->input('params', ''));
         }
 
         return $params;
