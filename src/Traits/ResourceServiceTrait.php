@@ -32,9 +32,8 @@ trait ResourceServiceTrait
 
     /**
      * 模型
-     * @var string
      */
-    protected $model = '';
+    protected $model;
 
     /**
      * 查询构造器
