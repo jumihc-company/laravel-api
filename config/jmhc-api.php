@@ -15,6 +15,9 @@ return [
     // 单设备登录临时缓存过期时间（秒）
     'sdl_tmp_expire' => env('JMHC_SDL_TMP_EXPIRE', 10),
 
+    // 最大查询数量
+    'max_query_num' => env('JMHC_MAX_QUERY_NUM', 1000),
+
     // 日志配置
     'log' => [
         // 是否允许保存debug日志

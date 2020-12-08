@@ -25,9 +25,8 @@ trait ResourceServiceTrait
 
     /**
      * 当前模型
-     * @var string
      */
-    protected $model = '';
+    protected $model;
 
     /**
      * 标题
@@ -421,11 +420,16 @@ trait ResourceServiceTrait
      */
     protected function indexSelectList(Builder $builder, array $params, array $columns)
     {
+        // 最大数量
+        $maxNum = config('jmhc-api.max_query_num', 1000);
+        // 修改参数
+        $params = $this->modifyParams($params, $maxNum);
+
         // 是否分页
         if ($this->isPaging()) {
             // 分页参数
-            $page = $this->params->page ?: ConstAttributeInterface::DEFAULT_PAGE;
-            $pageSize = $this->params->page_size ?: ConstAttributeInterface::DEFAULT_PAGE_SIZE;
+            $page = ! empty($params['page']) ? $params['page'] : ConstAttributeInterface::DEFAULT_PAGE;
+            $pageSize = ! empty($params['page_size']) ? $params['page_size'] : ConstAttributeInterface::DEFAULT_PAGE_SIZE;
             return $builder
                 ->paginate($pageSize, $columns, 'page', $page);
         }
@@ -436,6 +440,9 @@ trait ResourceServiceTrait
             static::assembleLimit($builder, $params);
             // 组装page分页
             static::assemblePage($builder, $params);
+        } else {
+            // 未启用分页不超过最大限制
+            $builder->offset(0)->limit($maxNum);
         }
 
         return $builder
@@ -489,6 +496,27 @@ trait ResourceServiceTrait
         }
 
         return $res;
+    }
+
+    /**
+     * 修改参数
+     * @param array $params
+     * @param int $maxNum
+     * @return array
+     */
+    private function modifyParams(array $params, int $maxNum)
+    {
+        // 页数过大
+        if (! empty($params['page_size']) && $params['page_size'] > $maxNum) {
+            $params['page_size'] = $maxNum;
+        }
+
+        // 限制过大
+        if (! empty($params['limit']) && $params['limit'] > $maxNum) {
+            $params['limit'] = $maxNum;
+        }
+
+        return $params;
     }
 
     /**

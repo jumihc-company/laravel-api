@@ -78,3 +78,8 @@ JMHC_REQUEST_LOCK_TIPS=请求已被锁定，请稍后重试~
 # 单设备登录临时缓存过期时间（秒）
 JMHC_SDL_TMP_EXPIRE=10
 ```
+
+```apacheconfig
+# 最大查询数量
+JMHC_MAX_QUERY_NUM=1000
+```
