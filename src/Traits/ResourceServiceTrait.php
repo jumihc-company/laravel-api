@@ -506,14 +506,20 @@ trait ResourceServiceTrait
      */
     private function modifyParams(array $params, int $maxNum)
     {
-        // 页数过大
-        if (! empty($params['page_size']) && $params['page_size'] > $maxNum) {
-            $params['page_size'] = $maxNum;
+        // 限制和页数都不存在
+        if (empty($params['limit']) && empty($params['page_size'])) {
+            $params['page'] = ! empty($params['page']) ? $params['page'] : ConstAttributeInterface::DEFAULT_PAGE;
+            $params['page_size'] = ConstAttributeInterface::DEFAULT_PAGE_SIZE;
         }
 
         // 限制过大
         if (! empty($params['limit']) && $params['limit'] > $maxNum) {
             $params['limit'] = $maxNum;
+        }
+
+        // 页数过大
+        if (! empty($params['page_size']) && $params['page_size'] > $maxNum) {
+            $params['page_size'] = $maxNum;
         }
 
         return $params;
