@@ -93,10 +93,8 @@ trait ResourceServiceTrait
 
     public function index()
     {
-        // 处理是否启用分页
-        $this->handleIsEnablePage();
-        // 处理是否返回分页字段
-        $this->handlerIsResultPageField();
+        // 查询前处理
+        $this->indexQueryBeforeHandler();
 
         // 初始化查询构造器
         $this->initQuery();
@@ -179,6 +177,17 @@ trait ResourceServiceTrait
         $this->destroyAfter();
 
         $this->success();
+    }
+
+    /**
+     * index 查询前处理
+     */
+    protected function indexQueryBeforeHandler()
+    {
+        // 处理是否启用分页
+        $this->handleIsEnablePage();
+        // 处理是否返回分页字段
+        $this->handlerIsResultPageField();
     }
 
     /**
