@@ -37,6 +37,8 @@ class ExceptionHandler extends Handler
 
     protected $httpCode;
 
+    protected $headers = [];
+
     private $key;
 
     public function report(Throwable $e)
@@ -69,13 +71,10 @@ class ExceptionHandler extends Handler
         // 响应处理
         $response = $this->responseHandler($response);
 
-        // 响应头
-        $headers = [];
-
         // 判断刷新的令牌是否存在
         if (! empty($request->refreshToken)) {
             // 刷新令牌
-            $this->refreshToken($request, $request->refreshToken, $headers);
+            $this->refreshToken($request, $request->refreshToken);
             // 单设备登录处理
             $this->sdlHandler($request, $request->refreshToken);
         }
@@ -86,7 +85,7 @@ class ExceptionHandler extends Handler
         // 响应前处理
         $this->responseBeforeHandler($request);
 
-        return response()->json($response, $this->httpCode, $headers, JSON_UNESCAPED_UNICODE);
+        return response()->json($response, $this->httpCode, $this->headers, JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -115,11 +114,10 @@ class ExceptionHandler extends Handler
      * 刷新令牌
      * @param $request
      * @param string $token
-     * @param array $headers
      */
-    protected function refreshToken($request, string $token, array &$headers)
+    protected function refreshToken($request, string $token)
     {
-        $headers['Refresh-Token'] = $token;
+        $this->headers['Refresh-Token'] = $token;
     }
 
     /**
