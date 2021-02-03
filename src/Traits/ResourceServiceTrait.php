@@ -299,16 +299,13 @@ trait ResourceServiceTrait
      */
     protected function destroyHandler()
     {
-        // 简单验证id
-        $ids = explode(',', $this->params->id);
-        if (empty($ids)) {
-            $this->error(jmhc_api_lang_messages_trans('destroy_data_no_exist'));
-        }
+        // 删除id获取
+        $ids = $this->destroyIdsObtain();
 
         // 删除
         $this->query
-            ->getModel()
-            ->destroy($ids);
+            ->whereIn($this->query->getModel()->getKeyName(), $ids)
+            ->delete();
     }
 
     /**
@@ -351,6 +348,22 @@ trait ResourceServiceTrait
     }
 
     /**
+     * index 集合处理
+     * @param $list
+     * @param Closure $closure
+     * @return LengthAwarePaginator|mixed
+     */
+    protected function indexCollectionHandler($list, Closure $closure)
+    {
+        if ($list instanceof LengthAwarePaginator) {
+            $list->setCollection($closure($list->getCollection()));
+            return $list;
+        }
+
+        return $closure($list);
+    }
+
+    /**
      * index 成功返回
      * @param $list
      * @param array $fields
@@ -363,6 +376,22 @@ trait ResourceServiceTrait
         }
 
         return $this->isPage() ? PaginateHelper::paginate($list, $fields) : $list;
+    }
+
+    /**
+     * 删除id获取
+     * @return false|string[]
+     * @throws ResultException
+     */
+    protected function destroyIdsObtain()
+    {
+        // 简单验证id
+        $ids = explode(',', $this->params->id);
+        if (empty($ids)) {
+            $this->error(jmhc_api_lang_messages_trans('destroy_data_no_exist'));
+        }
+
+        return $ids;
     }
 
     /**
