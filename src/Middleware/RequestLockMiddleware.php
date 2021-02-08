@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Cache;
 use Jmhc\Restful\Contracts\RequestParamsInterface;
 use Jmhc\Restful\Contracts\ResultCodeInterface;
 use Jmhc\Restful\Traits\ResultThrowTrait;
+use Jmhc\Support\Utils\Helper;
 
 /**
  * 请求锁定中间件
@@ -21,7 +22,7 @@ class RequestLockMiddleware
 {
     use ResultThrowTrait;
 
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next, $useSign = false)
     {
         // 跨域请求
         if ($request->getMethod() === 'OPTIONS') {
@@ -32,7 +33,7 @@ class RequestLockMiddleware
         $request->requestLock = Cache::store(
             config('jmhc-api.request_lock.driver', 'redis')
         )->lock(
-            $this->getLockKey($request),
+            $this->getLockKey($request, $useSign),
             config('jmhc-api.request_lock.seconds', 5)
         );
 
@@ -49,10 +50,12 @@ class RequestLockMiddleware
     /**
      * 获取锁定标识
      * @param Request $request
+     * @param bool $useSign
      * @return string|null
      */
-    protected function getLockKey(Request $request)
+    protected function getLockKey(Request $request, bool $useSign)
     {
-        return 'lock-' . md5($request->ip() . $request->path() . json_encode(app()->get(RequestParamsInterface::class)));
+        $sign = $useSign ? $request->input('sign', '') : '';
+        return 'lock-' . md5($request->ip() . $request->path() . $sign . json_encode(app()->get(RequestParamsInterface::class)));
     }
 }
