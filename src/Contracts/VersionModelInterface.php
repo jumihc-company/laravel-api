@@ -15,6 +15,11 @@ interface VersionModelInterface
     const PLATFORM_ANDROID = 1; // 安卓
     const PLATFORM_APPLE = 2; // 苹果
 
+    const PLATFORM_TEXTS = [
+        self::PLATFORM_ANDROID => '安卓',
+        self::PLATFORM_APPLE => '苹果',
+    ];
+
     // 获取最新版本信息
     public function getLastInfo();
 
